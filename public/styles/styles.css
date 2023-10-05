@@ -1,0 +1,23 @@
+body{
+    background-color: #F1F0E8 ;
+    margin: 0;
+}
+
+.header{
+    background-color: #ADC4CE;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.menu{
+    display: flex;
+    gap: 10px;
+}
+
+footer{
+    position: fixed;
+    bottom: 0;
+    width: 100%;
+    text-align: center;
+}
