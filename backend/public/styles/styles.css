@@ -1,0 +1,49 @@
+body{
+    background-color: #ADC4CE ;
+    margin: 0;
+}
+
+.header{
+    background-color: #96B6C5;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+h1{
+    margin: 20px;
+    text-align: center;
+}
+
+.menu{
+    display: flex;
+    gap: 10px;
+    margin: 20px;
+}
+
+.Login-menu{
+    display: flex;
+    gap: 10px;
+    margin: 20px;
+}
+
+.signin{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+footer{
+    position: fixed;
+    bottom: 0;
+    width: 100%;
+    text-align: center;
+}
+
+.UPC{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 90vh;
+}
