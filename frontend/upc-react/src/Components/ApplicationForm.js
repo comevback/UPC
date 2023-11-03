@@ -1,53 +1,57 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import './ApplicationForm.css';
-import { getData, uploadData } from '../Tools/api';
+import { uploadData, getFiles, downloadFile } from '../Tools/api';
+import FileList from './FileList';
+import UploadForm from './UploadForm';
 
 function ApplicationForm() {
+    const [files, setFiles] = useState([]);
+
+    useEffect(() => {
+        // Get the list of files when the component mounts
+        getFiles()
+        .then(files => {
+            setFiles(files);
+        })
+        .catch(error => {
+            console.error('Error fetching files:', error);
+        });
+    }, []);
+
     const [data, setData] = useState(null);
-    const fetchSth = async () => {
-        const fetchedData = await getData();
-        setData(fetchedData);
-    };
+
     const uploadSth = async (formData) => {
         const uploadedData = await uploadData(formData);
         setData(uploadedData);
+        // Get the updated list of files
+        getFiles()
+        .then(files => {
+            setFiles(files);
+        })
+        .catch(error => {
+            console.error('Error fetching files:', error);
+        });
     };
 
     const [file, setFile] = useState(null);
-    const [text, setText] = useState('');
 
     const handleFileChange = (event) => {
         setFile(event.target.files[0]);
-    };
-
-    const handleTextChange = (event) => {
-        setText(event.target.value);
     };
 
     const handleSubmit = (event) => {
         event.preventDefault();
         const formData = new FormData();
         formData.append('file', file);
-        formData.append('text', text);
         // Send formData to server using fetch or axios
         uploadSth(formData);
     };
 
     return (
-        <form onSubmit={handleSubmit}>
-            <div>
-                <label htmlFor="file-input">Upload File:</label>
-                <input type="file" id="file-input" onChange={handleFileChange} />
-            </div>
-            <div>
-                <label htmlFor="text-input">Enter Text:</label>
-                <input type="text" id="text-input" value={text} onChange={handleTextChange} />
-            </div>
-            <button type="submit">Submit</button>
-
-            <button onClick={fetchSth}>Fetch</button>
-            <div>{data}</div>
-        </form>
+        <div>
+            <UploadForm handleFileChange={handleFileChange} handleSubmit={handleSubmit} />
+            <FileList files={files} />
+        </div>
     );
 }
 

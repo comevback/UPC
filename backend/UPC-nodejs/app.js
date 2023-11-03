@@ -5,12 +5,17 @@ import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
 import rateLimit from 'express-rate-limit';
 import cors from 'cors';
-import { spawn } from "child_process";
+import fs from 'fs';
+import path from 'path';
 import upload from "./Components/upload.js";
 import { User, Task } from "./Components/mongo.js";
+import { fileURLToPath } from 'url';
+import { dirname } from 'path';
 
 const app = express();
 const port = 3001;
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = dirname(__filename);
 
 app.use(bodyParser.urlencoded({extended:true}));
 app.use(express.static("public"));
@@ -86,28 +91,27 @@ app.post('/api/upload', upload.single('file'), (req, res) => {
     res.send('File uploaded successfully');
 });
 
-// Add a route to handle the request
-app.get('/api/data', async (req, res) => {
-    // Send a simple response message
-    res.send('Received your request!');
+// Route to get the list of all files
+app.get('/api/files', async (req, res) => {
+    const directoryPath = path.join(__dirname, 'uploads');
+    fs.readdir(directoryPath, (err, files) => {
+        if (err) {
+            return res.status(500).send('Unable to scan directory: ' + err);
+        } 
+        // Return the list of files
+        res.send(files);
+    });
 });
 
+// Route to download a file
+app.get('/api/files/:filename', (req, res) => {
+    const filePath = path.join(__dirname, 'uploads', req.params.filename);
+    res.download(filePath);
+});
 
 //Listen on port
 app.listen(port, () => {
     console.log(`Server is running on port ${port}.`);
 });
 
-// const child = spawn('docker', ['run', '--rm', '-p', '3001:3000', 'afterlifexx/myblogapp']);
 
-// child.stdout.on('data', (data) => {
-// console.log(`stdout: ${data}`);
-// });
-
-// child.stderr.on('data', (data) => {
-// console.error(`stderr: ${data}`);
-// });
-
-// child.on('close', (code) => {
-// console.log(`子进程退出，退出码 ${code}`);
-// });
