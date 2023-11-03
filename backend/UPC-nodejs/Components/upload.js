@@ -13,7 +13,8 @@ const storage = multer.diskStorage({
         cb(null, dir) // Destination folder
     },
     filename: (req, file, cb) => {
-        cb(null, file.originalname + '_' + Date.now() + path.extname(file.originalname)) // Filename + timestamp
+        //cb(null, file.originalname + '_' + Date.now() + path.extname(file.originalname)) // Filename + timestamp 时间戳名，可以重复上传同一文件
+        cb(null, file.originalname) // Filename 原名，不能重复上传同一文件
     }
 });
 

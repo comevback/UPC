@@ -29,6 +29,7 @@ const limiter = rateLimit({
   });
 app.use(limiter);
 
+
 //--------------------------------------------------------------------------------------
 
 //basic
@@ -87,7 +88,11 @@ await task.save();
 res.status(201).send('Task created');
 });
 
-app.post('/api/upload', upload.single('file'), (req, res) => {
+// app.post('/api/upload', upload.single('file'), (req, res) => {
+//     res.send('File uploaded successfully');
+// });
+
+app.post('/api/upload', upload.array('file', 12), (req, res) => {
     res.send('File uploaded successfully');
 });
 
@@ -103,9 +108,26 @@ app.get('/api/files', async (req, res) => {
     });
 });
 
+app.get('/api/results', async (req, res) => {
+    const directoryPath = path.join(__dirname, 'results');
+    fs.readdir(directoryPath, (err, files) => {
+        if (err) {
+            return res.status(500).send('Unable to scan directory: ' + err);
+        } 
+        // Return the list of files
+        res.send(files);
+    });
+});
+
 // Route to download a file
 app.get('/api/files/:filename', (req, res) => {
     const filePath = path.join(__dirname, 'uploads', req.params.filename);
+    res.download(filePath);
+});
+
+// Route to download a result
+app.get('/api/results/:filename', (req, res) => {
+    const filePath = path.join(__dirname, 'results', req.params.filename);
     res.download(filePath);
 });
 
