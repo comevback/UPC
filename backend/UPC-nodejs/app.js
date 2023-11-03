@@ -1,21 +1,20 @@
 //import and setting
 import express from "express";
-import mongoose from "mongoose";
 import bodyParser from "body-parser";
 import bcrypt from "bcryptjs";
-import multer from "multer";
 import jwt from "jsonwebtoken";
-import dotenv from "dotenv";
 import rateLimit from 'express-rate-limit';
+import cors from 'cors';
 import { spawn } from "child_process";
+import upload from "./Components/upload.js";
+import { User, Task } from "./Components/mongo.js";
 
-dotenv.config();
 const app = express();
-const port = 3000;
+const port = 3001;
 
 app.use(bodyParser.urlencoded({extended:true}));
 app.use(express.static("public"));
-app.set("view engine", "ejs");
+app.use(cors());
 
 //Rate limit
 const limiter = rateLimit({
@@ -25,33 +24,12 @@ const limiter = rateLimit({
   });
 app.use(limiter);
 
-//mongoose connection
-mongoose.connect(process.env.MongoURL)
-.then(() => {
-    console.log(`Connected to MongoDB.`);
-})
-.catch(error => {
-    console.error(`MongoDB connection error: ${error}`);
-});
-
-//Create Schema
-const userSchema = new mongoose.Schema({
-    username: String,
-    password: String,
-    email: String,
-    tasks: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Task' }]
-  });
-  
-const taskSchema = new mongoose.Schema({
-title: String,
-description: String,
-owner: { type: mongoose.Schema.Types.ObjectId, ref: 'User' }
-});
-
-const User = mongoose.model('User', userSchema);
-const Task = mongoose.model('Task', taskSchema);
-
 //--------------------------------------------------------------------------------------
+
+//basic
+app.get("/", (req, res) => {
+    res.send("Hello World!");
+});
 
 //Register and Login
 app.post('/register', async (req, res) => {
@@ -104,21 +82,32 @@ await task.save();
 res.status(201).send('Task created');
 });
 
-//Listen on port 3000
+app.post('/api/upload', upload.single('file'), (req, res) => {
+    res.send('File uploaded successfully');
+});
+
+// Add a route to handle the request
+app.get('/api/data', async (req, res) => {
+    // Send a simple response message
+    res.send('Received your request!');
+});
+
+
+//Listen on port
 app.listen(port, () => {
     console.log(`Server is running on port ${port}.`);
 });
 
-const child = spawn('docker', ['run', '--rm', '-p', '3001:3000', 'afterlifexx/myblogapp']);
+// const child = spawn('docker', ['run', '--rm', '-p', '3001:3000', 'afterlifexx/myblogapp']);
 
-child.stdout.on('data', (data) => {
-  console.log(`stdout: ${data}`);
-});
+// child.stdout.on('data', (data) => {
+// console.log(`stdout: ${data}`);
+// });
 
-child.stderr.on('data', (data) => {
-  console.error(`stderr: ${data}`);
-});
+// child.stderr.on('data', (data) => {
+// console.error(`stderr: ${data}`);
+// });
 
-child.on('close', (code) => {
-  console.log(`子进程退出，退出码 ${code}`);
-});
+// child.on('close', (code) => {
+// console.log(`子进程退出，退出码 ${code}`);
+// });
