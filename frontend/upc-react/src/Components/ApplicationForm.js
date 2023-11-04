@@ -43,7 +43,7 @@ function ApplicationForm() {
         <div>
             <UploadForm refreshFiles={refreshFiles} refreshResults={refreshResults}/>
             <div className='shownFiles'>
-                <FileList files={files} />
+                <FileList files={files} refreshFiles={refreshFiles} refreshResults={refreshResults}/>
                 <ResultList results={results} />
             </div>
             <button className="button" onClick={refresh}>Refresh file list</button>

@@ -23,7 +23,6 @@ function UploadForm(props) {
 
         // Send formData to server using fetch or axios
         const result = await uploadData(formData);
-        console.log(result);
         if (result) {
             setUploadStatus('File uploaded successfully');
         } else {

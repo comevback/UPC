@@ -1,8 +1,8 @@
-import { downloadFile } from '../Tools/api';
+import { downloadFile, generateImage } from '../Tools/api';
 import './FileList.css';
 
 // FileList.js
-function FileList(props) {
+function FileList(props) {    
     if (!props.files.length){
         return (
             <div>
@@ -22,7 +22,11 @@ function FileList(props) {
                     <li className="file-item" key={file}>
                         <span>{file}</span>
                         <div className='buttons'>
-                            <button >Generate Image</button>
+                            <button onClick={() => {
+                                generateImage(file);
+                                console.log("generatesuccess");
+                                props.refreshFiles();
+                            }} >Generate Image</button>
                             <button onClick={() => downloadFile(file)}>Download</button>
                         </div> 
                     </li>
