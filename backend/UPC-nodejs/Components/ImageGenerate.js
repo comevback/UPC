@@ -6,7 +6,7 @@ const path = require('path');
 const upload = multer({ dest: 'geneImages/' });
 
 const generateImage = (text, callback) => {
-    const child = spawn('docker', ['run', '--rm', '-p', '3001:3000', 'afterlifexx/myblogapp']);
+    const child = spawn("pack build test_img --path apps/test-app --builder cnbs/sample-builder:bionic");
 
     child.stdout.on('data', (data) => {
         onsole.log(`stdout: ${data}`);

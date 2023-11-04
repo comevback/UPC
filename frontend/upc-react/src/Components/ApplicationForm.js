@@ -4,6 +4,7 @@ import { getFiles, getResults } from '../Tools/api';
 import FileList from './FileList';
 import ResultList from './ResultList';
 import UploadForm from './UploadForm';
+import ImagesList from './ImagesList';
 
 function ApplicationForm() {
     const [files, setFiles] = useState([]);
@@ -46,6 +47,7 @@ function ApplicationForm() {
                 <FileList files={files} refreshFiles={refreshFiles} refreshResults={refreshResults}/>
                 <ResultList results={results} />
             </div>
+            <ImagesList />
             <button className="button" onClick={refresh}>Refresh file list</button>
         </div>
     );

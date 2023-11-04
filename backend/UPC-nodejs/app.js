@@ -9,7 +9,7 @@ import fs from 'fs';
 import path from 'path';
 import extract from "extract-zip";
 import upload from "./Components/upload.js";
-import { exec } from "child_process";
+import { exec, spawn } from "child_process";
 import { User, Task } from "./Components/mongo.js";
 import { fileURLToPath } from 'url';
 import { dirname } from 'path';
@@ -121,6 +121,21 @@ app.get('/api/results', async (req, res) => {
     });
 });
 
+// Route to get the list of all images
+app.get('/api/images', (req, res) => {
+    exec('docker images --format "{{.Repository}}:{{.Tag}}————{{.Size}}"', (err, stdout, stderr) => {
+        if (err) {
+            // 错误处理
+            res.status(500).send(stderr);
+        } else {
+            // 标准输出处理
+            const images = stdout.split('\n').filter(line => line); // 删除空行
+            res.status(200).json(images);
+        }
+    });
+});
+
+
 // Route to download a file
 app.get('/api/files/:filename', (req, res) => {
     const filePath = path.join(__dirname, 'uploads', req.params.filename);
@@ -139,6 +154,7 @@ app.post('/api/files/:filename', async(req, res) => {
     const baseFileName = path.basename(filename, '.zip');
     const filePath = path.join(__dirname, 'uploads', filename);
     const extractPath = path.join(__dirname, 'uploads');
+    const appPath = path.join(__dirname, 'uploads', baseFileName);
 
     console.log(`Attempting to unzip file: ${filePath}`);
 
@@ -152,14 +168,40 @@ app.post('/api/files/:filename', async(req, res) => {
     }
     
     //unzip the file
-    try{
+    try {
         await extract(filePath, { dir: extractPath });
         console.log('File unzipped successfully');
-        res.status(200).send({ message: 'File unzipped successfully' });
+
+        // Replace docker run with pack build command
+        const pack = spawn('pack', [
+            'build', 
+            baseFileName.toLowerCase(),               // This is the image name
+            '--path', appPath,        // Path to the application code
+            '--builder', 'paketobuildpacks/builder:base'
+        ]);
+
+        pack.stdout.on('data', (data) => {
+            console.log(`stdout: ${data}`);
+            res.send(`data: ${data}\n\n`);
+        });
+
+        pack.stderr.on('data', (data) => {
+            console.error(`stderr: ${data}`);
+        });
+
+        pack.on('close', (code) => {
+            if (code === 0) {
+                console.log(`pack build completed successfully.`);
+                res.status(200).send({ message: 'Image built successfully' });
+            } else {
+                console.error(`pack build failed with code ${code}`);
+                res.status(500).send({ message: 'Error building image' });
+            }
+        });
     } catch (error) {
         console.error('Error unzipping file:', error);
-        return res.status(500).send({ message: 'Error unzipping file' });
-    };
+        res.status(500).send({ message: 'Error unzipping file' });
+    }
 
 });
 
