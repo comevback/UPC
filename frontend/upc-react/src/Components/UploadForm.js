@@ -7,37 +7,30 @@ function UploadForm(props) {
     const [file, setFile] = useState([]);
     const [uploadStatus, setUploadStatus] = useState('');
 
-    // useEffect(() => {
-    //     // Get the list of files when the component mounts
-    //     props.refreshFiles();
-    //     props.refreshResults();
-    // }, []);
-
-    // const uploadSth = async (formData) => {
-    //     const uploadedData = await uploadData(formData);
-    //     // Get the updated list of files
-    //     props.refreshFiles();
-    // };
-
     const handleFileChange = (event) => {
         setFile(Array.from(event.target.files));
         setUploadStatus('');
     };
 
     const handleSubmit = async (event) => {
-        event.preventDefault();
+        event.preventDefault();// Prevent the default form submit event
         const formData = new FormData();
-        console.log(formData)
+        // Create an empty FormData object
         
         file.forEach((file) => {
             formData.append('file', file);
         });// Add the file to formData
 
         // Send formData to server using fetch or axios
-        await uploadData(formData);
-        props.refreshFiles();
-        setFile([]);
-        setUploadStatus('File uploaded successfully');
+        const result = await uploadData(formData);
+        console.log(result);
+        if (result) {
+            setUploadStatus('File uploaded successfully');
+        } else {
+            setUploadStatus('File upload failed: ' + result);
+        } // Display the result from the server
+        props.refreshFiles(); // Refresh the list of files
+        setFile([]); // Clear the file input
     };
 
 
