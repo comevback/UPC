@@ -22,9 +22,8 @@ function FileList(props) {
                     <li className="file-item" key={file}>
                         <span>{file}</span>
                         <div className='buttons'>
-                            <button onClick={() => {
-                                generateImage(file);
-                                console.log("generatesuccess");
+                            <button onClick={async() => {
+                                await generateImage(file);
                                 props.refreshFiles();
                             }} >Generate Image</button>
                             <button onClick={() => downloadFile(file)}>Download</button>

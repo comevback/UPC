@@ -1,5 +1,5 @@
 // UploadForm.js
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { uploadData } from '../Tools/api';
 import './UploadForm.css';
 

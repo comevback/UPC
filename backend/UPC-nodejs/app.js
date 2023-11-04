@@ -9,6 +9,7 @@ import fs from 'fs';
 import path from 'path';
 import extract from "extract-zip";
 import upload from "./Components/upload.js";
+import { exec } from "child_process";
 import { User, Task } from "./Components/mongo.js";
 import { fileURLToPath } from 'url';
 import { dirname } from 'path';
@@ -133,26 +134,33 @@ app.get('/api/results/:filename', (req, res) => {
 });
 
 //generate image
-app.post('/api/files/:filename/generate', (req, res) => {
+app.post('/api/files/:filename', async(req, res) => {
     const { filename } = req.params;
     const baseFileName = path.basename(filename, '.zip');
     const filePath = path.join(__dirname, 'uploads', filename);
     const extractPath = path.join(__dirname, 'uploads');
 
+    console.log(`Attempting to unzip file: ${filePath}`);
+
     if (!filename.endsWith('.zip')) {
         console.log('Invalid file type');
         return res.status(400).send({ message: 'Invalid file type' });
     }
+    if (!fs.existsSync(filePath)) {
+        console.log('File does not exist');
+        return res.status(400).send({ message: 'File does not exist' });
+    }
+    
     //unzip the file
-    extract(filePath, { dir: extractPath }, function (err) {
-        if (err) {
-            console.error('Error unzipping file:', err);
-            res.status(500).send('Error unzipping file');
-        } else {
-            console.log('File unzipped');
-            res.send({ message: 'File unzipped', files: fs.readdirSync(extractPath) });
-        }
-    });
+    try{
+        await extract(filePath, { dir: extractPath });
+        console.log('File unzipped successfully');
+        res.status(200).send({ message: 'File unzipped successfully' });
+    } catch (error) {
+        console.error('Error unzipping file:', error);
+        return res.status(500).send({ message: 'Error unzipping file' });
+    };
+
 });
 
 

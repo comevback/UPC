@@ -74,7 +74,7 @@ export const downloadResult = async (fileName) => {
 // Generate image
 export const generateImage = async (fileName) => {
     try {
-        const response = await axios.post(`${API_URL}/api/files/${fileName}/generate`);
+        const response = await axios.post(`${API_URL}/api/files/${fileName}`);
         console.log(response.data);
         return response.data;
     } catch (error) {
