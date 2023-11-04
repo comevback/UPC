@@ -7,6 +7,7 @@ import rateLimit from 'express-rate-limit';
 import cors from 'cors';
 import fs from 'fs';
 import path from 'path';
+import extract from "extract-zip";
 import upload from "./Components/upload.js";
 import { User, Task } from "./Components/mongo.js";
 import { fileURLToPath } from 'url';
@@ -130,6 +131,30 @@ app.get('/api/results/:filename', (req, res) => {
     const filePath = path.join(__dirname, 'results', req.params.filename);
     res.download(filePath);
 });
+
+//generate image
+app.post('/api/files/:filename/generate', (req, res) => {
+    const { filename } = req.params;
+    const baseFileName = path.basename(filename, '.zip');
+    const filePath = path.join(__dirname, 'uploads', filename);
+    const extractPath = path.join(__dirname, 'uploads');
+
+    if (!filename.endsWith('.zip')) {
+        console.log('Invalid file type');
+        return res.status(400).send({ message: 'Invalid file type' });
+    }
+    //unzip the file
+    extract(filePath, { dir: extractPath }, function (err) {
+        if (err) {
+            console.error('Error unzipping file:', err);
+            res.status(500).send('Error unzipping file');
+        } else {
+            console.log('File unzipped');
+            res.send({ message: 'File unzipped', files: fs.readdirSync(extractPath) });
+        }
+    });
+});
+
 
 //Listen on port
 app.listen(port, () => {

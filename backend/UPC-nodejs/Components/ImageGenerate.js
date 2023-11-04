@@ -1,4 +1,9 @@
-import { spawn } from "child_process";
+import { spawn, exec } from "child_process";
+const multer = require('multer');
+const extract = require('extract-zip');
+const path = require('path');
+
+const upload = multer({ dest: 'geneImages/' });
 
 const generateImage = (text, callback) => {
     const child = spawn('docker', ['run', '--rm', '-p', '3001:3000', 'afterlifexx/myblogapp']);
