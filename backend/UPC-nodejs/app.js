@@ -123,7 +123,7 @@ app.get('/api/results', async (req, res) => {
 
 // Route to get the list of all images
 app.get('/api/images', (req, res) => {
-    exec('docker images --format "{{.Repository}}:{{.Tag}}————{{.Size}}"', (err, stdout, stderr) => {
+    exec('docker images --format "{{.Repository}}:{{.Tag}}——{{.Size}}"', (err, stdout, stderr) => {
         if (err) {
             // 错误处理
             res.status(500).send(stderr);
@@ -182,7 +182,6 @@ app.post('/api/files/:filename', async(req, res) => {
 
         pack.stdout.on('data', (data) => {
             console.log(`stdout: ${data}`);
-            res.send(`data: ${data}\n\n`);
         });
 
         pack.stderr.on('data', (data) => {

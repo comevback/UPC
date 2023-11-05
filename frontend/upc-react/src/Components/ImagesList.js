@@ -1,30 +1,11 @@
-import React, { useState, useEffect } from 'react';
+// Desc: This file contains the ImagesList component which is used to display a list of images
+
 import './ImagesList.css';
 
-const ImagesList = () => {
-    const [images, setImages] = useState([]);
-    const [loading, setLoading] = useState(true);
-
-    useEffect(() => {
-        fetch('http://localhost:3001/api/images')
-            .then(response => response.json())
-            .then(data => {
-                setImages(data);
-                setLoading(false);
-            })
-            .catch(error => {
-                console.error('Error fetching data: ', error);
-                setLoading(false);
-            });
-    }, []);
-
-    if (loading) {
-        return <div>Loading...</div>;
-    }
-
+const ImagesList = (props) => {
     return ( 
         <div className="image-list">
-            {images.map((image, index) => (
+            {props.images.map((image, index) => (
                 <li key={index} className="image-item">
                     {image}
                     <div className="buttons">

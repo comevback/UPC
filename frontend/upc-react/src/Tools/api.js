@@ -81,3 +81,12 @@ export const generateImage = async (fileName) => {
         console.error('Error generating image:', error);
     }
 };
+
+export const getImages = async () => {
+    try {
+        const response = await axios.get(`${API_URL}/api/images`);
+        return response.data;
+    } catch (error) {
+        console.error('Error fetching images:', error);
+    }
+}
