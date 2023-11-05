@@ -44,16 +44,16 @@ The application should now be running on localhost:3000.
 
 ### Usage
 
-`Describe how to use the application, including any scripts or commands that can be run.`
+Describe how to use the application, including any scripts or commands that can be run.
 
 ### Contributing
 
-`Please read CONTRIBUTING.md for details on our code of conduct, and the process for submitting pull requests to us.`
+Please read CONTRIBUTING.md for details on our code of conduct, and the process for submitting pull requests to us.
 
 ### License
 
-`This project is licensed under the MIT License - see the LICENSE.md file for details.`
+This project is licensed under the MIT License - see the LICENSE.md file for details.
 
 ### Acknowledgments
 
-`Hat tip to anyone whose code was used Inspiration etc `
+Hat tip to anyone whose code was used Inspiration etc
