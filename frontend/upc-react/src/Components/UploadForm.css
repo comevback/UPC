@@ -12,6 +12,7 @@
     max-width: 80vw; /* max out at 80% of the viewport width */
     height: 30vh; /* 80% of the viewport height */
     max-height: 80vh; /* max out at 80% of the viewport height */
+    overflow-y: auto;
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
 }
 

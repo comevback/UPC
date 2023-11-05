@@ -9,6 +9,7 @@ import fs from 'fs';
 import path from 'path';
 import extract from "extract-zip";
 import upload from "./Components/upload.js";
+import WebSocket, {WebSocketServer} from "ws";
 import { exec, spawn } from "child_process";
 import { User, Task } from "./Components/mongo.js";
 import { fileURLToPath } from 'url';
@@ -90,8 +91,10 @@ await task.save();
 res.status(201).send('Task created');
 });
 
+//Route to update files to the server
 app.post('/api/upload', upload.array('file', 12), (req, res) => {
-    res.send('File uploaded successfully');
+    console.log(req.files);
+    res.send(req.files);
 });
 
 // Route to get the list of all files
@@ -119,14 +122,50 @@ app.get('/api/results', async (req, res) => {
 
 // Route to get the list of all images
 app.get('/api/images', (req, res) => {
-    exec('docker images --format "{{.Repository}}:{{.Tag}}——{{.Size}}"', (err, stdout, stderr) => {
+    exec('docker images --format "{{.Repository}}:{{.Tag}}" | sort', (err, stdout, stderr) => {
         if (err) {
-            // 错误处理
+            // Error handling
             res.status(500).send(stderr);
         } else {
-            // 标准输出处理
-            const images = stdout.split('\n').filter(line => line); // 删除空行
+            // Standard output handling
+            const images = stdout.split('\n').filter(line => line); // Delete the last empty line
             res.status(200).json(images);
+        }
+    });
+});
+
+//view the image details
+app.get('/api/images/:imageName', (req, res) => {
+    const { imageName } = req.params;
+    exec(`docker image inspect ${imageName}`, (err, stdout, stderr) => {
+        if (err) {
+            // Error handling
+            console.error(`Error inspecting image: ${err}`);
+            res.status(500).send(stderr);
+        } else {
+            try {
+                // 将输出转换为JSON对象
+                const imageDetails = JSON.parse(stdout);
+
+                // 创建一个新的对象来保存您想要的信息
+                const formattedDetails = imageDetails.map(detail => ({
+                    RepositoryTags: detail.RepoTags,
+                    Id: detail.Id,
+                    Created: detail.Created,
+                    Size: `${(detail.Size / 1024 / 1024).toFixed(2)} MB`,
+                    Architecture: detail.Architecture,
+                    Os: detail.Os,
+                    DockerVersion: detail.DockerVersion,
+                    // 添加您想要的其他信息
+                }));
+
+                // 发送格式化后的信息
+                res.status(200).json(formattedDetails);
+            } catch (parseErr) {
+                // JSON解析错误处理
+                console.error(`Error parsing JSON: ${parseErr}`);
+                res.status(500).send('服务器内部错误，无法解析镜像信息。');
+            }
         }
     });
 });
@@ -178,7 +217,14 @@ app.post('/api/files/:filename', async(req, res) => {
 
         pack.stdout.on('data', (data) => {
             console.log(`stdout: ${data}`);
+            // Send the output to all connected WebSocket clients
+            wss.clients.forEach(function each(client) {
+              if (client.readyState === WebSocket.OPEN) {
+                client.send(data.toString());
+              }
+            });
         });
+    
 
         pack.stderr.on('data', (data) => {
             console.error(`stderr: ${data}`);
@@ -212,30 +258,96 @@ app.post('/api/files/:filename', async(req, res) => {
 // Route to delete a file
 app.delete('/api/files/:filename', (req, res) => {
     const filePath = path.join(__dirname, 'uploads', req.params.filename);
-    fs.unlink(filePath, (err) => {
+    fs.lstat(filePath, (err, stats) => {
         if (err) {
-            return res.status(500).send('Unable to delete file: ' + err);
+            // if file does not exist or path is invalid, handle the error
+            return res.status(500).send('Error when visiting the file path: ' + err.message);
         }
-        // Return a success response upon successful deletion
-        res.send('File deleted successfully');
+
+        if (stats.isDirectory()) {
+            // if it is a directory, delete it recursively
+            fs.rm(filePath, { recursive: true }, (err) => {
+                if (err) {
+                    return res.status(500).send('Can not find the file'+ err.message);
+                }
+                res.send('directory deleted successfully');
+            });
+        } else {
+            // if it is not a directory, try to delete the file
+            fs.unlink(filePath, (err) => {
+                if (err) {
+                    // if file can not be deleted, handle the error
+                    return res.status(500).send('Unable to delete the file: ' + err.message);
+                }
+                // send success response after deleting the file
+                res.send('File deleted successfully');
+            });
+        }
     });
 });
 
 // Route to delete a result
 app.delete('/api/results/:filename', (req, res) => {
-    const filePath = path.join(__dirname, 'results', req.params.filename);
-    fs.unlink(filePath, (err) => {
+    const filePath = path.join(__dirname, 'uploads', req.params.filename);
+    fs.lstat(filePath, (err, stats) => {
         if (err) {
-            return res.status(500).send('Unable to delete result: ' + err);
+            // if file does not exist or path is invalid, handle the error
+            return res.status(500).send('Error when visiting the file path: ' + err.message);
         }
-        // Return a success response upon successful deletion
-        res.send('Result deleted successfully');
+
+        if (stats.isDirectory()) {
+            // if it is a directory, delete it recursively
+            fs.rm(filePath, { recursive: true }, (err) => {
+                if (err) {
+                    return res.status(500).send('Can not find the file'+ err.message);
+                }
+                res.send('directory deleted successfully');
+            });
+        } else {
+            // if it is not a directory, try to delete the file
+            fs.unlink(filePath, (err) => {
+                if (err) {
+                    // if file can not be deleted, handle the error
+                    return res.status(500).send('Unable to delete the file: ' + err.message);
+                }
+                // send success response after deleting the file
+                res.send('File deleted successfully');
+            });
+        }
+    });
+});
+
+// Route to delete an image
+app.delete('/api/images/:imageName', (req, res) => {
+    const { imageName } = req.params;
+    exec(`docker rmi ${imageName}`, (err, stdout, stderr) => {
+        if (err) {
+            // Error handling
+            console.error(`Error deleting image: ${err}`);
+            res.status(500).send(stderr);
+        } else {
+            // Standard output handling
+            console.log(`Image deleted: ${stdout}`);
+            res.status(200).send(stdout);
+        }
     });
 });
 
 //Listen on port
-app.listen(port, () => {
+const server = app.listen(port, () => {
     console.log(`Server is running on port ${port}.`);
 });
 
+// 创建WebSocket服务
+const wss = new WebSocketServer({ server });
 
+// 监听WebSocket连接
+wss.on('connection', function connection(ws) {
+  console.log('A new client connected');
+  ws.on('message', function incoming(message) {
+    console.log('received: %s', message);
+  });
+
+  // 你可以在这里发送消息给客户端
+  ws.send('hello from server');
+});

@@ -104,6 +104,7 @@ export const generateImage = async (fileName) => {
     }
 };
 
+// Get the list of images
 export const getImages = async () => {
     try {
         const response = await axios.get(`${API_URL}/api/images`);
@@ -112,3 +113,26 @@ export const getImages = async () => {
         console.error('Error fetching images:', error);
     }
 }
+
+// View an image details
+export const viewImage = async (fileName) => {
+    try {
+        const response = await axios.get(`${API_URL}/api/images/${fileName}`);
+        console.log(response.data);
+        return response.data;
+    } catch (error) {
+        console.error('Error viewing image:', error);
+    }
+};
+
+// Delete an image
+export const deleteImage = async (fileName) => {
+    try {
+        const response = await axios.delete(`${API_URL}/api/images/${fileName}`);
+        console.log(response.data);
+        return response.data;
+    } catch (error) {
+        console.error('Error deleting image:', error);
+    }
+};
+

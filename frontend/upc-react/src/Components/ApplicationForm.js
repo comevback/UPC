@@ -59,11 +59,11 @@ function ApplicationForm() {
         <div>
             <div className="shownFiles">
                 <UploadForm refreshFiles={refreshFiles} refreshResults={refreshResults}/>
-                <ImagesList images={images}/>
+                <ImagesList images={images} refreshImages={refreshImages}/>
             </div>
             
             <div className='shownFiles'>
-                <FileList files={files} refreshFiles={refreshFiles} refreshResults={refreshResults}/>
+                <FileList files={files} refreshFiles={refreshFiles} refreshResults={refreshResults} refreshAll={refresh}/>
                 <ResultList results={results} refreshFiles={refreshFiles} refreshResults={refreshResults}/>
             </div>
             
