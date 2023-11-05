@@ -1,4 +1,4 @@
-import { downloadFile, downloadResult } from '../Tools/api';
+import { downloadFile, downloadResult, deleteResult } from '../Tools/api';
 import './ResultList.css';
 
 // FileList.js
@@ -22,6 +22,10 @@ function ResultList(props) {
                     <li className="result-item" key={result}>
                         <span>{result}</span>
                         <button onClick={() => downloadResult(result)}>Download</button>
+                        <button onClick={async() => {
+                            await deleteResult(result);
+                            props.refreshResults();
+                        }}>Delete</button>
                     </li>
                 ))}
             </ul>

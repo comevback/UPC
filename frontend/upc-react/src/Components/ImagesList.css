@@ -9,7 +9,7 @@
     border-radius: 5px;
     width: 45vw; /* 45% of the viewport width */
     max-width: 80vw; /* max out at 80% of the viewport width */
-    height: 80vh; /* 80% of the viewport height */
+    height: 30vh; /* 80% of the viewport height */
     max-height: 80vh; /* max out at 80% of the viewport height */
     overflow-y: auto; /* allow vertical scrolling */
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.1); /* subtle shadow for depth */

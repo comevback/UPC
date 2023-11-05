@@ -4,7 +4,9 @@ import './ImagesList.css';
 
 const ImagesList = (props) => {
     return ( 
-        <div className="image-list">
+        <div>
+        <h1>Docker Images</h1>
+            <div className="image-list">
             {props.images.map((image, index) => (
                 <li key={index} className="image-item">
                     {image}
@@ -16,6 +18,8 @@ const ImagesList = (props) => {
                 </li>
             ))}
         </div>
+        </div>
+        
     );
 };
 

@@ -33,6 +33,28 @@ export const getResults = async () => {
     }
 };
 
+//delete a file
+export const deleteFile = async (fileName) => {
+    try {
+        const response = await axios.delete(`${API_URL}/api/files/${fileName}`);
+        console.log(response.data);
+        return response.data;
+    } catch (error) {
+        console.error('Error deleting file:', error);
+    }
+};
+
+//delete a result
+export const deleteResult = async (fileName) => {
+    try {
+        const response = await axios.delete(`${API_URL}/api/results/${fileName}`);
+        console.log(response.data);
+        return response.data;
+    } catch (error) {
+        console.error('Error deleting result:', error);
+    }
+};
+
 // Download a file
 export const downloadFile = async (fileName) => {
     try {

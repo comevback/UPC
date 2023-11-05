@@ -81,18 +81,14 @@ res.json(tasks);
 });
 
 app.post('/tasks', authenticate, async (req, res) => {
-const task = new Task({
-    title: req.body.title,
-    description: req.body.description,
-    owner: req.user.userId
-});
+    const task = new Task({
+        title: req.body.title,
+        description: req.body.description,
+        owner: req.user.userId
+    });
 await task.save();
 res.status(201).send('Task created');
 });
-
-// app.post('/api/upload', upload.single('file'), (req, res) => {
-//     res.send('File uploaded successfully');
-// });
 
 app.post('/api/upload', upload.array('file', 12), (req, res) => {
     res.send('File uploaded successfully');
@@ -197,6 +193,15 @@ app.post('/api/files/:filename', async(req, res) => {
                 res.status(500).send({ message: 'Error building image' });
             }
         });
+
+        exec('docker run --rm -v "$(pwd)/data:/app/data" {other command}', (error, stdout, stderr) => {
+            if (error) {
+                console.error(`Error executing Docker command: ${error}`);
+                return;
+            }
+            console.log(`Docker command output: ${stdout}`);
+        });
+        
     } catch (error) {
         console.error('Error unzipping file:', error);
         res.status(500).send({ message: 'Error unzipping file' });
@@ -204,6 +209,29 @@ app.post('/api/files/:filename', async(req, res) => {
 
 });
 
+// Route to delete a file
+app.delete('/api/files/:filename', (req, res) => {
+    const filePath = path.join(__dirname, 'uploads', req.params.filename);
+    fs.unlink(filePath, (err) => {
+        if (err) {
+            return res.status(500).send('Unable to delete file: ' + err);
+        }
+        // Return a success response upon successful deletion
+        res.send('File deleted successfully');
+    });
+});
+
+// Route to delete a result
+app.delete('/api/results/:filename', (req, res) => {
+    const filePath = path.join(__dirname, 'results', req.params.filename);
+    fs.unlink(filePath, (err) => {
+        if (err) {
+            return res.status(500).send('Unable to delete result: ' + err);
+        }
+        // Return a success response upon successful deletion
+        res.send('Result deleted successfully');
+    });
+});
 
 //Listen on port
 app.listen(port, () => {

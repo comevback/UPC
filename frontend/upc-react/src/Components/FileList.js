@@ -1,4 +1,4 @@
-import { downloadFile, generateImage } from '../Tools/api';
+import { downloadFile, generateImage, deleteFile} from '../Tools/api';
 import './FileList.css';
 
 // FileList.js
@@ -27,6 +27,10 @@ function FileList(props) {
                                 props.refreshFiles();
                             }} >Generate Image</button>
                             <button onClick={() => downloadFile(file)}>Download</button>
+                            <button onClick={async() => {
+                                await deleteFile(file);
+                                props.refreshFiles();
+                            }}>Delete</button>
                         </div> 
                     </li>
                 ))}
