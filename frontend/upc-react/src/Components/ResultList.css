@@ -32,3 +32,14 @@
     justify-content: space-between;
 }
 
+.name-and-buttons{
+    display: flex;
+    justify-content: space-between;
+    width: 100%;
+}
+
+.buttons{
+    display: flex;
+    gap: 10px;
+}
+

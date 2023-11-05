@@ -28,6 +28,7 @@
 .image-item {
     display: flex;
     align-items: center;
+    flex-direction: column;
     background-color: #f5f5f5; /* light grey background */
     justify-content: space-between; /* space out children */
     padding: 10px; /* padding inside each image item */
@@ -35,7 +36,17 @@
     margin: 5px 0; /* slight margin for separation */
 }
 
+.name-and-buttons{
+    display: flex;
+    justify-content: space-between;
+    width: 100%;
+}
+
 .buttons {
     display: flex;
     gap: 10px; /* space between buttons */
 }
+
+
+
+

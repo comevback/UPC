@@ -20,12 +20,16 @@ function ResultList(props) {
             <ul className="result-list">
                 {props.results.map(result => (
                     <li className="result-item" key={result}>
-                        <span>{result}</span>
-                        <button onClick={() => downloadResult(result)}>Download</button>
-                        <button onClick={async() => {
-                            await deleteResult(result);
-                            props.refreshResults();
-                        }}>Delete</button>
+                        <div className='name-and-buttons'>
+                            <span>{result}</span>
+                            <div className='buttons'>
+                                <button onClick={() => downloadResult(result)}>Download</button>
+                                <button onClick={async() => {
+                                    await deleteResult(result);
+                                    props.refreshResults();
+                                }}>Delete</button>
+                            </div>
+                        </div>
                     </li>
                 ))}
             </ul>

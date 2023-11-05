@@ -1,8 +1,8 @@
 /* UploadForm.css */
+
 .upload-form {
     display: flex;
     justify-content: center;
-    flex-direction: column;
     align-items: center;
     margin: 20px auto;
     padding: 20px;
@@ -12,28 +12,46 @@
     max-width: 80vw; /* max out at 80% of the viewport width */
     height: 30vh; /* 80% of the viewport height */
     max-height: 80vh; /* max out at 80% of the viewport height */
-    overflow-y: auto;
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    background-color: #fff;
+    box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+}
+
+.upload-form h1 {
+    font-size: 1.5rem;
+    text-align: center;
+    color: #333;
+    margin-bottom: 1rem;
 }
 
 .upload-form input[type="file"] {
-    margin: 10px 0;
+    width: 100%;
+    padding-top: 0.5rem;
+    padding-bottom: 0.5rem;
+    padding-left: 0.5rem;
+    margin-bottom: 1rem;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    box-sizing: border-box;
 }
 
 .upload-form button {
-    padding: 10px 20px;
-    background-color: #007BFF;
-    color: white;
+    width: 100%;
+    padding: 0.5rem;
     border: none;
     border-radius: 5px;
+    background-color: #5cb85c;
+    color: white;
+    font-size: 1rem;
     cursor: pointer;
-    margin-top: 10px;
+    transition: background-color 0.3s;
 }
 
 .upload-form button:hover {
-    background-color: #0056b3;
+    background-color: #4cae4c;
 }
 
 .upload-form p {
-    margin-top: 10px;
+    text-align: center;
+    color: #333;
+    margin-top: 1rem;
 }

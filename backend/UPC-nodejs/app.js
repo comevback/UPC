@@ -92,7 +92,7 @@ res.status(201).send('Task created');
 });
 
 //Route to update files to the server
-app.post('/api/upload', upload.array('file', 12), (req, res) => {
+app.post('/api/upload', upload.array('file', 50), (req, res) => {
     console.log(req.files);
     res.send(req.files);
 });
@@ -201,9 +201,14 @@ app.post('/api/files/:filename', async(req, res) => {
         console.log('File does not exist');
         return res.status(400).send({ message: 'File does not exist' });
     }
-    
+
     //unzip the file
     try {
+        //if the file is already unzipped, delete the unzipped folder
+        if (fs.existsSync(appPath)) {
+            await fs.promises.rm(appPath, { recursive: true });
+            console.log('Previous unzipped folder deleted');
+        }
         await extract(filePath, { dir: extractPath });
         console.log('File unzipped successfully');
 
@@ -228,6 +233,12 @@ app.post('/api/files/:filename', async(req, res) => {
 
         pack.stderr.on('data', (data) => {
             console.error(`stderr: ${data}`);
+            // Send the Error to all connected WebSocket clients
+            wss.clients.forEach(function each(client) {
+              if (client.readyState === WebSocket.OPEN) {
+                client.send(data.toString());
+              }
+            });
         });
 
         pack.on('close', (code) => {
@@ -240,13 +251,13 @@ app.post('/api/files/:filename', async(req, res) => {
             }
         });
 
-        exec('docker run --rm -v "$(pwd)/data:/app/data" {other command}', (error, stdout, stderr) => {
-            if (error) {
-                console.error(`Error executing Docker command: ${error}`);
-                return;
-            }
-            console.log(`Docker command output: ${stdout}`);
-        });
+        // exec('docker run --rm -v "$(pwd)/data:/app/data" {other command}', (error, stdout, stderr) => {
+        //     if (error) {
+        //         console.error(`Error executing Docker command: ${error}`);
+        //         return;
+        //     }
+        //     console.log(`Docker command output: ${stdout}`);
+        // });
         
     } catch (error) {
         console.error('Error unzipping file:', error);
@@ -288,7 +299,7 @@ app.delete('/api/files/:filename', (req, res) => {
 
 // Route to delete a result
 app.delete('/api/results/:filename', (req, res) => {
-    const filePath = path.join(__dirname, 'uploads', req.params.filename);
+    const filePath = path.join(__dirname, 'results', req.params.filename);
     fs.lstat(filePath, (err, stats) => {
         if (err) {
             // if file does not exist or path is invalid, handle the error
@@ -338,16 +349,15 @@ const server = app.listen(port, () => {
     console.log(`Server is running on port ${port}.`);
 });
 
-// 创建WebSocket服务
+// Create a new WebSocket server
 const wss = new WebSocketServer({ server });
 
-// 监听WebSocket连接
+// Listen for new connections
 wss.on('connection', function connection(ws) {
   console.log('A new client connected');
   ws.on('message', function incoming(message) {
     console.log('received: %s', message);
   });
-
-  // 你可以在这里发送消息给客户端
-  ws.send('hello from server');
+  // Send a message to the client
+  ws.send('Server: Successfully connected to the server');
 });

@@ -23,7 +23,7 @@ function UploadForm(props) {
 
         // Send formData to server using fetch or axios
         const result = await uploadData(formData);
-        if (result) {
+        if (result.length > 0) {
             setUploadStatus('File uploaded successfully');
         } else {
             setUploadStatus('File upload failed: ' + result);
@@ -35,12 +35,14 @@ function UploadForm(props) {
 
 
     return (
-        <div>
+        <div className="upload-form-container">
             <h1>Upload a file</h1>
             <form className="upload-form" onSubmit={handleSubmit}>
-                <input type="file" id="file-input" onChange={handleFileChange} multiple />
-                <button type="submit">Upload</button>
-                <p>{uploadStatus}</p>
+                <div>
+                    <input type="file" id="file-input" onChange={handleFileChange} multiple />
+                    <button type="submit">Upload</button>
+                    <p>{uploadStatus}</p>
+                </div>
             </form>
         </div>
     );

@@ -66,8 +66,6 @@ function ApplicationForm() {
                 <FileList files={files} refreshFiles={refreshFiles} refreshResults={refreshResults} refreshAll={refresh}/>
                 <ResultList results={results} refreshFiles={refreshFiles} refreshResults={refreshResults}/>
             </div>
-            
-            <button className="button" onClick={refresh}>Refresh file list</button>
         </div>
     );
 }

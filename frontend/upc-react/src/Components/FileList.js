@@ -1,43 +1,57 @@
-import { useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import { downloadFile, generateImage, deleteFile} from '../Tools/api';
 import './FileList.css';
 
 // FileList.js
-function FileList(props) {    
-    // 创建一个状态来保存WebSocket实例
+function FileList(props) {
+    const [info, setInfo] = useState([]);
+    const [activeInfoFile, setActiveInfoFile] = useState('');
 
+    // ============================== WebSocket ==================================
     useEffect(() => {
-        // 创建WebSocket连接
+        // Create a new WebSocket
         const newSocket = new WebSocket('ws://localhost:3001'); // 请替换为你的WebSocket服务的URL
 
-        // 监听WebSocket的消息事件
+        // Listen for messages
         newSocket.onmessage = function(event) {
-            // 处理接收到的消息
+            // Display messages received from the WebSocket server
             console.log('Message from server:', event.data);
+            // Update the state with the message from the server
+            setInfo(event.data);
         };
 
-        // 监听WebSocket的开启事件
+        // Listen for WebSocket connection open
         newSocket.onopen = function(event) {
             console.log('WebSocket connected:', event);
         };
 
-        // 监听WebSocket的错误事件
+        // Listen for WebSocket errors
         newSocket.onerror = function(event) {
             console.error('WebSocket error:', event);
         };
 
-        // 监听WebSocket的关闭事件
+        // Listen for WebSocket connection close
         newSocket.onclose = function(event) {
             console.log('WebSocket disconnected:', event);
         };
 
-        // 组件卸载时关闭WebSocket连接
+        // Close the WebSocket connection when the component unmounts
         return () => {
             console.log('Closing WebSocket connection');
             newSocket.close();
+            setInfo([]);
         };
     }, []);
 
+    // ============================== WebSocket ==================================
+
+    // If click the file, Show the info
+    const handleFileClick = async(file) => {
+        setInfo('Loading...');
+        setActiveInfoFile(file);
+        await generateImage(file);
+        props.refreshAll();
+    };
 
     if (!props.files.length){
         return (
@@ -56,18 +70,22 @@ function FileList(props) {
             <ul className="file-list">
                 {props.files.map(file => (
                     <li className="file-item" key={file}>
-                        <span>{file}</span>
-                        <div className='buttons'>
-                            <button onClick={async() => {
-                                await generateImage(file);
-                                props.refreshAll();
-                            }} >Generate Image</button>
-                            <button onClick={() => downloadFile(file)}>Download</button>
-                            <button onClick={async() => {
-                                await deleteFile(file);
-                                props.refreshFiles();
-                            }}>Delete</button>
-                        </div> 
+                        <div className='name-and-buttons'>
+                            <span>{file}</span>
+                            <div className='buttons'>
+                                <button onClick={() => handleFileClick(file)} >Generate Image</button>
+                                <button onClick={() => downloadFile(file)}>Download</button>
+                                <button onClick={async() => {
+                                    await deleteFile(file);
+                                    props.refreshFiles();
+                                }}>Delete</button>
+                            </div> 
+                        </div>
+                        {activeInfoFile === file && (
+                            <div className='info'>
+                                <p>{info || 'Loading...'}</p>
+                            </div>
+                        )}
                     </li>
                 ))}
             </ul>
