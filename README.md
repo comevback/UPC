@@ -30,8 +30,8 @@ git clone https://github.com/comevback/UPC-nodejs.git
 
 Install the necessary tools for this system:
 
-Docker: https://www.docker.com/
-buildpack: https://buildpacks.io/docs/tools/pack/
+- Docker: https://www.docker.com/
+- buildpack: https://buildpacks.io/docs/tools/pack/
 
 Install dependencies for the backend:
 

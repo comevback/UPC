@@ -132,3 +132,6 @@ dist
 
 uploads
 results
+
+uploads/*
+results/*
