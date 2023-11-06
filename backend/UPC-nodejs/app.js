@@ -195,6 +195,11 @@ app.post('/api/files/:filename', async(req, res) => {
 
     if (!filename.endsWith('.zip')) {
         console.log('Invalid file type');
+        wss.clients.forEach(function each(client) {
+            if (client.readyState === WebSocket.OPEN) {
+              client.send('Invalid file type');
+            }
+          });
         return res.status(400).send({ message: 'Invalid file type' });
     }
     if (!fs.existsSync(filePath)) {
@@ -241,23 +246,17 @@ app.post('/api/files/:filename', async(req, res) => {
             });
         });
 
-        pack.on('close', (code) => {
+        pack.on('close', async(code) => {
             if (code === 0) {
                 console.log(`pack build completed successfully.`);
+                await fs.promises.rm(appPath, { recursive: true });
+                console.log('unzipped folder deleted');
                 res.status(200).send({ message: 'Image built successfully' });
             } else {
                 console.error(`pack build failed with code ${code}`);
                 res.status(500).send({ message: 'Error building image' });
             }
         });
-
-        // exec('docker run --rm -v "$(pwd)/data:/app/data" {other command}', (error, stdout, stderr) => {
-        //     if (error) {
-        //         console.error(`Error executing Docker command: ${error}`);
-        //         return;
-        //     }
-        //     console.log(`Docker command output: ${stdout}`);
-        // });
         
     } catch (error) {
         console.error('Error unzipping file:', error);

@@ -47,13 +47,22 @@
 .info{
     display: flex;
     flex-direction: column;
-    align-items: self-start;
-    width: 38vw;
-    color: green;
+    align-items: start;
+    width: 40vw;
+    color: #5cb85c;
     word-break: break-all;
     font-family: 'Courier New', Courier, monospace;
 }
 
-.info p {
+.info p{
     margin: 0;
-  }
+    font-weight: bold;
+}
+
+.info-error{
+    color: red;
+}
+
+.info-loading{
+    color: orange;
+}

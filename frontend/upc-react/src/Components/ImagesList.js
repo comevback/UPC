@@ -6,11 +6,18 @@ const ImagesList = (props) => {
     const [activeImageInfo, setActiveImageInfo] = useState(null); // Store the active image info object
 
     const handleViewClick = async (image) => {
-        const response = await viewImage(image);
-        // Assuming 'response' will be an array of objects and we want the first one.
-        setActiveImageInfo(response[0]); // Set the active image info to the first object in the response array
+        // Check if the activeImageInfo is already set to the clicked image
+        if (activeImageInfo && activeImageInfo.RepositoryTags.includes(image)) {
+            // If so, set it back to null to 'deselect' it
+            setActiveImageInfo(null);
+        } else {
+            // If not, fetch the new image info and set it as the active info
+            const response = await viewImage(image);
+            setActiveImageInfo(response[0]); // Set the active image info to the first object in the response array
+        }
         props.refreshImages();
     };
+    
 
     const handleDeleteClick = async (image) => {
         await deleteImage(image);
@@ -28,7 +35,7 @@ const ImagesList = (props) => {
                 {props.images.map((image, index) => (
                     <li key={index} className="image-item">
                         <div className='name-and-buttons'>
-                            {image}
+                            <span>{image}</span>
                             <div className="buttons">
                                 <button onClick={() => handleViewClick(image)}>View</button>
                                 <button onClick={() => handleDeleteClick(image)}>Delete</button>

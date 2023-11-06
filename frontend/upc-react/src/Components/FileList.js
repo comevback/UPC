@@ -13,26 +13,26 @@ function FileList(props) {
         const newSocket = new WebSocket('ws://localhost:3001'); // 请替换为你的WebSocket服务的URL
 
         // Listen for messages
-        newSocket.onmessage = function(event) {
-            // Display messages received from the WebSocket server
-            console.log('Message from server:', event.data);
+        newSocket.onmessage = (event) => {
             // Update the state with the message from the server
             setInfo(event.data);
         };
 
         // Listen for WebSocket connection open
-        newSocket.onopen = function(event) {
+        newSocket.onopen = (event) => {
             console.log('WebSocket connected:', event);
         };
 
         // Listen for WebSocket errors
-        newSocket.onerror = function(event) {
+        newSocket.onerror = (event) => {
             console.error('WebSocket error:', event);
+            setInfo(event.data);
         };
 
         // Listen for WebSocket connection close
-        newSocket.onclose = function(event) {
+        newSocket.onclose = (event) => {
             console.log('WebSocket disconnected:', event);
+            setInfo(event.data);
         };
 
         // Close the WebSocket connection when the component unmounts
@@ -83,7 +83,15 @@ function FileList(props) {
                         </div>
                         {activeInfoFile === file && (
                             <div className='info'>
-                                <p>{info || 'Loading...'}</p>
+                                <p className={
+                                    info === 'Invalid file type'
+                                    ? 'info-error'
+                                    : info === 'Loading...'
+                                    ? 'info-loading'
+                                    : ''
+                                }>
+                                {info || 'Loading...'}
+                                </p>
                             </div>
                         )}
                     </li>

@@ -4,6 +4,7 @@
     display: flex;
     justify-content: center;
     align-items: center;
+    flex-direction: column;
     margin: 20px auto;
     padding: 20px;
     border: 1px solid #ddd;
@@ -13,7 +14,16 @@
     height: 30vh; /* 80% of the viewport height */
     max-height: 80vh; /* max out at 80% of the viewport height */
     background-color: #fff;
+    overflow-y: auto;
     box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+}
+
+
+
+.upload-input{
+    display: flex;
+    justify-content: center;
+    align-items: start;
 }
 
 .upload-form h1 {
@@ -39,19 +49,46 @@
     padding: 0.5rem;
     border: none;
     border-radius: 5px;
-    background-color: #5cb85c;
+    background-color: gray;
     color: white;
     font-size: 1rem;
     cursor: pointer;
-    transition: background-color 0.3s;
+    transition: 0.3s;
 }
 
 .upload-form button:hover {
-    background-color: #4cae4c;
+    background-color: lightgray;
+    color: black;
 }
 
-.upload-form p {
-    text-align: center;
-    color: #333;
-    margin-top: 1rem;
+/* UploadForm.css */
+.upload-instructions{
+    background-color: #f5f5f5; /* Light grey background */
+    border: 1px solid #eaeaea; /* Light grey border */
+    border-radius: 5px;
+    color: #333; /* Dark grey text */
+    width: 40vw;
+    height: 20vh;
+    font-size: large;
+    padding: 10px;
+    padding-left: 40px;
+    margin-bottom: 0;
+    text-align:left;
+    font-family:Verdana, Geneva, Tahoma, sans-serif;
 }
+
+.upload-instructions li code {
+    background-color: #eef; /* Light blue background for code elements */
+    padding: 3px 6px;
+    border-radius: 3px;
+    font-family: 'Courier New', Courier, monospace; /* Monospaced font for code */
+    font-size: large; /* Slightly smaller font size for code */
+}
+
+.upload-status{
+    font-size: larger;
+    font-weight: bold;
+    margin: 8px;
+    /* Add any additional styles for upload status messages */
+}
+  

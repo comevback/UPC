@@ -5,11 +5,11 @@ import './UploadForm.css';
 
 function UploadForm(props) {
     const [file, setFile] = useState([]);
-    const [uploadStatus, setUploadStatus] = useState('');
+    const [uploadStatus, setUploadStatus] = useState('○');
 
     const handleFileChange = (event) => {
         setFile(Array.from(event.target.files));
-        setUploadStatus('');
+        setUploadStatus('○');
     };
 
     const handleSubmit = async (event) => {
@@ -24,9 +24,9 @@ function UploadForm(props) {
         // Send formData to server using fetch or axios
         const result = await uploadData(formData);
         if (result.length > 0) {
-            setUploadStatus('File uploaded successfully');
+            setUploadStatus('✓');
         } else {
-            setUploadStatus('File upload failed: ' + result);
+            setUploadStatus('✗');
         } // Display the result from the server
         props.refreshFiles(); // Refresh the list of files
         setFile([]); // Clear the file input
@@ -38,13 +38,22 @@ function UploadForm(props) {
         <div className="upload-form-container">
             <h1>Upload a file</h1>
             <form className="upload-form" onSubmit={handleSubmit}>
-                <div>
-                    <input type="file" id="file-input" onChange={handleFileChange} multiple />
-                    <button type="submit">Upload</button>
-                    <p>{uploadStatus}</p>
+                <div className="upload-input">
+                    <div className="upload-panel">
+                        <input type="file" id="file-input" onChange={handleFileChange} multiple />
+                        <button type="submit">Upload</button>
+                    </div>
+                    <div className="upload-status">{uploadStatus}</div>
                 </div>
+                <ol class="upload-instructions">
+                    <li>Compress your environment folder into a <code>.zip</code> file.</li>
+                    <li>Upload the zipped file using this form.</li>
+                    <li>Click on the "Generate Image" button of the file</li>
+                    <li>Wait for the generation to finish.</li>
+                </ol>
             </form>
         </div>
+
     );
 }
 
