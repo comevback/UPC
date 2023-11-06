@@ -1,0 +1,47 @@
+.services-container {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 20px; /* Adjust the gap size as needed */
+  margin-top: 20px;
+}
+
+.service-card {
+  flex: 1;
+  padding: 20px;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  background-color: #fff;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  min-width: 250px; /* Minimum width for each card */
+  max-width: 300px; /* Maximum width for each card to maintain consistency */
+}
+
+.frontend{
+  background-color: #dee8ec;
+}
+
+.backend{
+  background-color: #efeee8;
+}
+
+/* Styles for the list to make it look cleaner */
+.service-card ul {
+  list-style-type: none;
+  padding-left: 20px;
+}
+
+.service-card li {
+  padding: 5px 0;
+}
+
+/* Optional: Responsive adjustment for smaller screens */
+@media (max-width: 768px) {
+  .services-container {
+    flex-direction: column;
+  }
+  .service-card {
+    max-width: none;
+    margin-bottom: 20px;
+  }
+}
+  

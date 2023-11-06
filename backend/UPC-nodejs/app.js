@@ -5,7 +5,9 @@ import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
 import rateLimit from 'express-rate-limit';
 import cors from 'cors';
+import axios from "axios";
 import fs from 'fs';
+import os from 'os';
 import path from 'path';
 import extract from "extract-zip";
 import upload from "./Components/upload.js";
@@ -24,6 +26,33 @@ app.use(bodyParser.urlencoded({extended:true}));
 app.use(express.static("public"));
 app.use(cors());
 
+// Convert bytes to gigabytes
+const bytesToGB = (bytes) => (bytes / 1024 / 1024 / 1024).toFixed(2) + ' GB';
+
+// Convert seconds to days, hours, and minutes
+const formatUptime = (seconds) => {
+  const days = Math.floor(seconds / (3600 * 24));
+  const hours = Math.floor(seconds % (3600 * 24) / 3600);
+  const minutes = Math.floor(seconds % 3600 / 60);
+  return `${days}d ${hours}h ${minutes}m`;
+};
+
+// 获取主机配置信息
+const getHostInfo = () => {
+    return {
+      architecture: os.arch(), // CPU 架构
+      cpus: os.cpus().length, // CPU 核心数量
+      totalMemory: bytesToGB(os.totalmem()), // 系统总内存
+      freeMemory: bytesToGB(os.freemem()), // 系统空闲内存
+      uptime: formatUptime(os.uptime()), // 系统运行时间
+      platform: os.platform(), // 操作系统平台
+      release: os.release(), // 操作系统版本
+    };
+  };
+
+const hostInfo = getHostInfo();
+const id = 'My API Service';
+
 //Rate limit
 const limiter = rateLimit({
     windowMs: 15 * 60 * 1000, // 15 minutes
@@ -31,6 +60,84 @@ const limiter = rateLimit({
     message: "Too many requests from this IP, please try again later."
   });
 app.use(limiter);
+
+// 中心服务器的信息
+const CENTRAL_SERVER = 'http://localhost:4000'; // 替换为实际地址
+
+// 后端服务器的详细信息
+const serviceInfo = {
+  _id: id,
+  url: 'http://localhost:3001', // 替换为实际地址
+  endpoints: [
+    '/',
+    '/register',
+    '/login',
+    '/tasks',
+    '/api/upload',
+    '/api/files',
+    '/api/files/:filename',
+    '/api/results',
+    '/api/results/:filename',
+    '/api/images',
+    '/api/images/:imageName'
+  ], // 列出所有可用的端点
+  hostInfo: hostInfo
+};
+
+// 注册服务
+const registerService = async () => {
+  try {
+    const response = await axios.post(`${CENTRAL_SERVER}/register-service`, serviceInfo);
+    console.log('Service registered');
+  } catch (error) {
+    console.error('Failed to register service:', error);
+  }
+};
+
+// 发送心跳
+const sendHeartbeat = async () => {
+  try {
+    await axios.post(`${CENTRAL_SERVER}/service-heartbeat/${id}`);
+  } catch (error) {
+    console.error('Failed to send heartbeat:', error);
+  }
+};
+
+// 注销服务
+const unregisterService = async () => {
+  try {
+    const response = await axios.delete(`${CENTRAL_SERVER}/unregister-service/${id}`);
+    console.log('Service unregistered');
+  } catch (error) {
+    console.error('Failed to unregister service:');
+  }
+};
+
+// 在服务器启动时注册服务
+registerService();
+
+// 每分钟发送一次心跳
+setInterval(sendHeartbeat, 60000);
+
+// 在服务器关闭时注销服务
+const gracefulShutdown = async () => {
+    try {
+      await unregisterService();
+      console.log('Service unregistered and server is closing.');
+    } catch (error) {
+      console.log('Failed to unregister service');
+    } finally {
+      server.close(() => {
+        console.log('Server closed');
+        process.exit(0);
+      });
+    }
+  };
+  
+
+// 捕获关闭信号
+process.on('SIGTERM', gracefulShutdown);
+process.on('SIGINT', gracefulShutdown);
 
 
 //--------------------------------------------------------------------------------------
