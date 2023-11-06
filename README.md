@@ -61,7 +61,7 @@ npm start
 
 ### Usage
 
-- Start the React(frontend) and API(backend) servers,
+- Start the React(frontend) API(backend) servers and Register-Server.
 - Compress the directory of the task in to .zip file,
 - Upload the compressed file on React website,
 - Generate a image for this kind of task,

@@ -45,15 +45,16 @@ function UploadForm(props) {
                     </div>
                     <div className="upload-status">{uploadStatus}</div>
                 </div>
+                {/*
                 <ol class="upload-instructions">
                     <li>Compress your environment folder into a <code>.zip</code> file.</li>
                     <li>Upload the zipped file using this form.</li>
                     <li>Click on the "Generate Image" button of the file</li>
                     <li>Wait for the generation to finish.</li>
                 </ol>
+                 */}
             </form>
         </div>
-
     );
 }
 

@@ -37,21 +37,21 @@ const formatUptime = (seconds) => {
   return `${days}d ${hours}h ${minutes}m`;
 };
 
-// 获取主机配置信息
+// Get host information
 const getHostInfo = () => {
     return {
-      architecture: os.arch(), // CPU 架构
-      cpus: os.cpus().length, // CPU 核心数量
-      totalMemory: bytesToGB(os.totalmem()), // 系统总内存
-      freeMemory: bytesToGB(os.freemem()), // 系统空闲内存
-      uptime: formatUptime(os.uptime()), // 系统运行时间
-      platform: os.platform(), // 操作系统平台
-      release: os.release(), // 操作系统版本
+      architecture: os.arch(), 
+      cpus: os.cpus().length, 
+      totalMemory: bytesToGB(os.totalmem()), 
+      freeMemory: bytesToGB(os.freemem()),
+      uptime: formatUptime(os.uptime()),
+      platform: os.platform(),
+      release: os.release(),
     };
   };
 
 const hostInfo = getHostInfo();
-const id = 'My API Service';
+const id = 'API Service';
 
 //Rate limit
 const limiter = rateLimit({
@@ -61,13 +61,13 @@ const limiter = rateLimit({
   });
 app.use(limiter);
 
-// 中心服务器的信息
+// URL of the central server
 const CENTRAL_SERVER = 'http://localhost:4000'; // 替换为实际地址
 
-// 后端服务器的详细信息
+// Information about this service
 const serviceInfo = {
   _id: id,
-  url: 'http://localhost:3001', // 替换为实际地址
+  url: 'http://localhost:3001',
   endpoints: [
     '/',
     '/register',
@@ -80,11 +80,11 @@ const serviceInfo = {
     '/api/results/:filename',
     '/api/images',
     '/api/images/:imageName'
-  ], // 列出所有可用的端点
+  ],
   hostInfo: hostInfo
 };
 
-// 注册服务
+// Register the service
 const registerService = async () => {
   try {
     const response = await axios.post(`${CENTRAL_SERVER}/register-service`, serviceInfo);
@@ -94,7 +94,7 @@ const registerService = async () => {
   }
 };
 
-// 发送心跳
+// Send a heartbeat to the central server
 const sendHeartbeat = async () => {
   try {
     await axios.post(`${CENTRAL_SERVER}/service-heartbeat/${id}`);
@@ -103,7 +103,7 @@ const sendHeartbeat = async () => {
   }
 };
 
-// 注销服务
+// Unregister the service
 const unregisterService = async () => {
   try {
     const response = await axios.delete(`${CENTRAL_SERVER}/unregister-service/${id}`);
@@ -113,13 +113,13 @@ const unregisterService = async () => {
   }
 };
 
-// 在服务器启动时注册服务
+// Register the service
 registerService();
 
-// 每分钟发送一次心跳
+// Send a heartbeat every 60 seconds
 setInterval(sendHeartbeat, 60000);
 
-// 在服务器关闭时注销服务
+// Gracefully unregister the service when the process is terminated
 const gracefulShutdown = async () => {
     try {
       await unregisterService();
@@ -135,7 +135,7 @@ const gracefulShutdown = async () => {
   };
   
 
-// 捕获关闭信号
+// Handle process termination
 process.on('SIGTERM', gracefulShutdown);
 process.on('SIGINT', gracefulShutdown);
 

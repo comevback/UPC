@@ -74,7 +74,7 @@ app.post('/register-service', async (req, res) => {
     }
 });
 
-app.get('/services', async (req, res) => {
+app.get('/', async (req, res) => {
     try {
         const services = await Service.find();
         res.render('index.ejs', { services, frontendServices });
