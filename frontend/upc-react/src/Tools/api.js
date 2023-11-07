@@ -1,7 +1,9 @@
 import axios from 'axios';
 
 // Get data
-const API_URL = 'http://localhost:3001'; // replace with your backend URL
+export const API_URL = 'http://localhost:4000'; // replace with your backend URL
+export const CENTRAL_SERVER_URL = 'http://localhost:8000';
+export const WebSocketURL = 'ws://localhost:4000';
 
 export const uploadData = async (data) => {
         try {
@@ -136,11 +138,11 @@ export const deleteImage = async (fileName) => {
     }
 };
 
-export const runImage = async () => {
-    try {
-      const response = await axios.post('${API_URL}/api/images/docker-run', { imageName, fileName });
-      console.log(response.data); // 可以根据需求改为适当的 UI 提示
-    } catch (error) {
-      console.error('Error running docker:', error);
-    }
-};
+// export const runImage = async () => {
+//     try {
+//       const response = await axios.post('${API_URL}/api/images/docker-run', { imageName, fileName });
+//       console.log(response.data); // 可以根据需求改为适当的 UI 提示
+//     } catch (error) {
+//       console.error('Error running docker:', error);
+//     }
+// };

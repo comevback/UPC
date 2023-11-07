@@ -6,7 +6,7 @@ import axios from "axios";
 import rateLimit from "express-rate-limit";
 
 // URL of the central server
-const CENTRAL_SERVER = 'http://localhost:4000'; // 替换为实际地址
+const CENTRAL_SERVER = 'http://localhost:8000'; // 替换为实际地址
 
 // Get host information. ============================================
 export const getHostInfo = () => {
@@ -124,4 +124,4 @@ export const gracefulShutdown = async () => {
       });
     }
 };
-  
+

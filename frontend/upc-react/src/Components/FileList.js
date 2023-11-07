@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { downloadFile, generateImage, deleteFile} from '../Tools/api';
+import { downloadFile, generateImage, deleteFile, WebSocketURL} from '../Tools/api';
 import './FileList.css';
 
 // FileList.js
@@ -10,7 +10,7 @@ function FileList(props) {
     // ============================== WebSocket ==================================
     useEffect(() => {
         // Create a new WebSocket
-        const newSocket = new WebSocket('ws://localhost:3001'); // 请替换为你的WebSocket服务的URL
+        const newSocket = new WebSocket(WebSocketURL); // 请替换为你的WebSocket服务的URL
 
         // Listen for messages
         newSocket.onmessage = (event) => {

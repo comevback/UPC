@@ -2,16 +2,15 @@ import React, { useEffect } from 'react';
 import axios from 'axios';
 import './App.css';
 import ApplicationForm from './Components/ApplicationForm';
+import { CENTRAL_SERVER_URL } from './Tools/api.js';
 
-const CENTRAL_SERVER_REGISTRATION_URL = 'http://localhost:4000/frontend/register-service';
-const CENTRAL_SERVER_UNREGISTRATION_URL = 'http://localhost:4000/frontend/unregister-service';
 
 function App() {
   useEffect(() => {
     // Register the service
     const registerService = async () => {
       try {
-        const response = await axios.post(CENTRAL_SERVER_REGISTRATION_URL, {
+        const response = await axios.post(`${CENTRAL_SERVER_URL}/frontend/register-service`, {
           name: 'React Frontend Service',
           url: window.location.origin,
         });
@@ -24,7 +23,7 @@ function App() {
     // Unregister the service
     const unregisterService = async () => {
       try {
-        const response = await axios.delete(CENTRAL_SERVER_UNREGISTRATION_URL, {
+        const response = await axios.delete(`${CENTRAL_SERVER_URL}/frontend/unregister-service`, {
           data: { url: window.location.origin },
         });
         console.log('Service unregistered:', response.data);
