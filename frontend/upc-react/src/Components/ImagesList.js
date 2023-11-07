@@ -27,6 +27,11 @@ const ImagesList = (props) => {
             setActiveImageInfo(null);
         }
     };
+
+    const handleRunClick = async (image) => {
+        await runImage(image);
+        props.refreshImages();
+    }
     
 
     return (

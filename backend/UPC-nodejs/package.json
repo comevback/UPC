@@ -1,13 +1,20 @@
 {
-  "name": "yyyy",
+  "name": "upc-api-server",
   "version": "1.0.0",
-  "description": "",
-  "main": "index.js",
+  "description": "UPC backend APIs",
+  "main": "app.js",
+  "bin": "app.js",
   "type": "module",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node app.js"
   },
-  "author": "",
+  "pkg": {
+    "targets": [
+      "node14-macos-arm64"
+    ]
+  },
+  "author": "Xu Xiang",
   "license": "ISC",
   "dependencies": {
     "axios": "^1.6.0",

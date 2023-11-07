@@ -1,7 +1,10 @@
 import mongoose from 'mongoose';
+import dotenv from 'dotenv';
+
+dotenv.config("../.env");
 
 // Connect to MongoDB
-mongoose.connect('mongodb://localhost:27017/Register-server', {
+mongoose.connect(process.env.MongoURL, {
   useNewUrlParser: true,
   useUnifiedTopology: true
 });
