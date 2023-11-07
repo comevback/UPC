@@ -1,6 +1,6 @@
 import express from "express";
-import mongoose from 'mongoose';
 import cors from 'cors';
+import { Service } from "./Components/mongoDB.js";
 
 const app = express();
 app.use(express.json());
@@ -9,48 +9,6 @@ app.use(cors());
 const port = 4000; 
 
 let frontendServices = {};
-
-// Connect to MongoDB
-mongoose.connect('mongodb://localhost:27017/Register-server', {
-  useNewUrlParser: true,
-  useUnifiedTopology: true
-});
-
-
-// Define the service schema
-const serviceSchema = new mongoose.Schema({
-    _id: {
-    type: String,
-    required: true
-  },
-  url: {
-    type: String,
-    required: true
-  },
-  endpoints: [{
-    type: String,
-    required: true
-  }],
-  hostConfig: {
-    architecture: String,
-    cpus: Number,
-    totalMemory: Number,
-    freeMemory: Number,
-    uptime: Number,
-    platform: String,
-    release: String
-  },
-  createdAt: {
-    type: Date,
-    default: Date.now
-  },
-  lastHeartbeat: {
-    type: Date,
-    default: Date.now
-  }
-});
-
-const Service = mongoose.model('Service', serviceSchema);
 
 // Homepage
 app.get('/', async (req, res) => {

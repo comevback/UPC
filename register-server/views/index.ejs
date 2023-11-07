@@ -18,9 +18,11 @@
                 <%= service.name %><br>
                     <strong>URL:</strong> <a href="<%= service.url %>" target="_blank">
                         <%= service.url %>
-                    </a><br>
-                    <strong>Registered At:</strong>
-                    <%= new Date(service.registeredAt).toLocaleString() %><br>
+                    </a>
+                    <div class="register-time">
+                        <strong>Registered At:</strong>
+                        <%= new Date(service.registeredAt).toLocaleString() %><br>
+                    </div>
             </div>
             <% } %>
                 <% services.forEach(function(service) { %>
@@ -28,7 +30,7 @@
                         <h2>Backend Service</h2>
                         <strong>ID:</strong>
                         <%= service._id %><br>
-                            <strong>URL:</strong> <a href="<%= service.url %>" target="_blank">
+                            <strong>Documentation:</strong> <br><a href="<%= service.url %>" target="_blank">
                                 <%= service.url %>
                             </a><br>
                             <strong>Endpoints:</strong>
@@ -39,10 +41,14 @@
                                     </li>
                                     <% }) %>
                             </ul>
-                            <strong>Last Heartbeat:</strong>
-                            <%= new Date(service.lastHeartbeat).toLocaleString() %><br>
+                            <div class="register-time">
+                                <strong>Registered At:</strong>
+                                <%= new Date(service.createdAt).toLocaleString() %><br>
+                                    <strong>Last Heartbeat:</strong>
+                                    <%= new Date(service.lastHeartbeat).toLocaleString() %><br>
+                            </div>
+                            <% }) %>
                     </div>
-                    <% }) %>
     </div>
 </body>
 

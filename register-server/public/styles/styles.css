@@ -26,7 +26,6 @@
 
 /* Styles for the list to make it look cleaner */
 .service-card ul {
-  list-style-type: none;
   padding-left: 20px;
 }
 
@@ -44,4 +43,3 @@
     margin-bottom: 20px;
   }
 }
-  

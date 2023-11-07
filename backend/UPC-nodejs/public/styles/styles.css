@@ -1,7 +1,7 @@
 /* Simple CSS file for API Documentation Page */
 
 body {
-    font-family: Arial, sans-serif;
+    font-family: Arial;
     line-height: 1.6;
 }
 
@@ -13,6 +13,7 @@ header {
 }
 
 header h1 {
+    font-family: Georgia;
     margin: 0;
 }
 
