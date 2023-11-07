@@ -3,21 +3,21 @@ import mongoose from 'mongoose';
 import cors from 'cors';
 
 const app = express();
-app.use(express.json()); // 用于解析JSON请求体
+app.use(express.json());
 app.use(express.static("public"));
 app.use(cors());
-const port = 4000; // 中心服务器的端口号
+const port = 4000; 
 
 let frontendServices = {};
 
-// 连接到MongoDB数据库
+// Connect to MongoDB
 mongoose.connect('mongodb://localhost:27017/Register-server', {
   useNewUrlParser: true,
   useUnifiedTopology: true
 });
 
 
-// 定义服务信息的数据结构
+// Define the service schema
 const serviceSchema = new mongoose.Schema({
     _id: {
     type: String,
@@ -52,9 +52,17 @@ const serviceSchema = new mongoose.Schema({
 
 const Service = mongoose.model('Service', serviceSchema);
 
+// Homepage
+app.get('/', async (req, res) => {
+  try {
+      const services = await Service.find();
+      res.render('index.ejs', { services, frontendServices });
+  } catch (error) {
+      res.status(500).send(error.message);
+  }
+});
 
-// 存储服务信息的数据结构å
-
+// Register a service
 app.post('/register-service', async (req, res) => {
     const { _id, url, endpoints, hostConfig } = req.body;
     //console.log(req.body);
@@ -73,17 +81,8 @@ app.post('/register-service', async (req, res) => {
       res.status(500).json({ message: error.message });
     }
 });
-
-app.get('/', async (req, res) => {
-    try {
-        const services = await Service.find();
-        res.render('index.ejs', { services, frontendServices });
-    } catch (error) {
-        res.status(500).send(error.message);
-    }
-});
   
-
+// List all registered services as json
 app.get('/list-services', async (req, res) => {
     try {
         const services = await Service.find();
@@ -112,7 +111,7 @@ app.post('/service-heartbeat/:id', async (req, res) => {
     }
 });
   
-
+// Unregister a service
 app.delete('/unregister-service/:id', async (req, res) => {
     try {
       await Service.findByIdAndDelete(req.params.id);
@@ -125,7 +124,7 @@ app.delete('/unregister-service/:id', async (req, res) => {
 });
   
 
-//frontend server ================================
+// Register frontend server 
 app.post('/frontend/register-service', (req, res) => {
     const { name, url } = req.body;
     console.log(req.body);
@@ -146,6 +145,7 @@ app.post('/frontend/register-service', (req, res) => {
     res.status(201).json({ message: 'Service registered successfully.' });
 });
 
+// Unregister frontend server 
 app.delete('/frontend/unregister-service', (req, res) => {
     const { url } = req.body;
   

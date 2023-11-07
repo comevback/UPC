@@ -1,0 +1,52 @@
+/* Simple CSS file for API Documentation Page */
+
+body {
+    font-family: Arial, sans-serif;
+    line-height: 1.6;
+}
+
+header {
+    background: #333;
+    color: #fff;
+    padding: 10px 0;
+    text-align: center;
+}
+
+header h1 {
+    margin: 0;
+}
+
+main {
+    padding: 20px;
+}
+
+section {
+    margin-bottom: 20px;
+}
+
+section h2 {
+    background: #f4f4f4;
+    padding: 5px;
+    border-left: 4px solid #333;
+}
+
+article {
+    background-color: #e9ecef;
+    border: 1px solid #ddd;
+    padding: 15px;
+    margin-top: 10px;
+}
+
+article h3 {
+    color: #333;
+}
+
+footer {
+    position: static;
+    bottom: 0;
+    background: #333;
+    color: #fff;
+    text-align: center;
+    padding: 10px 0;
+    width: 100%;
+}

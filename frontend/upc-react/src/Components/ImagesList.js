@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { deleteImage, viewImage } from '../Tools/api';
+import { deleteImage, viewImage, runImage } from '../Tools/api';
 import './ImagesList.css';
 
 const ImagesList = (props) => {
@@ -27,6 +27,7 @@ const ImagesList = (props) => {
             setActiveImageInfo(null);
         }
     };
+    
 
     return (
         <div>
@@ -39,6 +40,7 @@ const ImagesList = (props) => {
                             <div className="buttons">
                                 <button onClick={() => handleViewClick(image)}>View</button>
                                 <button onClick={() => handleDeleteClick(image)}>Delete</button>
+                                <button onClick={() => handleRunClick(image)}>Run</button>
                             </div>
                         </div>
                         {activeImageInfo && activeImageInfo.RepositoryTags.includes(image) && (

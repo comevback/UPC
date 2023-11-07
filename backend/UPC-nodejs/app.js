@@ -3,19 +3,17 @@ import express from "express";
 import bodyParser from "body-parser";
 import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
-import rateLimit from 'express-rate-limit';
 import cors from 'cors';
-import axios from "axios";
 import fs from 'fs';
-import os from 'os';
+import ejs from "ejs";
 import path from 'path';
 import extract from "extract-zip";
-import upload from "./Components/upload.js";
-import WebSocket, {WebSocketServer} from "ws";
-import { exec, spawn } from "child_process";
-import { User, Task } from "./Components/mongo.js";
-import { fileURLToPath } from 'url';
 import { dirname } from 'path';
+import { fileURLToPath } from 'url';
+import { exec, spawn } from "child_process";
+import WebSocket, {WebSocketServer} from "ws";
+import { User, Task } from "./Components/mongo.js";
+import { upload, limiter, registerService, sendHeartbeat, gracefulShutdown} from "./Components/methods.js";
 
 const app = express();
 const port = 3001;
@@ -24,116 +22,15 @@ const __dirname = dirname(__filename);
 
 app.use(bodyParser.urlencoded({extended:true}));
 app.use(express.static("public"));
+app.set('view engine', 'ejs');
 app.use(cors());
-
-// Convert bytes to gigabytes
-const bytesToGB = (bytes) => (bytes / 1024 / 1024 / 1024).toFixed(2) + ' GB';
-
-// Convert seconds to days, hours, and minutes
-const formatUptime = (seconds) => {
-  const days = Math.floor(seconds / (3600 * 24));
-  const hours = Math.floor(seconds % (3600 * 24) / 3600);
-  const minutes = Math.floor(seconds % 3600 / 60);
-  return `${days}d ${hours}h ${minutes}m`;
-};
-
-// Get host information
-const getHostInfo = () => {
-    return {
-      architecture: os.arch(), 
-      cpus: os.cpus().length, 
-      totalMemory: bytesToGB(os.totalmem()), 
-      freeMemory: bytesToGB(os.freemem()),
-      uptime: formatUptime(os.uptime()),
-      platform: os.platform(),
-      release: os.release(),
-    };
-  };
-
-const hostInfo = getHostInfo();
-const id = 'API Service';
-
-//Rate limit
-const limiter = rateLimit({
-    windowMs: 15 * 60 * 1000, // 15 minutes
-    max: 100, // limit each IP to 100 requests per windowMs
-    message: "Too many requests from this IP, please try again later."
-  });
 app.use(limiter);
-
-// URL of the central server
-const CENTRAL_SERVER = 'http://localhost:4000'; // 替换为实际地址
-
-// Information about this service
-const serviceInfo = {
-  _id: id,
-  url: 'http://localhost:3001',
-  endpoints: [
-    '/',
-    '/register',
-    '/login',
-    '/tasks',
-    '/api/upload',
-    '/api/files',
-    '/api/files/:filename',
-    '/api/results',
-    '/api/results/:filename',
-    '/api/images',
-    '/api/images/:imageName'
-  ],
-  hostInfo: hostInfo
-};
-
-// Register the service
-const registerService = async () => {
-  try {
-    const response = await axios.post(`${CENTRAL_SERVER}/register-service`, serviceInfo);
-    console.log('Service registered');
-  } catch (error) {
-    console.error('Failed to register service:', error);
-  }
-};
-
-// Send a heartbeat to the central server
-const sendHeartbeat = async () => {
-  try {
-    await axios.post(`${CENTRAL_SERVER}/service-heartbeat/${id}`);
-  } catch (error) {
-    console.error('Failed to send heartbeat:', error);
-  }
-};
-
-// Unregister the service
-const unregisterService = async () => {
-  try {
-    const response = await axios.delete(`${CENTRAL_SERVER}/unregister-service/${id}`);
-    console.log('Service unregistered');
-  } catch (error) {
-    console.error('Failed to unregister service:');
-  }
-};
 
 // Register the service
 registerService();
 
 // Send a heartbeat every 60 seconds
 setInterval(sendHeartbeat, 60000);
-
-// Gracefully unregister the service when the process is terminated
-const gracefulShutdown = async () => {
-    try {
-      await unregisterService();
-      console.log('Service unregistered and server is closing.');
-    } catch (error) {
-      console.log('Failed to unregister service');
-    } finally {
-      server.close(() => {
-        console.log('Server closed');
-        process.exit(0);
-      });
-    }
-  };
-  
 
 // Handle process termination
 process.on('SIGTERM', gracefulShutdown);
@@ -144,7 +41,7 @@ process.on('SIGINT', gracefulShutdown);
 
 //basic
 app.get("/", (req, res) => {
-    res.send("Hello World!");
+    res.render("index");
 });
 
 //Register and Login
@@ -216,6 +113,7 @@ app.get('/api/files', async (req, res) => {
     });
 });
 
+// Route to get the list of all results
 app.get('/api/results', async (req, res) => {
     const directoryPath = path.join(__dirname, 'results');
     fs.readdir(directoryPath, (err, files) => {
@@ -277,7 +175,6 @@ app.get('/api/images/:imageName', (req, res) => {
     });
 });
 
-
 // Route to download a file
 app.get('/api/files/:filename', (req, res) => {
     const filePath = path.join(__dirname, 'uploads', req.params.filename);
@@ -290,7 +187,7 @@ app.get('/api/results/:filename', (req, res) => {
     res.download(filePath);
 });
 
-//generate image
+// Generate Image after upload and unzip file
 app.post('/api/files/:filename', async(req, res) => {
     const { filename } = req.params;
     const baseFileName = path.basename(filename, '.zip');
@@ -449,6 +346,22 @@ app.delete('/api/images/:imageName', (req, res) => {
         }
     });
 });
+
+// Route to run a docker image
+app.post('/api/images/docker-run', (req, res) => {
+    const { imageName, fileName } = req.body; // 确保通过正确的验证和错误处理
+  
+    const command = `docker run --rm -v ${__dirname}/uploads:/app/uploads -v ${__dirname}/results:/app/results ${imageName} ${fileName}`;
+  
+    exec(command, (error, stdout, stderr) => {
+      if (error) {
+        console.error(`exec error: ${error}`);
+        return res.status(500).send(stderr);
+      }
+      // 假设你的 Docker 容器会把结果输出到一个文件
+      res.status(200).send(`Result saved to: /results/output-${fileName}.txt`);
+    });
+  });
 
 //Listen on port
 const server = app.listen(port, () => {
