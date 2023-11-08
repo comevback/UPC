@@ -3,140 +3,35 @@ import express from "express";
 import bodyParser from "body-parser";
 import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
-import rateLimit from 'express-rate-limit';
 import cors from 'cors';
-import axios from "axios";
 import fs from 'fs';
-import os from 'os';
 import path from 'path';
 import extract from "extract-zip";
-import upload from "./Components/upload.js";
-import WebSocket, {WebSocketServer} from "ws";
-import { exec, spawn } from "child_process";
-import { User, Task } from "./Components/mongo.js";
-import { fileURLToPath } from 'url';
 import { dirname } from 'path';
+import { fileURLToPath } from 'url';
+import { exec, spawn } from "child_process";
+import WebSocket, {WebSocketServer} from "ws";
+import { User, Task } from "./Components/mongo.js";
+import { upload, limiter, registerService, sendHeartbeat, gracefulShutdown} from "./Components/methods.js";
 
 const app = express();
-const port = 3002;
+const port = 5000;
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
 
 app.use(bodyParser.urlencoded({extended:true}));
 app.use(express.static("public"));
+app.set('view engine', 'ejs');
 app.use(cors());
-
-// Convert bytes to gigabytes
-const bytesToGB = (bytes) => (bytes / 1024 / 1024 / 1024).toFixed(2) + ' GB';
-
-// Convert seconds to days, hours, and minutes
-const formatUptime = (seconds) => {
-  const days = Math.floor(seconds / (3600 * 24));
-  const hours = Math.floor(seconds % (3600 * 24) / 3600);
-  const minutes = Math.floor(seconds % 3600 / 60);
-  return `${days}d ${hours}h ${minutes}m`;
-};
-
-// 获取主机配置信息
-const getHostInfo = () => {
-    return {
-      architecture: os.arch(), // CPU 架构
-      cpus: os.cpus().length, // CPU 核心数量
-      totalMemory: bytesToGB(os.totalmem()), // 系统总内存
-      freeMemory: bytesToGB(os.freemem()), // 系统空闲内存
-      uptime: formatUptime(os.uptime()), // 系统运行时间
-      platform: os.platform(), // 操作系统平台
-      release: os.release(), // 操作系统版本
-    };
-  };
-
-const hostInfo = getHostInfo();
-const id = 'My API Service 2';
-
-//Rate limit
-const limiter = rateLimit({
-    windowMs: 15 * 60 * 1000, // 15 minutes
-    max: 100, // limit each IP to 100 requests per windowMs
-    message: "Too many requests from this IP, please try again later."
-  });
 app.use(limiter);
 
-// 中心服务器的信息
-const CENTRAL_SERVER = 'http://localhost:4000'; // 替换为实际地址
-
-// 后端服务器的详细信息
-const serviceInfo = {
-  _id: id,
-  url: 'http://localhost:3002', // 替换为实际地址
-  endpoints: [
-    '/',
-    '/register',
-    '/login',
-    '/tasks',
-    '/api/upload',
-    '/api/files',
-    '/api/files/:filename',
-    '/api/results',
-    '/api/results/:filename',
-    '/api/images',
-    '/api/images/:imageName'
-  ], // 列出所有可用的端点
-  hostInfo: hostInfo
-};
-
-// 注册服务
-const registerService = async () => {
-  try {
-    const response = await axios.post(`${CENTRAL_SERVER}/register-service`, serviceInfo);
-    console.log('Service registered');
-  } catch (error) {
-    console.error('Failed to register service:', error);
-  }
-};
-
-// 发送心跳
-const sendHeartbeat = async () => {
-  try {
-    const response = await axios.post(`${CENTRAL_SERVER}/service-heartbeat/${id}`);
-    console.log('Heartbeat sent:', response.data);
-  } catch (error) {
-    console.error('Failed to send heartbeat:', error);
-  }
-};
-
-// 注销服务
-const unregisterService = async () => {
-  try {
-    const response = await axios.delete(`${CENTRAL_SERVER}/unregister-service/${id}`);
-    console.log('Service unregistered');
-  } catch (error) {
-    console.error('Failed to unregister service:');
-  }
-};
-
-// 在服务器启动时注册服务
+// Register the service
 registerService();
 
-// 每分钟发送一次心跳
+// Send a heartbeat every 60 seconds
 setInterval(sendHeartbeat, 60000);
 
-// 在服务器关闭时注销服务
-const gracefulShutdown = async () => {
-    try {
-      await unregisterService();
-      console.log('Service unregistered and server is closing.');
-    } catch (error) {
-      console.log('Failed to unregister service');
-    } finally {
-      server.close(() => {
-        console.log('Server closed');
-        process.exit(0);
-      });
-    }
-  };
-  
-
-// 捕获关闭信号
+// Handle process termination
 process.on('SIGTERM', gracefulShutdown);
 process.on('SIGINT', gracefulShutdown);
 
@@ -145,7 +40,7 @@ process.on('SIGINT', gracefulShutdown);
 
 //basic
 app.get("/", (req, res) => {
-    res.send("Hello World!");
+    res.render("index");
 });
 
 //Register and Login
@@ -217,6 +112,7 @@ app.get('/api/files', async (req, res) => {
     });
 });
 
+// Route to get the list of all results
 app.get('/api/results', async (req, res) => {
     const directoryPath = path.join(__dirname, 'results');
     fs.readdir(directoryPath, (err, files) => {
@@ -278,7 +174,6 @@ app.get('/api/images/:imageName', (req, res) => {
     });
 });
 
-
 // Route to download a file
 app.get('/api/files/:filename', (req, res) => {
     const filePath = path.join(__dirname, 'uploads', req.params.filename);
@@ -291,7 +186,7 @@ app.get('/api/results/:filename', (req, res) => {
     res.download(filePath);
 });
 
-//generate image
+// Generate Image after upload and unzip file
 app.post('/api/files/:filename', async(req, res) => {
     const { filename } = req.params;
     const baseFileName = path.basename(filename, '.zip');
@@ -305,10 +200,10 @@ app.post('/api/files/:filename', async(req, res) => {
         console.log('Invalid file type');
         wss.clients.forEach(function each(client) {
             if (client.readyState === WebSocket.OPEN) {
-              client.send('Invalid file type');
+              client.send('Invalid file type, Shoud be .zip file');
             }
           });
-        return res.status(400).send({ message: 'Invalid file type' });
+        return res.status(400).send({ message: 'Invalid file type, Shoud be .zip file' });
     }
     if (!fs.existsSync(filePath)) {
         console.log('File does not exist');
@@ -450,6 +345,22 @@ app.delete('/api/images/:imageName', (req, res) => {
         }
     });
 });
+
+// Route to run a docker image
+app.post('/api/images/docker-run', (req, res) => {
+    const { imageName, fileName } = req.body; // 确保通过正确的验证和错误处理
+  
+    const command = `docker run --rm -v ${__dirname}/uploads:/app/uploads -v ${__dirname}/results:/app/results ${imageName} ${fileName}`;
+  
+    exec(command, (error, stdout, stderr) => {
+      if (error) {
+        console.error(`exec error: ${error}`);
+        return res.status(500).send(stderr);
+      }
+      // 假设你的 Docker 容器会把结果输出到一个文件
+      res.status(200).send(`Result saved to: /results/output-${fileName}.txt`);
+    });
+  });
 
 //Listen on port
 const server = app.listen(port, () => {
