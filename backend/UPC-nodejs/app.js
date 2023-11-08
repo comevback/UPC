@@ -5,7 +5,6 @@ import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
 import cors from 'cors';
 import fs from 'fs';
-import ejs from "ejs";
 import path from 'path';
 import extract from "extract-zip";
 import { dirname } from 'path';
@@ -201,10 +200,10 @@ app.post('/api/files/:filename', async(req, res) => {
         console.log('Invalid file type');
         wss.clients.forEach(function each(client) {
             if (client.readyState === WebSocket.OPEN) {
-              client.send('Invalid file type');
+              client.send('Invalid file type, Shoud be .zip file');
             }
           });
-        return res.status(400).send({ message: 'Invalid file type' });
+        return res.status(400).send({ message: 'Invalid file type, Shoud be .zip file' });
     }
     if (!fs.existsSync(filePath)) {
         console.log('File does not exist');

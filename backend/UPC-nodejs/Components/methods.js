@@ -38,7 +38,7 @@ const id = 'API Service';
 // Information about this service
 const serviceInfo = {
   _id: id,
-  url: 'http://localhost:3001',
+  url: 'http://localhost:4000',
   endpoints: [
     '/',
     '/register',

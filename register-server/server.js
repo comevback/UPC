@@ -8,7 +8,7 @@ app.use(express.static("public"));
 app.use(cors());
 const port = 8000; 
 
-let frontendServices = {};
+let frontendServices = {}; // Store the registered frontend services
 
 // Homepage
 app.get('/', async (req, res) => {
@@ -59,7 +59,7 @@ app.post('/service-heartbeat/:id', async (req, res) => {
             { lastHeartbeat: Date.now() },
             { new: true }
         );
-        console.log(`Heartbeat from service ${service._id}`);
+        console.log(`Heartbeat from backend service : ${service._id}`);
         if (!service) {
             return res.status(404).json({ message: "Service not found" });
         }
@@ -75,12 +75,12 @@ app.delete('/unregister-service/:id', async (req, res) => {
       await Service.findByIdAndDelete(req.params.id);
       console.log(`Unregistered service ${req.params.id}`);
       // Service has been found and deleted successfully
-      res.status(200).json({ message: "Service unregistered successfully" });
+      res.status(200).json({ message: `Service ${req.params.id} unregistered successfully` });
     } catch (error) {
       res.status(500).json({ message: error.message });
     }
 });
-  
+
 
 // Register frontend server 
 app.post('/frontend/register-service', (req, res) => {

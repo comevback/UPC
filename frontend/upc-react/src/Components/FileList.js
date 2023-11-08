@@ -45,7 +45,7 @@ function FileList(props) {
 
     // ============================== WebSocket ==================================
 
-    // If click the file, Show the info
+    // If click the file, Show the info, and generate the image, refresh the file list
     const handleFileClick = async(file) => {
         setInfo('Loading...');
         setActiveInfoFile(file);
@@ -84,7 +84,7 @@ function FileList(props) {
                         {activeInfoFile === file && (
                             <div className='info'>
                                 <p className={
-                                    info === 'Invalid file type'
+                                    info === 'Invalid file type, Shoud be .zip file'
                                     ? 'info-error'
                                     : info === 'Loading...'
                                     ? 'info-loading'
