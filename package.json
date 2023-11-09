@@ -5,8 +5,7 @@
         "React-client": "npm start --prefix ./frontend/upc-react",
         "Register-server": "npm start --prefix ./register-server"
     },
-      
-    "devDependencies": {
+    "dependencies": {
         "concurrently": "^8.2.2"
     }
 }
