@@ -26,24 +26,35 @@ Clone the repository:
 
 ```bash
 git clone https://github.com/comevback/UPC-node.git
+cd UPC-node
 ```
 
 Install dependencies for the all:
 
+**Linux/MacOS**:
 ```bash
-cd UPC-node
-npm install
+npm install-all
+```
+or
+```bash
+chmod +x install.sh
+./install.sh
+```
+
+**Windows**:
+```powershell
+.\install.bat
 ```
 
 ### Usage
 ---
-#### Run Frontend-Server Backend-Server and Register-Server at the same time:
+**Run Frontend-Server Backend-Server and Register-Server at the same time:**
 
 ```bash
 npm start
 ```
 ---
-#### Or run individual part:
+**Or run individual part:**
 
 Register-Server:
 ```bash

@@ -5,7 +5,7 @@
         "React-client": "npm start --prefix ./frontend/upc-react",
         "Register-server": "npm start --prefix ./register-server",
 
-        "install": "npm install --prefix ./backend/UPC-API && npm install --prefix ./frontend/upc-react && npm install --prefix ./register-server"
+        "install-all": "npm install concurrently --prefix ./backend/UPC-API && npm install --prefix ./frontend/upc-react && npm install --prefix ./register-server"
     },
     "dependencies": {
         "concurrently": "^8.2.2"
