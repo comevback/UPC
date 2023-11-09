@@ -15,7 +15,7 @@ import { User, Task } from "./Components/mongo.js";
 import { upload, limiter, registerService, sendHeartbeat, gracefulShutdown} from "./Components/methods.js";
 
 const app = express();
-const port = 5000;
+const port = 4001;
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
 
@@ -29,7 +29,7 @@ app.use(limiter);
 registerService();
 
 // Send a heartbeat every 60 seconds
-setInterval(sendHeartbeat, 60000);
+setInterval(sendHeartbeat, 300000);
 
 // Handle process termination
 process.on('SIGTERM', gracefulShutdown);

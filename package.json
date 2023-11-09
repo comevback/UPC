@@ -1,0 +1,12 @@
+{
+    "scripts": {
+        "start": "concurrently --names \"backend,frontend,register-server\" --prefix-colors \"blue,green,magenta\" \"npm run API-server\" \"npm run React-client\" \"npm run Register-server\"",
+        "API-server": "npm start  --prefix ./backend/UPC-nodejs",
+        "React-client": "npm start --prefix ./frontend/upc-react",
+        "Register-server": "npm start --prefix ./register-server"
+    },
+      
+    "devDependencies": {
+        "concurrently": "^8.2.2"
+    }
+}

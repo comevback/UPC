@@ -5,6 +5,34 @@ export const API_URL = 'http://localhost:4000'; // replace with your backend URL
 export const CENTRAL_SERVER_URL = 'http://localhost:8000'; // replace with your central register server URL
 export const WebSocketURL = 'ws://localhost:4000'; // replace with your backend WS URL
 
+// Register the service
+export const registerService = async () => {
+    try {
+      const response = await axios.post(`${CENTRAL_SERVER_URL}/frontend/register-service`, {
+        name: 'React Frontend Service',
+        url: window.location.origin,
+      });
+      console.log('Service registered:', response.data);
+      return (response.data);
+    } catch (error) {
+      console.error('Failed to register service:', error);
+    }
+};
+
+  // Unregister the service
+export const unregisterService = async () => {
+    try {
+      const response = await axios.delete(`${CENTRAL_SERVER_URL}/frontend/unregister-service`, {
+        name: 'React Frontend Service',
+        url: window.location.origin,
+      });
+      console.log('Service unregistered:', response.data);
+      return (response.data);
+    } catch (error) {
+      console.error('Failed to unregister service:', error);
+    }
+};
+
 export const uploadData = async (data) => {
         try {
                 const response = await axios.post(`${API_URL}/api/upload`, data);

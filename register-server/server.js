@@ -85,7 +85,6 @@ app.delete('/unregister-service/:id', async (req, res) => {
 // Register frontend server 
 app.post('/frontend/register-service', (req, res) => {
     const { name, url } = req.body;
-    console.log(req.body);
   
     // Use the URL as a unique identifier for the service
     if (frontendServices[url]) {
@@ -105,7 +104,7 @@ app.post('/frontend/register-service', (req, res) => {
 
 // Unregister frontend server 
 app.delete('/frontend/unregister-service', (req, res) => {
-    const { url } = req.body;
+    const { name, url } = req.body;
   
     if (!frontendServices[url]) {
       return res.status(404).json({ message: 'Service not found.' });
@@ -114,7 +113,7 @@ app.delete('/frontend/unregister-service', (req, res) => {
     // Remove the service from the registered services object
     delete frontendServices[url];
   
-    console.log(`Service unregistered successfully`);
+    console.log(`Service ${name} unregistered successfully`);
     res.status(200).json({ message: 'Service unregistered successfully.' });
 });
 
@@ -128,7 +127,7 @@ app.listen(port, () => {
       for (const service of services) {
         const now = Date.now();
         const timeElapsedSinceLastHeartbeat = now - service.lastHeartbeat;
-        if (timeElapsedSinceLastHeartbeat > 120000) {
+        if (timeElapsedSinceLastHeartbeat > 300000) { // 5 minutes
           try {
             await Service.findByIdAndDelete(service._id); // Using await to ensure the operation completes
             console.log(`Unregistered service ${service._id}`);

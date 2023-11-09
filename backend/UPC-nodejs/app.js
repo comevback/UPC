@@ -28,8 +28,8 @@ app.use(limiter);
 // Register the service
 registerService();
 
-// Send a heartbeat every 60 seconds
-setInterval(sendHeartbeat, 60000);
+// Send a heartbeat every 2 minutes
+setInterval(sendHeartbeat, 120000);
 
 // Handle process termination
 process.on('SIGTERM', gracefulShutdown);
