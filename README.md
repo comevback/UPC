@@ -49,7 +49,12 @@ chmod +x install.sh
 
 ### Usage
 
-*before run the system, you should configure the *
+*If you want to use Database to store the registered service, create a .env file on register-server folder, and add a line as:*
+```.env
+MongoURL={your-mongoDB-RUL}
+```
+
+*otherwise the data will be loacl.*
 
 ---
 **Run Frontend-Server Backend-Server and Register-Server at the same time:**

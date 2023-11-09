@@ -1,15 +1,16 @@
 import express from "express";
 import cors from 'cors';
-import { Service, checkDatabaseConnection } from "./Components/mongoDB.js";
+import { checkDatabaseConnection, Service } from "./Components/mongoDB.js";
 
 const app = express();
 app.use(express.json());
 app.use(express.static("public"));
+app.set('view engine', 'ejs');
 app.use(cors());
 const port = 8000; 
 
 let frontendServices = {}; // Store the registered frontend services
-let backendServices = {}; // Store the registered backend services
+let backendServices = []; // Store the registered backend services
 let isDbConnected = false;
 
 checkDatabaseConnection().then((isConnected) => {
@@ -28,7 +29,8 @@ app.get('/', async (req, res) => {
         const services = await Service.find();
         res.render('index.ejs', { services, frontendServices });
       } else {
-        res.render('index.ejs', { services: backendServices, frontendServices });
+        const services = Object.values(backendServices);
+        res.render('index.ejs', { services, frontendServices });
       }
   } catch (error) {
       res.status(500).send(error.message);
@@ -39,15 +41,15 @@ app.get('/', async (req, res) => {
 app.post('/register-service', async (req, res) => {
     const { _id, url, endpoints, hostConfig } = req.body;
     //console.log(req.body);
-    const newService = new Service({
-      _id,
-      url,
-      endpoints,
-      hostConfig
-    });
   
     try {
       if (isDbConnected) {
+      const newService = new Service({
+        _id,
+        url,
+        endpoints,
+        hostConfig
+      });
       const savedService = await newService.save();
       console.log(`Service ${savedService._id} registered successfully`);
       res.status(201).json(savedService);
@@ -175,7 +177,23 @@ app.delete('/frontend/unregister-service', (req, res) => {
 app.listen(port, () => {
     console.log(`Register server is running on port ${port}.`);
     // Clean up services that have not sent a heartbeat in the last 30 seconds
-    setInterval(async () => {
+      if (!isDbConnected) {
+        setInterval(async () => {
+        for (const service of backendServices) {
+          const now = Date.now();
+          const timeElapsedSinceLastHeartbeat = now - service.lastHeartbeat;
+          if (timeElapsedSinceLastHeartbeat > 300000) { // 5 minutes
+            try {
+              await Service.findByIdAndDelete(service._id); // Using await to ensure the operation completes
+              console.log(`Unregistered service ${service._id}`);
+            } catch (error) {
+              console.error(`Error unregistering service ${service._id}: ${error}`);
+            }
+          }
+        }
+      }, 10000);
+    } else {
+      setInterval(async () => {
       const services = await Service.find();
       for (const service of services) {
         const now = Date.now();
@@ -190,4 +208,5 @@ app.listen(port, () => {
         }
       }
     }, 10000);
+  }
 });

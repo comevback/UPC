@@ -3,7 +3,9 @@ import dotenv from 'dotenv';
 
 dotenv.config("../.env");
 
-export const checkDatabaseConnection = async () => {
+let Service;
+
+const checkDatabaseConnection = async () => {
   try {
     await mongoose.connect(process.env.MongoURL);
     return true; // if database connected successfully
@@ -13,6 +15,7 @@ export const checkDatabaseConnection = async () => {
   }
 };
 
+if (await checkDatabaseConnection()) {
 // Connect to MongoDB
 mongoose.connect(process.env.MongoURL, {
   useNewUrlParser: true,
@@ -53,4 +56,9 @@ const serviceSchema = new mongoose.Schema({
   }
 });
 
-export const Service = mongoose.model('Service', serviceSchema);
+Service = mongoose.model('Service', serviceSchema);
+} else {
+  Service = {};
+}
+
+export {checkDatabaseConnection, Service}
