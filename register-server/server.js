@@ -1,6 +1,6 @@
 import express from "express";
 import cors from 'cors';
-import { Service } from "./Components/mongoDB.js";
+import { Service, checkDatabaseConnection } from "./Components/mongoDB.js";
 
 const app = express();
 app.use(express.json());
@@ -9,12 +9,25 @@ app.use(cors());
 const port = 8000; 
 
 let frontendServices = {}; // Store the registered frontend services
+let backendServices = {}; // Store the registered backend services
+
+checkDatabaseConnection().then((isConnected) => {
+    if (isConnected) {
+      console.log('Connected to MongoDB.');
+    } else {
+      console.error('Failed to connect to MongoDB. use local storage instead.');
+    }
+});
 
 // Homepage
 app.get('/', async (req, res) => {
   try {
-      const services = await Service.find();
-      res.render('index.ejs', { services, frontendServices });
+      if (await checkDatabaseConnection()) {
+        const services = await Service.find();
+        res.render('index.ejs', { services, frontendServices });
+      } else {
+        res.render('index.ejs', { services: backendServices, frontendServices });
+      }
   } catch (error) {
       res.status(500).send(error.message);
   }
@@ -32,9 +45,22 @@ app.post('/register-service', async (req, res) => {
     });
   
     try {
+      if (await checkDatabaseConnection()) {
       const savedService = await newService.save();
       console.log(`Service ${savedService._id} registered successfully`);
       res.status(201).json(savedService);
+      } else {
+        backendServices[_id] = {
+          _id,
+          url,
+          endpoints,
+          hostConfig,
+          createdAt: new Date(),
+          lastHeartbeat: new Date()
+        };
+        console.log(`Service ${_id} registered successfully`);
+        res.status(201).json({ message: 'Service registered successfully.' });
+      }
     } catch (error) {
       res.status(500).json({ message: error.message });
     }
@@ -43,8 +69,12 @@ app.post('/register-service', async (req, res) => {
 // List all registered services as json
 app.get('/list-services', async (req, res) => {
     try {
+      if (await checkDatabaseConnection()) {
         const services = await Service.find();
         res.status(200).json(services);
+      } else {
+        res.status(200).json(backendServices);
+      } 
     } catch (error) {
         res.status(500).json({ message: error.message });
     }
@@ -54,6 +84,7 @@ app.get('/list-services', async (req, res) => {
 // Heartbeat Endpoint
 app.post('/service-heartbeat/:id', async (req, res) => {
     try {
+      if (await checkDatabaseConnection()) {
         const service = await Service.findByIdAndUpdate(
             req.params.id,
             { lastHeartbeat: Date.now() },
@@ -64,6 +95,15 @@ app.post('/service-heartbeat/:id', async (req, res) => {
             return res.status(404).json({ message: "Service not found" });
         }
         res.status(200).json(service);
+      } else {
+        const service = backendServices[req.params.id];
+        if (!service) {
+            return res.status(404).json({ message: "Service not found" });
+        }
+        service.lastHeartbeat = Date.now();
+        console.log(`Heartbeat from backend service : ${service._id}`);
+        res.status(200).json(service);
+      }
     } catch (error) {
         res.status(500).json({ message: error.message });
     }
@@ -72,10 +112,21 @@ app.post('/service-heartbeat/:id', async (req, res) => {
 // Unregister a service
 app.delete('/unregister-service/:id', async (req, res) => {
     try {
-      await Service.findByIdAndDelete(req.params.id);
-      console.log(`Unregistered service ${req.params.id}`);
-      // Service has been found and deleted successfully
-      res.status(200).json({ message: `Service ${req.params.id} unregistered successfully` });
+      if (await checkDatabaseConnection()) {
+        const service = await Service.findByIdAndDelete(req.params.id);
+        console.log(`Unregistered service ${service._id}`);
+        // Service has been found and deleted successfully
+        res.status(200).json({ message: `Service ${service._id} unregistered successfully` });
+      } else {
+        const service = backendServices[req.params.id];
+        if (!service) {
+          return res.status(404).json({ message: "Service not found" });
+        }
+        delete backendServices[req.params.id];
+        console.log(`Unregistered service ${service._id}`);
+        // Service has been found and deleted successfully
+        res.status(200).json({ message: `Service ${service._id} unregistered successfully` });
+      }
     } catch (error) {
       res.status(500).json({ message: error.message });
     }

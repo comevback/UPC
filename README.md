@@ -19,6 +19,7 @@ These instructions will get you a copy of the project up and running on your loc
 - Node.js: https://nodejs.org/en/download
 - Docker: https://www.docker.com
 - buildpack: https://buildpacks.io/docs/tools/pack
+- MongoDB(optional): https://www.mongodb.com
 
 ### Installing
 
@@ -47,6 +48,9 @@ chmod +x install.sh
 ```
 
 ### Usage
+
+*before run the system, you should configure the *
+
 ---
 **Run Frontend-Server Backend-Server and Register-Server at the same time:**
 

@@ -3,6 +3,16 @@ import dotenv from 'dotenv';
 
 dotenv.config("../.env");
 
+export const checkDatabaseConnection = async () => {
+  try {
+    await mongoose.connect(process.env.MongoURL);
+    return true; // if database connected successfully
+  } catch (error) {
+    console.error('Failed to connect to MongoDB, falling back to local storage.');
+    return false; // if database connection failed
+  }
+};
+
 // Connect to MongoDB
 mongoose.connect(process.env.MongoURL, {
   useNewUrlParser: true,
