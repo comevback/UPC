@@ -43,7 +43,7 @@ npm install
 npm start
 ```
 ---
-#### Run individual part:
+#### Or run individual part:
 
 Register-Server:
 ```bash
