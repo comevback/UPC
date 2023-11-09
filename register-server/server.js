@@ -10,10 +10,12 @@ const port = 8000;
 
 let frontendServices = {}; // Store the registered frontend services
 let backendServices = {}; // Store the registered backend services
+let isDbConnected = false;
 
 checkDatabaseConnection().then((isConnected) => {
     if (isConnected) {
       console.log('Connected to MongoDB.');
+      isDbConnected = true;
     } else {
       console.error('Failed to connect to MongoDB. use local storage instead.');
     }
@@ -22,7 +24,7 @@ checkDatabaseConnection().then((isConnected) => {
 // Homepage
 app.get('/', async (req, res) => {
   try {
-      if (await checkDatabaseConnection()) {
+      if (isDbConnected) {
         const services = await Service.find();
         res.render('index.ejs', { services, frontendServices });
       } else {
@@ -45,7 +47,7 @@ app.post('/register-service', async (req, res) => {
     });
   
     try {
-      if (await checkDatabaseConnection()) {
+      if (isDbConnected) {
       const savedService = await newService.save();
       console.log(`Service ${savedService._id} registered successfully`);
       res.status(201).json(savedService);
@@ -69,7 +71,7 @@ app.post('/register-service', async (req, res) => {
 // List all registered services as json
 app.get('/list-services', async (req, res) => {
     try {
-      if (await checkDatabaseConnection()) {
+      if (isDbConnected) {
         const services = await Service.find();
         res.status(200).json(services);
       } else {
@@ -84,7 +86,7 @@ app.get('/list-services', async (req, res) => {
 // Heartbeat Endpoint
 app.post('/service-heartbeat/:id', async (req, res) => {
     try {
-      if (await checkDatabaseConnection()) {
+      if (isDbConnected) {
         const service = await Service.findByIdAndUpdate(
             req.params.id,
             { lastHeartbeat: Date.now() },
@@ -112,7 +114,7 @@ app.post('/service-heartbeat/:id', async (req, res) => {
 // Unregister a service
 app.delete('/unregister-service/:id', async (req, res) => {
     try {
-      if (await checkDatabaseConnection()) {
+      if (isDbConnected) {
         const service = await Service.findByIdAndDelete(req.params.id);
         console.log(`Unregistered service ${service._id}`);
         // Service has been found and deleted successfully
