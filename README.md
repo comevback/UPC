@@ -9,64 +9,68 @@ This project is a full-stack application that provides a platform for generating
 - **Database Integration**: Store and manage UPC data using MongoDB. (in progress).
 - **Server registration**: register backend API servers and frontend React servers at Register-Server.
 
+
 ## Getting Started
 
-These instructions will get you a copy of the project up and running on your local machine for development and testing purposes.
+These instructions will get you a copy of the project up and running on your local machine for development.
 
 ### Prerequisites
 
-- Node.js
-- npm
-- Docker
-- Buildpack
+- Node.js: https://nodejs.org/en/download
+- Docker: https://www.docker.com
+- buildpack: https://buildpacks.io/docs/tools/pack
 
 ### Installing
 
 Clone the repository:
 
 ```bash
-git clone https://github.com/comevback/UPC-nodejs.git
+git clone https://github.com/comevback/UPC-node.git
 ```
 
-Install the necessary tools for this system:
-
-- Docker: https://www.docker.com/
-- buildpack: https://buildpacks.io/docs/tools/pack/
-
-Install dependencies for the backend:
+Install dependencies for the all:
 
 ```bash
-cd backend/UPC-nodejs
+cd UPC-node
 npm install
 ```
 
-Start the backend server:
-
-```bash
-node app.js
-```
-
-Install dependencies for the frontend:
-
-```bash
-cd frontend/upc-react
-npm install
-```
-
-Start the React development server:
+### Usage
+---
+#### Run Frontend-Server Backend-Server and Register-Server at the same time:
 
 ```bash
 npm start
 ```
+---
+#### Run individual part:
 
-### Usage
+Register-Server:
+```bash
+cd register-server
+npm start
+```
 
-- Start the React(frontend) API(backend) servers and Register-Server.
-- Compress the directory of the task in to .zip file,
-- Upload the compressed file on React website,
-- Generate a image for this kind of task,
-- Upload files and process,
-- Download the results.
+Backend-Server:
+```bash
+cd backend/UPC-nodejs
+npm start
+```
+
+Frontend-Server:
+```bash
+cd frontend/upc-react
+npm start
+```
+---
+## Workflow
+
+1. Start the React(frontend) API(backend) servers and Register-Server.
+2. Compress the directory of the task in to .zip file,
+3. Upload the compressed file on React website,
+4. Generate a image for this kind of task,
+5. Upload files and process,
+6. Download the results.
 
 ### Contributing
 

@@ -1,9 +1,11 @@
 {
     "scripts": {
         "start": "concurrently --names \"backend,frontend,register-server\" --prefix-colors \"blue,green,magenta\" \"npm run API-server\" \"npm run React-client\" \"npm run Register-server\"",
-        "API-server": "npm start  --prefix ./backend/UPC-nodejs",
-        "React-client": "npm start --prefix ./frontend/upc-react",
-        "Register-server": "npm start --prefix ./register-server"
+        "API-server": "npm start  --prefix ./backend/UPC-API",
+        "React-client": "npm start --prefix ./frontend/UPC-react",
+        "Register-server": "npm start --prefix ./register-server",
+
+        "install": "npm install --prefix ./backend/UPC-API && npm install --prefix ./frontend/UPC-react && npm install --prefix ./register-server"
     },
     "dependencies": {
         "concurrently": "^8.2.2"
