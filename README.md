@@ -33,7 +33,7 @@ Install dependencies for the all:
 
 **Linux/MacOS**:
 ```bash
-npm install-all
+npm run install-all
 ```
 or
 ```bash
