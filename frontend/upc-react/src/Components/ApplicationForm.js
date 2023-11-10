@@ -5,6 +5,7 @@ import FileList from './FileList';
 import ResultList from './ResultList';
 import UploadForm from './UploadForm';
 import ImagesList from './ImagesList';
+import Heading from './Heading';
 
 function ApplicationForm() {
     const [files, setFiles] = useState([]);
@@ -57,6 +58,7 @@ function ApplicationForm() {
 
     return (
         <div>
+            <Heading/>
             <div className="shownFiles">
                 <UploadForm refreshFiles={refreshFiles} refreshResults={refreshResults}/>
                 <ImagesList images={images} refreshImages={refreshImages}/>

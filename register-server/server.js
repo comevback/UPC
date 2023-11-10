@@ -7,6 +7,7 @@ app.use(express.json());
 app.use(express.static("public"));
 app.set('view engine', 'ejs');
 app.use(cors());
+const Server_URL = 'http://localhost:8000';
 const port = 8000; 
 
 let frontendServices = {}; // Store the registered frontend services
@@ -154,7 +155,7 @@ app.post('/frontend/register-service', (req, res) => {
     };
   
     console.log(`Service ${name} registered successfully`);
-    res.status(201).json({ message: 'Service registered successfully.' });
+    res.status(201).send({ URL: Server_URL }); // 201 Created
 });
 
 // Unregister frontend server 

@@ -10,7 +10,7 @@ function FileList(props) {
     // ============================== WebSocket ==================================
     useEffect(() => {
         // Create a new WebSocket
-        const newSocket = new WebSocket(WebSocketURL); // 请替换为你的WebSocket服务的URL
+        const newSocket = new WebSocket(WebSocketURL);
 
         // Listen for messages
         newSocket.onmessage = (event) => {

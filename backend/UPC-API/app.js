@@ -1,8 +1,6 @@
 //import and setting
 import express from "express";
 import bodyParser from "body-parser";
-import bcrypt from "bcryptjs";
-import jwt from "jsonwebtoken";
 import cors from 'cors';
 import fs from 'fs';
 import path from 'path';
@@ -11,7 +9,7 @@ import { dirname } from 'path';
 import { fileURLToPath } from 'url';
 import { exec, spawn } from "child_process";
 import WebSocket, {WebSocketServer} from "ws";
-import { upload, limiter, registerService, sendHeartbeat, gracefulShutdown} from "./Components/methods.js";
+import { serviceInfo, upload, limiter, registerService, sendHeartbeat, gracefulShutdown} from "./Components/methods.js";
 
 const app = express();
 const port = 4000;
@@ -22,7 +20,7 @@ app.use(bodyParser.urlencoded({extended:true}));
 app.use(express.static("public"));
 app.set('view engine', 'ejs');
 app.use(cors());
-app.use(limiter);
+//app.use(limiter);
 
 // Register the service
 registerService();
@@ -42,55 +40,9 @@ app.get("/", (req, res) => {
     res.render("index");
 });
 
-//Register and Login
-app.post('/register', async (req, res) => {
-const hashedPassword = await bcrypt.hash(req.body.password, 10);
-const user = new User({
-    username: req.body.username,
-    password: hashedPassword,
-    email: req.body.email
-});
-await user.save();
-res.status(201).send('User registered successfully');
-});
-
-app.post('/login', async (req, res) => {
-const user = await User.findOne({ username: req.body.username });
-if (user && await bcrypt.compare(req.body.password, user.password)) {
-    const token = jwt.sign({ userId: user._id }, 'SECRET_KEY', { expiresIn: '1h' });
-    res.json({ token });
-} else {
-    res.status(401).send('Invalid credentials');
-}
-});
-
-//Function that makes sure the user is authenticated
-function authenticate(req, res, next) {
-const token = req.headers.authorization;
-if (!token) return res.status(401).send('Access denied');
-try {
-    const verified = jwt.verify(token, 'SECRET_KEY');
-    req.user = verified;
-    next();
-} catch {
-    res.status(400).send('Invalid token');
-}
-}
-
-//get and post tasks
-app.get('/tasks', authenticate, async (req, res) => {
-const tasks = await Task.find({ owner: req.user.userId });
-res.json(tasks);
-});
-
-app.post('/tasks', authenticate, async (req, res) => {
-    const task = new Task({
-        title: req.body.title,
-        description: req.body.description,
-        owner: req.user.userId
-    });
-await task.save();
-res.status(201).send('Task created');
+//Connection test
+app.get('/api', (req, res) => {
+    res.send(serviceInfo);
 });
 
 //Route to update files to the server
@@ -147,10 +99,10 @@ app.get('/api/images/:imageName', (req, res) => {
             res.status(500).send(stderr);
         } else {
             try {
-                // 将输出转换为JSON对象
+                // Try to parse the JSON output
                 const imageDetails = JSON.parse(stdout);
 
-                // 创建一个新的对象来保存您想要的信息
+                // Create a new array with the formatted details
                 const formattedDetails = imageDetails.map(detail => ({
                     RepositoryTags: detail.RepoTags,
                     Id: detail.Id,
@@ -159,15 +111,15 @@ app.get('/api/images/:imageName', (req, res) => {
                     Architecture: detail.Architecture,
                     Os: detail.Os,
                     DockerVersion: detail.DockerVersion,
-                    // 添加您想要的其他信息
+                    // more details can be added here
                 }));
 
-                // 发送格式化后的信息
+                // Send the formatted details to the client
                 res.status(200).json(formattedDetails);
             } catch (parseErr) {
-                // JSON解析错误处理
+                // If the JSON parsing fails, send an error to the client
                 console.error(`Error parsing JSON: ${parseErr}`);
-                res.status(500).send('服务器内部错误，无法解析镜像信息。');
+                res.status(500).send('Error parsing JSON');
             }
         }
     });
@@ -224,7 +176,7 @@ app.post('/api/files/:filename', async(req, res) => {
             'build', 
             baseFileName.toLowerCase(),               // This is the image name
             '--path', appPath,        // Path to the application code
-            '--builder', 'paketobuildpacks/builder:base'
+            '--builder', 'paketobuildpacks/builder-jammy-base'
         ]);
 
         pack.stdout.on('data', (data) => {

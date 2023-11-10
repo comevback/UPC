@@ -15,7 +15,10 @@
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
 }
 
-.file-list li {
+.file-item {
+    display: flex;
+    align-items: center;
+    flex-direction: column;
     list-style-type: none;
     margin: 10px 0;
     padding: 10px;
@@ -23,14 +26,10 @@
     border-radius: 5px;
     width: 40vw;
     text-align: center;
-}
-
-.file-item {
-    display: flex;
-    align-items: center;
-    flex-direction: column;
+    min-height: 20px;
     background-color: #f5f5f5;
     justify-content: space-between;
+    overflow-x: auto;
 }
 
 .name-and-buttons{

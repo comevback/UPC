@@ -5,6 +5,21 @@ export const API_URL = 'http://localhost:4000'; // replace with your backend URL
 export const CENTRAL_SERVER_URL = 'http://localhost:8000'; // replace with your central register server URL
 export const WebSocketURL = 'ws://localhost:4000'; // replace with your backend WS URL
 
+
+// Check if the backend is connected
+export const checkConnection = async () => {
+    try {
+        const response = await axios.get(`${API_URL}/api`);
+        if(response.status === 200){
+            return (response.data);
+        } else {
+            return false;
+        }
+    } catch (error) {
+        console.error('Error connecting backend:', error);
+    }
+};
+
 // Register the service
 export const registerService = async () => {
     try {
@@ -12,7 +27,7 @@ export const registerService = async () => {
         name: 'React Frontend Service',
         url: window.location.origin,
       });
-      console.log('Service registered:', response.data);
+      console.log('Service registered, Server: ', response.data);
       return (response.data);
     } catch (error) {
       console.error('Failed to register service:', error);
