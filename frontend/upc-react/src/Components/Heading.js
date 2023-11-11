@@ -17,7 +17,6 @@ const Heading = () => {
                 setBackendURLs(newUrls); // update the state
             }
         }
-        console.log(backendURLs);
     };
 
     const chooseAPIserver = (url) => {

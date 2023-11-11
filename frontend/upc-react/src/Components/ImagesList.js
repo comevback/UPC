@@ -1,9 +1,11 @@
-import { useState } from 'react';
+import { useContext, useState } from 'react';
 import { deleteImage, viewImage } from '../Tools/api';
+import { ParaContext } from '../Global.js';
 import './ImagesList.css';
 
 const ImagesList = (props) => {
     const [activeImageInfo, setActiveImageInfo] = useState(null); // Store the active image info object
+    const { API_URL } = useContext(ParaContext);
 
     const handleViewClick = async (image) => {
         // Check if the activeImageInfo is already set to the clicked image
@@ -42,6 +44,7 @@ const ImagesList = (props) => {
     return (
         <div>
             <h1>Docker Images</h1>
+            <h2>{API_URL}</h2>
             <ul className="image-list">
                 {props.images.map((image, index) => (
                     <li key={index} className="image-item">

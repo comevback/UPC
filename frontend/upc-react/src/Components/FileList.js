@@ -69,6 +69,7 @@ function FileList(props) {
     return (
         <div>
             <h1>Uploaded</h1>
+            <h2>{WebSocketURL}</h2>
             <ul className="file-list">
                 {props.files.map(file => (
                     <li className="file-item" key={file}>

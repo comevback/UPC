@@ -1,11 +1,13 @@
 // UploadForm.js
 import { useState } from "react";
 import { uploadData } from '../Tools/api';
+import { ParaContext } from "../Global.js";
 import './UploadForm.css';
 
 function UploadForm(props) {
     const [file, setFile] = useState([]);
     const [uploadStatus, setUploadStatus] = useState('○');
+    const { API_URL } = useContext(ParaContext);
 
     const handleFileChange = (event) => {
         setFile(Array.from(event.target.files));
@@ -37,6 +39,7 @@ function UploadForm(props) {
     return (
         <div className="upload-form-container">
             <h1>Upload a file</h1>
+            <h2>{API_URL}</h2>
             <form className="upload-form" onSubmit={handleSubmit}>
                 <div className="upload-input">
                     <div className="upload-panel">

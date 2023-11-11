@@ -1,8 +1,12 @@
+import { useContext } from 'react';
+import { ParaContext } from '../Global.js';
 import { downloadResult, deleteResult } from '../Tools/api';
 import './ResultList.css';
 
 // FileList.js
 function ResultList(props) {
+    const { API_URL } = useContext(ParaContext);
+
     if (!props.results.length){
         return (
             <div>
@@ -17,6 +21,7 @@ function ResultList(props) {
     return (
         <div>
             <h1>Results</h1>
+            <h2>{API_URL}</h2>
             <ul className="result-list">
                 {props.results.map(result => (
                     <li className="result-item" key={result}>
