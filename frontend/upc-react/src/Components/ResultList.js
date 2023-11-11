@@ -15,6 +15,7 @@ function ResultList(props) {
         return (
             <div>
                 <h1>Results</h1>
+                <h2>{API_URL}</h2>
                 <div className="result-list">
                     <p>No Results files yet.</p>
                 </div>
