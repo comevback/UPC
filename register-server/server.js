@@ -38,11 +38,25 @@ app.get('/', async (req, res) => {
   }
 });
 
+// List all registered services as json
+app.get('/list-services', async (req, res) => {
+  try {
+    if (isDbConnected) {
+      const services = await Service.find();
+      res.send(services);
+    } else {
+      console.log(backendServices);
+      res.send(backendServices);
+    } 
+  } catch (error) {
+      res.status(500).json({ message: error.message });
+  }
+});
+
 // Register a service
 app.post('/register-service', async (req, res) => {
     const { _id, url, endpoints, hostConfig } = req.body;
     //console.log(req.body);
-  
     try {
       if (isDbConnected) {
       const newService = new Service({
@@ -70,21 +84,6 @@ app.post('/register-service', async (req, res) => {
       res.status(500).json({ message: error.message });
     }
 });
-  
-// List all registered services as json
-app.get('/list-services', async (req, res) => {
-    try {
-      if (isDbConnected) {
-        const services = await Service.find();
-        res.status(200).json(services);
-      } else {
-        res.status(200).json(backendServices);
-      } 
-    } catch (error) {
-        res.status(500).json({ message: error.message });
-    }
-});
-  
   
 // Heartbeat Endpoint
 app.post('/service-heartbeat/:id', async (req, res) => {

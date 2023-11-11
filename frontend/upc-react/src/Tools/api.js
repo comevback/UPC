@@ -20,6 +20,18 @@ export const checkConnection = async () => {
     }
 };
 
+
+// Get the list of services
+export const getServices = async () => {
+    try {
+        const response = await axios.get(`${CENTRAL_SERVER_URL}/list-services`);
+        console.log(response);
+        return response.data;
+    } catch (error) {
+        console.error('Error fetching services:', error);
+    }
+};
+
 // Register the service
 export const registerService = async () => {
     try {
@@ -34,7 +46,7 @@ export const registerService = async () => {
     }
 };
 
-  // Unregister the service
+// Unregister the service
 export const unregisterService = async () => {
     try {
       const response = await axios.delete(`${CENTRAL_SERVER_URL}/frontend/unregister-service`, {

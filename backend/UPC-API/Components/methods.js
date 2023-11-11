@@ -94,7 +94,8 @@ export const registerService = async () => {
 // Send a heartbeat to the central server ============================================
 export const sendHeartbeat = async () => {
     try {
-      await axios.post(`${CENTRAL_SERVER}/service-heartbeat/${id}`);
+      const response = await axios.post(`${CENTRAL_SERVER}/service-heartbeat/${id}`);
+      console.log('Heartbeat sent');
     } catch (error) {
       console.error('Failed to send heartbeat:', error);
     }
