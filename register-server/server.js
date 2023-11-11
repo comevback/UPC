@@ -179,7 +179,8 @@ app.listen(port, () => {
     // Clean up services that have not sent a heartbeat in the last 30 seconds
       if (!isDbConnected) {
         setInterval(async () => {
-        for (const service of backendServices) {
+        const services = Object.values(backendServices);
+        for (const service of services) {
           const now = Date.now();
           const timeElapsedSinceLastHeartbeat = now - service.lastHeartbeat;
           if (timeElapsedSinceLastHeartbeat > 300000) { // 5 minutes
