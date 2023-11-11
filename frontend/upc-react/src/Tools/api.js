@@ -1,11 +1,11 @@
 import axios from 'axios';
-import { ParaContext } from '../Global';
+//import { ParaContext } from '../Global';
 
 // Get data
-const { API_URL, CENTRAL_SERVER_URL, WebSocketURL } = ParaContext._currentValue;
+//const { API_URL, CENTRAL_SERVER_URL, WebSocketURL } = ParaContext._currentValue;
 
 // Check if the backend is connected
-export const checkConnection = async () => {
+export const checkConnection = async (API_URL) => {
     try {
         const response = await axios.get(`${API_URL}/api`);
         if(response.status === 200){
@@ -20,7 +20,7 @@ export const checkConnection = async () => {
 
 
 // Get the list of services
-export const getServices = async () => {
+export const getServices = async (CENTRAL_SERVER_URL) => {
     try {
         const response = await axios.get(`${CENTRAL_SERVER_URL}/list-services`);
         return response.data;
@@ -30,7 +30,7 @@ export const getServices = async () => {
 };
 
 // Register the service
-export const registerService = async () => {
+export const registerService = async (CENTRAL_SERVER_URL) => {
     try {
       const response = await axios.post(`${CENTRAL_SERVER_URL}/frontend/register-service`, {
         name: 'React Frontend Service',
@@ -44,7 +44,7 @@ export const registerService = async () => {
 };
 
 // Unregister the service
-export const unregisterService = async () => {
+export const unregisterService = async (CENTRAL_SERVER_URL) => {
     try {
       const response = await axios.delete(`${CENTRAL_SERVER_URL}/frontend/unregister-service`, {
         name: 'React Frontend Service',
@@ -57,7 +57,7 @@ export const unregisterService = async () => {
     }
 };
 
-export const uploadData = async (data) => {
+export const uploadData = async (API_URL, data) => {
         try {
                 const response = await axios.post(`${API_URL}/api/upload`, data);
                 console.log(response.data)
@@ -68,7 +68,7 @@ export const uploadData = async (data) => {
 };
 
 // Get the list of files
-export const getFiles = async () => {
+export const getFiles = async (API_URL) => {
     try {
         const response = await axios.get(`${API_URL}/api/files`);
         return response.data;
@@ -78,7 +78,7 @@ export const getFiles = async () => {
 };
 
 // Get the list of results
-export const getResults = async () => {
+export const getResults = async (API_URL) => {
     try {
         const response = await axios.get(`${API_URL}/api/results`);
         return response.data;
@@ -88,7 +88,7 @@ export const getResults = async () => {
 };
 
 //delete a file
-export const deleteFile = async (fileName) => {
+export const deleteFile = async (API_URL, fileName) => {
     try {
         const response = await axios.delete(`${API_URL}/api/files/${fileName}`);
         console.log(response.data);
@@ -99,7 +99,7 @@ export const deleteFile = async (fileName) => {
 };
 
 //delete a result
-export const deleteResult = async (fileName) => {
+export const deleteResult = async (API_URL, fileName) => {
     try {
         const response = await axios.delete(`${API_URL}/api/results/${fileName}`);
         console.log(response.data);
@@ -110,7 +110,7 @@ export const deleteResult = async (fileName) => {
 };
 
 // Download a file
-export const downloadFile = async (fileName) => {
+export const downloadFile = async (API_URL, fileName) => {
     try {
         const response = await axios({
             url: `${API_URL}/api/files/${fileName}`,
@@ -129,7 +129,7 @@ export const downloadFile = async (fileName) => {
 };
 
 // Download a result
-export const downloadResult = async (fileName) => {
+export const downloadResult = async (API_URL, fileName) => {
     try {
         const response = await axios({
             url: `${API_URL}/api/results/${fileName}`,
@@ -148,7 +148,7 @@ export const downloadResult = async (fileName) => {
 };
 
 // Generate image
-export const generateImage = async (fileName) => {
+export const generateImage = async (API_URL, fileName) => {
     try {
         const response = await axios.post(`${API_URL}/api/files/${fileName}`);
         console.log(response.data);
@@ -159,7 +159,7 @@ export const generateImage = async (fileName) => {
 };
 
 // Get the list of images
-export const getImages = async () => {
+export const getImages = async (API_URL) => {
     try {
         const response = await axios.get(`${API_URL}/api/images`);
         return response.data;
@@ -169,7 +169,7 @@ export const getImages = async () => {
 }
 
 // View an image details
-export const viewImage = async (fileName) => {
+export const viewImage = async (API_URL, fileName) => {
     try {
         const response = await axios.get(`${API_URL}/api/images/${fileName}`);
         // if ressponse.status === 404, return false
@@ -184,7 +184,7 @@ export const viewImage = async (fileName) => {
 };
 
 // Delete an image
-export const deleteImage = async (fileName) => {
+export const deleteImage = async (API_URL, fileName) => {
     try {
         const response = await axios.delete(`${API_URL}/api/images/${fileName}`);
         if (response.status === 404) {

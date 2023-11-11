@@ -1,6 +1,7 @@
-import React, { useState, useEffect } from 'react';
+import React, { useContext, useState, useEffect } from 'react';
 import './ApplicationForm.css';
 import { getFiles, getResults, getImages } from '../Tools/api';
+import { ParaContext } from '../Global.js';
 import FileList from './FileList';
 import ResultList from './ResultList';
 import UploadForm from './UploadForm';
@@ -11,9 +12,10 @@ function ApplicationForm() {
     const [files, setFiles] = useState([]);
     const [results, setResults] = useState([]);
     const [images, setImages] = useState([]);
+    const { API_URL, CENTRAL_SERVER_URL, WebSocketURL } = useContext(ParaContext);
 
     const refreshFiles = () => {
-        getFiles()
+        getFiles(API_URL)
         .then(files => {
             setFiles(files);
         })
@@ -23,7 +25,7 @@ function ApplicationForm() {
     };
 
     const refreshResults = () => {
-        getResults()
+        getResults(API_URL)
         .then(results => {
             setResults(results);
         })
@@ -33,7 +35,7 @@ function ApplicationForm() {
     };
 
     const refreshImages = () => {
-        getImages()
+        getImages(API_URL)
         .then(images => {
             setImages(images);
         })

@@ -8,7 +8,7 @@ const Heading = () => {
     const [backendURLs, setBackendURLs] = useState([]);
 
     const InputHandler = async () => {
-        const response = await getServices();
+        const response = await getServices(CENTRAL_SERVER_URL);
         console.log(response);
         if (response && Array.isArray(response)) {
             if (response && Array.isArray(response)) {

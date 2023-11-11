@@ -7,7 +7,7 @@ import './FileList.css';
 function FileList(props) {
     const [info, setInfo] = useState([]);
     const [activeInfoFile, setActiveInfoFile] = useState('');
-    const { WebSocketURL } = useContext(ParaContext);
+    const { API_URL, WebSocketURL } = useContext(ParaContext);
 
     // ============================== WebSocket ==================================
     useEffect(() => {
@@ -43,7 +43,7 @@ function FileList(props) {
             newSocket.close();
             setInfo([]);
         };
-    }, []);
+    }, [API_URL, WebSocketURL]);
 
     // ============================== WebSocket ==================================
 
@@ -51,7 +51,7 @@ function FileList(props) {
     const handleFileClick = async(file) => {
         setInfo('Loading...');
         setActiveInfoFile(file);
-        await generateImage(file);
+        await generateImage(API_URL, file);
         props.refreshAll();
     };
 
@@ -77,9 +77,9 @@ function FileList(props) {
                             <span>{file}</span>
                             <div className='buttons'>
                                 <button onClick={() => handleFileClick(file)} >Generate Image</button>
-                                <button onClick={() => downloadFile(file)}>Download</button>
+                                <button onClick={() => downloadFile(API_URL, file)}>Download</button>
                                 <button onClick={async() => {
-                                    await deleteFile(file);
+                                    await deleteFile(API_URL, file);
                                     props.refreshFiles();
                                 }}>Delete</button>
                             </div> 

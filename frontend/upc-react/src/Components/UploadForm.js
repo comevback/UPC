@@ -24,7 +24,7 @@ function UploadForm(props) {
         });// Add the file to formData
 
         // Send formData to server using fetch or axios
-        const result = await uploadData(formData);
+        const result = await uploadData(API_URL, formData);
         if (result.length > 0) {
             setUploadStatus('✓');
         } else {

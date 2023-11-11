@@ -28,9 +28,9 @@ function ResultList(props) {
                         <div className='name-and-buttons'>
                             <span>{result}</span>
                             <div className='buttons'>
-                                <button onClick={() => downloadResult(result)}>Download</button>
+                                <button onClick={() => downloadResult(API_URL, result)}>Download</button>
                                 <button onClick={async() => {
-                                    await deleteResult(result);
+                                    await deleteResult(API_URL, result);
                                     props.refreshResults();
                                 }}>Delete</button>
                             </div>
