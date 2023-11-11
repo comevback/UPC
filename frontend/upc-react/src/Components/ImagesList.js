@@ -13,14 +13,24 @@ const ImagesList = (props) => {
         } else {
             // If not, fetch the new image info and set it as the active info
             const response = await viewImage(image);
+            // If the response is undefined, the image was not found
+            if (response === undefined || response.length === 0 || response === false) {
+                alert('Image Cannot be viewed');
+                return;
+            } else {
             setActiveImageInfo(response[0]); // Set the active image info to the first object in the response array
+            }
         }
         props.refreshImages();
     };
     
 
     const handleDeleteClick = async (image) => {
-        await deleteImage(image);
+        const response = await deleteImage(image);
+        if (response === undefined || response.length === 0 || response === false) {
+            alert('Image Cannot be deleted');
+            return;
+        }
         props.refreshImages();
         // If the deleted image was the active image, clear the active image info
         if (activeImageInfo && activeImageInfo.RepositoryTags.includes(image)) {

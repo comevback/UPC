@@ -54,6 +54,10 @@ app.post('/api/upload', upload.array('file', 50), (req, res) => {
 // Route to get the list of all files
 app.get('/api/files', async (req, res) => {
     const directoryPath = path.join(__dirname, 'uploads');
+    // if the uploads folder does not exist, create it
+    if (!fs.existsSync(directoryPath)) {
+        fs.mkdirSync(directoryPath);
+    }
     fs.readdir(directoryPath, (err, files) => {
         if (err) {
             return res.status(500).send('Unable to scan directory: ' + err);
@@ -68,6 +72,9 @@ app.get('/api/files', async (req, res) => {
 // Route to get the list of all results
 app.get('/api/results', async (req, res) => {
     const directoryPath = path.join(__dirname, 'results');
+    if (!fs.existsSync(directoryPath)) {
+        fs.mkdirSync(directoryPath);
+    }
     fs.readdir(directoryPath, (err, files) => {
         if (err) {
             return res.status(500).send('Unable to scan directory: ' + err);
@@ -105,7 +112,6 @@ app.get('/api/images/:imageName', (req, res) => {
             try {
                 // Try to parse the JSON output
                 const imageDetails = JSON.parse(stdout);
-
                 // Create a new array with the formatted details
                 const formattedDetails = imageDetails.map(detail => ({
                     RepositoryTags: detail.RepoTags,
@@ -120,6 +126,9 @@ app.get('/api/images/:imageName', (req, res) => {
 
                 // Send the formatted details to the client
                 res.status(200).json(formattedDetails);
+
+                // 
+
             } catch (parseErr) {
                 // If the JSON parsing fails, send an error to the client
                 console.error(`Error parsing JSON: ${parseErr}`);
@@ -303,7 +312,7 @@ app.delete('/api/images/:imageName', (req, res) => {
 
 // Route to run a docker image
 app.post('/api/images/docker-run', (req, res) => {
-    const { imageName, fileName } = req.body; // 确保通过正确的验证和错误处理
+    const { imageName, fileName } = req.body; // Get the image name and file name from the request body
   
     const command = `docker run --rm -v ${__dirname}/uploads:/app/uploads -v ${__dirname}/results:/app/results ${imageName} ${fileName}`;
   
@@ -312,7 +321,7 @@ app.post('/api/images/docker-run', (req, res) => {
         console.error(`exec error: ${error}`);
         return res.status(500).send(stderr);
       }
-      // 假设你的 Docker 容器会把结果输出到一个文件
+      // Send the output to all connected WebSocket clients
       res.status(200).send(`Result saved to: /results/output-${fileName}.txt`);
     });
   });

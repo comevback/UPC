@@ -163,8 +163,12 @@ export const getImages = async () => {
 export const viewImage = async (fileName) => {
     try {
         const response = await axios.get(`${API_URL}/api/images/${fileName}`);
-        console.log(response.data);
-        return response.data;
+        // if ressponse.status === 404, return false
+        if (response.status === 404) {
+            return false;
+        } else {
+            return response.data;
+        }
     } catch (error) {
         console.error('Error viewing image:', error);
     }
@@ -174,8 +178,11 @@ export const viewImage = async (fileName) => {
 export const deleteImage = async (fileName) => {
     try {
         const response = await axios.delete(`${API_URL}/api/images/${fileName}`);
-        console.log(response.data);
-        return response.data;
+        if (response.status === 404) {
+            return false;
+        } else {
+            return response.data;
+        }
     } catch (error) {
         console.error('Error deleting image:', error);
     }

@@ -133,3 +133,5 @@ uploads/*
 !uploads/.gitkeep
 results/*
 !results/.gitkeep
+uploads/
+results/
