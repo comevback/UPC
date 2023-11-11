@@ -1,9 +1,8 @@
 import axios from 'axios';
+import { ParaContext } from '../Global';
 
 // Get data
-export const API_URL = 'http://localhost:4000'; // replace with your backend URL
-export const CENTRAL_SERVER_URL = 'http://localhost:8000'; // replace with your central register server URL
-export const WebSocketURL = 'ws://localhost:4000'; // replace with your backend WS URL
+const { API_URL, CENTRAL_SERVER_URL, WebSocketURL } = ParaContext._currentValue;
 
 // Check if the backend is connected
 export const checkConnection = async () => {
