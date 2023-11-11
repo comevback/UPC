@@ -11,7 +11,7 @@ const Server_URL = 'http://localhost:8000';
 const port = 8000; 
 
 let frontendServices = {}; // Store the registered frontend services
-let backendServices = []; // Store the registered backend services
+let backendServices = {} // Store the registered backend services
 let isDbConnected = false;
 
 checkDatabaseConnection().then((isConnected) => {
@@ -30,7 +30,7 @@ app.get('/', async (req, res) => {
         const services = await Service.find();
         res.render('index.ejs', { services, frontendServices });
       } else {
-        const services = Object.values(backendServices);
+        const services = Object.values(backendServices); // Convert the object to an array
         res.render('index.ejs', { services, frontendServices });
       }
   } catch (error) {
@@ -45,8 +45,8 @@ app.get('/list-services', async (req, res) => {
       const services = await Service.find();
       res.send(services);
     } else {
-      console.log(backendServices);
-      res.send(backendServices);
+      const services = Object.values(backendServices); // Convert the object to an array
+      res.send(services);
     } 
   } catch (error) {
       res.status(500).json({ message: error.message });

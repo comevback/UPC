@@ -2,6 +2,7 @@ import React, { useEffect } from 'react';
 import './App.css';
 import ApplicationForm from './Components/ApplicationForm';
 import { registerService, unregisterService } from './Tools/api.js';
+import { ParaProvider } from './Global.js';
 
 
 function App() {
@@ -17,7 +18,9 @@ function App() {
 
   return (
     <div className="App">
-      <ApplicationForm />
+      <ParaProvider>
+        <ApplicationForm />
+      </ParaProvider>
     </div>
   );
 }

@@ -1,11 +1,13 @@
-import { useState, useEffect } from 'react';
-import { downloadFile, generateImage, deleteFile, WebSocketURL} from '../Tools/api';
+import { useState, useEffect, useContext } from 'react';
+import { downloadFile, generateImage, deleteFile } from '../Tools/api';
+import { ParaContext } from '../Global.js';        
 import './FileList.css';
 
 // FileList.js
 function FileList(props) {
     const [info, setInfo] = useState([]);
     const [activeInfoFile, setActiveInfoFile] = useState('');
+    const { WebSocketURL } = useContext(ParaContext);
 
     // ============================== WebSocket ==================================
     useEffect(() => {

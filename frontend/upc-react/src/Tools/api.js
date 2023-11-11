@@ -5,7 +5,6 @@ export const API_URL = 'http://localhost:4000'; // replace with your backend URL
 export const CENTRAL_SERVER_URL = 'http://localhost:8000'; // replace with your central register server URL
 export const WebSocketURL = 'ws://localhost:4000'; // replace with your backend WS URL
 
-
 // Check if the backend is connected
 export const checkConnection = async () => {
     try {
@@ -25,7 +24,6 @@ export const checkConnection = async () => {
 export const getServices = async () => {
     try {
         const response = await axios.get(`${CENTRAL_SERVER_URL}/list-services`);
-        console.log(response);
         return response.data;
     } catch (error) {
         console.error('Error fetching services:', error);

@@ -1,31 +1,45 @@
-import { useState } from "react";
-import { API_URL, CENTRAL_SERVER_URL, getServices } from "../Tools/api";
+import { useContext, useState } from "react";
+import { ParaContext } from "../Global.js";
+import { getServices } from "../Tools/api.js";
 import './Heading.css';
 
 const Heading = () => {
-    let backendURLs = [];
+    const { API_URL, setAPI_URL, CENTRAL_SERVER_URL, setCENTRAL_SERVER_URL, WebSocketURL, setWebSocketURL} = useContext(ParaContext);
+    const [backendURLs, setBackendURLs] = useState([]);
+
     const InputHandler = async () => {
         const response = await getServices();
         console.log(response);
         if (response && Array.isArray(response)) {
-            // Iterate over the list of services
-            response.forEach(service => {
-                // add the backend service URL to the list
-                backendURLs.push(service.url);
-            });
+            if (response && Array.isArray(response)) {
+                // Get the list of URLs
+                const newUrls = response.map(service => service.url);
+                setBackendURLs(newUrls); // update the state
+            }
         }
         console.log(backendURLs);
     };
 
+    const chooseAPIserver = (url) => {
+        setAPI_URL(url);
+        // convert the http:// to ws://
+        const wsURL = url.startsWith('https') ? url.replace('https', 'wss') : url.replace('http', 'ws');
+        setWebSocketURL(wsURL);
+    }
+
     return (
         <section className='heading'>
-            <a href="./" title="UPC-system" ><img className="logo" src="UPC-system.png"></img></a>
-            <a href={CENTRAL_SERVER_URL} title="The Register Server"><img className="logo" src="Regi.png"></img></a>
-            <a href={API_URL} title="The backend APIs Documentation"><img className="logo" src="API-server.png"></img></a>
+            <a href="./" title={`UPC system`} ><img className="logo" src="UPC-system.png"></img></a>
+            <a href={CENTRAL_SERVER_URL} title={`The Register Server: \n ${CENTRAL_SERVER_URL}`}><img className="logo" src="Regi.png"></img></a>
+            <a href={API_URL} title={`The backend APIs Documentation: \n ${API_URL}`}><img className="logo" src="API-server.png"></img></a>
             <button className="button" onClick={InputHandler}>Show the list of backend services</button>
             <div className="services">
                 {backendURLs.map((url, index) => (
-                    <a>{url}</a> 
+                    <div>
+                        <a title="The backend APIs Documentation" onClick={() => chooseAPIserver(url)}><img className="logo" src="API-server.png"></img></a>
+                        <span>{url}</span>
+                    </div>
+                    
                 ))   
                 }
             </div>
