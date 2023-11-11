@@ -5,8 +5,9 @@ import './Heading.css';
 const Heading = () => {
     return (
         <section className='heading'>
-            <a href={API_URL}><h1>UPC API Documentation</h1></a>
-            <a href={CENTRAL_SERVER_URL}><h1>Register Server</h1></a>
+            <a href="./" title="UPC-system" ><img className="logo" src="UPC-system.png"></img></a>
+            <a href={CENTRAL_SERVER_URL} title="The Register Server"><img className="logo" src="Regi.png"></img></a>
+            <a href={API_URL} title="The backend APIs Documentation"><img className="logo" src="API-server.png"></img></a>
         </section>
     );
 }

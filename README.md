@@ -43,8 +43,8 @@ chmod +x install.sh
 ```
 
 **Windows**:
-```powershell
-.\install.bat
+```git bash
+./install.sh
 ```
 
 ### Usage

@@ -58,6 +58,8 @@ app.get('/api/files', async (req, res) => {
         if (err) {
             return res.status(500).send('Unable to scan directory: ' + err);
         } 
+        // ignore the .gitkeep file
+        files = files.filter(file => file !== '.gitkeep');
         // Return the list of files
         res.send(files);
     });
@@ -70,6 +72,8 @@ app.get('/api/results', async (req, res) => {
         if (err) {
             return res.status(500).send('Unable to scan directory: ' + err);
         } 
+        // ignore the .gitkeep file
+        files = files.filter(file => file !== '.gitkeep');
         // Return the list of files
         res.send(files);
     });
@@ -323,7 +327,7 @@ const wss = new WebSocketServer({ server });
 
 // Listen for new connections
 wss.on('connection', function connection(ws) {
-  console.log('A new client connected');
+  console.log('websocket: A new client connected');
   ws.on('message', function incoming(message) {
     console.log('received: %s', message);
   });
