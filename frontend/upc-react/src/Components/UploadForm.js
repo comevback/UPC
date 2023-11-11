@@ -1,5 +1,5 @@
 // UploadForm.js
-import { useContext, useState } from "react";
+import { useContext, useState, useEffect } from "react";
 import { uploadData } from '../Tools/api';
 import { ParaContext } from "../Global.js";
 import './UploadForm.css';
@@ -8,6 +8,10 @@ function UploadForm(props) {
     const [file, setFile] = useState([]);
     const [uploadStatus, setUploadStatus] = useState('○');
     const { API_URL } = useContext(ParaContext);
+
+    useEffect(() => {
+        props.refreshFiles();
+    }, [API_URL]);
 
     const handleFileChange = (event) => {
         setFile(Array.from(event.target.files));

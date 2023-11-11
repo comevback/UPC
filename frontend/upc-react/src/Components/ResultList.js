@@ -1,4 +1,4 @@
-import { useContext } from 'react';
+import { useContext, useEffect } from 'react';
 import { ParaContext } from '../Global.js';
 import { downloadResult, deleteResult } from '../Tools/api';
 import './ResultList.css';
@@ -6,6 +6,10 @@ import './ResultList.css';
 // FileList.js
 function ResultList(props) {
     const { API_URL } = useContext(ParaContext);
+
+    useEffect(() => {
+        props.refreshResults();
+    }, [API_URL]);
 
     if (!props.results.length){
         return (

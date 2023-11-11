@@ -11,6 +11,8 @@ function FileList(props) {
 
     // ============================== WebSocket ==================================
     useEffect(() => {
+        props.refreshFiles();
+
         // Create a new WebSocket
         const newSocket = new WebSocket(WebSocketURL);
 

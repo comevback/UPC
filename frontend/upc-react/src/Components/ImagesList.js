@@ -1,4 +1,4 @@
-import { useContext, useState } from 'react';
+import { useContext, useState, useEffect } from 'react';
 import { deleteImage, viewImage } from '../Tools/api';
 import { ParaContext } from '../Global.js';
 import './ImagesList.css';
@@ -7,7 +7,12 @@ const ImagesList = (props) => {
     const [activeImageInfo, setActiveImageInfo] = useState(null); // Store the active image info object
     const { API_URL } = useContext(ParaContext);
 
+    useEffect(() => {
+        props.refreshImages();
+    }, [API_URL]);
+
     const handleViewClick = async (image) => {
+
         // Check if the activeImageInfo is already set to the clicked image
         if (activeImageInfo && activeImageInfo.RepositoryTags.includes(image)) {
             // If so, set it back to null to 'deselect' it

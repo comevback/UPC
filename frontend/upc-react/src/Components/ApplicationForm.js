@@ -62,13 +62,13 @@ function ApplicationForm() {
         <div>
             <Heading/>
             <div className="shownFiles">
-                <UploadForm refreshFiles={refreshFiles} refreshResults={refreshResults}/>
-                <ImagesList images={images} refreshImages={refreshImages}/>
+                <UploadForm refreshFiles={refreshFiles} refreshResults={refreshResults} refreshAll={refresh}/>
+                <ImagesList images={images} refreshImages={refreshImages} refreshAll={refresh}/>
             </div>
             
             <div className='shownFiles'>
                 <FileList files={files} refreshFiles={refreshFiles} refreshResults={refreshResults} refreshAll={refresh}/>
-                <ResultList results={results} refreshFiles={refreshFiles} refreshResults={refreshResults}/>
+                <ResultList results={results} refreshFiles={refreshFiles} refreshResults={refreshResults} refreshAll={refresh}/>
             </div>
         </div>
     );
