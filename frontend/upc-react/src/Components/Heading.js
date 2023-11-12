@@ -35,7 +35,7 @@ const Heading = () => {
             <div className="services">
                 {backendURLs.map((url, index) => (
                     <div>
-                        <a title="The backend APIs Documentation" onClick={() => chooseAPIserver(url)}><img className="logo" src="API-server.png"></img></a>
+                        <a title={`Choose this Server: ${url}`} onClick={() => chooseAPIserver(url)}><img className="logo" src="API-server.png"></img></a>
                         <span>{url}</span>
                     </div>
                     

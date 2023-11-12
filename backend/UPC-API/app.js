@@ -25,8 +25,8 @@ app.use(cors());
 // Register the service
 registerService();
 
-// Send a heartbeat every 2 minutes
-setInterval(sendHeartbeat, 120000);
+// Send a heartbeat every minute
+setInterval(sendHeartbeat, 60000);
 
 // Handle process termination
 process.on('SIGTERM', gracefulShutdown);

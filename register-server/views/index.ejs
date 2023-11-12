@@ -11,7 +11,7 @@
 <body>
     <h1>Registered Services</h1>
     <div class="services-container">
-        <% for (const [url, service] of Object.entries(frontendServices)) { %>
+        <% frontend_services.forEach(function(service) { %>
             <div class="service-card frontend">
                 <h2>Frontend Service</h2>
                 <strong>Name:</strong>
@@ -24,8 +24,8 @@
                         <%= new Date(service.registeredAt).toLocaleString() %><br>
                     </div>
             </div>
-            <% } %>
-                <% services.forEach(function(service) { %>
+            <% }) %>
+                <% backend_services.forEach(function(service) { %>
                     <div class="service-card backend">
                         <h2>Backend Service</h2>
                         <strong>ID:</strong>

@@ -87,24 +87,24 @@ export const registerService = async () => {
       const response = await axios.post(`${CENTRAL_SERVER}/register-service`, serviceInfo);
       console.log('Service registered');
     } catch (error) {
-      console.error('Failed to register service:', error);
+      console.error('Failed to register service');
     }
 };
   
 // Send a heartbeat to the central server ============================================
 export const sendHeartbeat = async () => {
     try {
-      const response = await axios.post(`${CENTRAL_SERVER}/service-heartbeat/${id}`);
+      const response = await axios.post(`${CENTRAL_SERVER}/service-heartbeat`, serviceInfo);
       console.log('Heartbeat sent');
     } catch (error) {
-      console.error('Failed to send heartbeat:', error);
+      console.error('Failed to send heartbeat');
     }
 };
   
 // Unregister the service. ============================================
 export const unregisterService = async () => {
     try {
-      const response = await axios.delete(`${CENTRAL_SERVER}/unregister-service/${id}`);
+      const response = await axios.delete(`${CENTRAL_SERVER}/unregister-service`, { data: { _id: id } });
       console.log('Service unregistered');
     } catch (error) {
       console.error('Failed to unregister service:');

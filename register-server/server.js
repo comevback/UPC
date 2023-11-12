@@ -1,6 +1,6 @@
 import express from "express";
 import cors from 'cors';
-import { checkDatabaseConnection, Service } from "./Components/mongoDB.js";
+import { checkDatabaseConnection, BackendService, FrontendService } from "./Components/mongoDB.js";
 
 const app = express();
 app.use(express.json());
@@ -19,7 +19,8 @@ checkDatabaseConnection().then((isConnected) => {
       console.log('Connected to MongoDB.');
       isDbConnected = true;
     } else {
-      console.error('Failed to connect to MongoDB. use local storage instead.');
+      console.log('Failed to connect to MongoDB. use local storage instead.');
+      isDbConnected = false;
     }
 });
 
@@ -27,11 +28,13 @@ checkDatabaseConnection().then((isConnected) => {
 app.get('/', async (req, res) => {
   try {
       if (isDbConnected) {
-        const services = await Service.find();
-        res.render('index.ejs', { services, frontendServices });
+        const backend_services = await BackendService.find();
+        const frontend_services = await FrontendService.find();
+        res.render('index.ejs', { backend_services, frontend_services });
       } else {
-        const services = Object.values(backendServices); // Convert the object to an array
-        res.render('index.ejs', { services, frontendServices });
+        const backend_services = Object.values(backendServices); // Convert the object to an array
+        const frontend_services = Object.values(frontendServices);
+        res.render('index.ejs', { backend_services, frontend_services });
       }
   } catch (error) {
       res.status(500).send(error.message);
@@ -42,7 +45,7 @@ app.get('/', async (req, res) => {
 app.get('/list-services', async (req, res) => {
   try {
     if (isDbConnected) {
-      const services = await Service.find();
+      const services = await BackendService.find();
       res.send(services);
     } else {
       const services = Object.values(backendServices); // Convert the object to an array
@@ -56,18 +59,21 @@ app.get('/list-services', async (req, res) => {
 // Register a service
 app.post('/register-service', async (req, res) => {
     const { _id, url, endpoints, hostConfig } = req.body;
-    //console.log(req.body);
     try {
       if (isDbConnected) {
-      const newService = new Service({
-        _id,
-        url,
-        endpoints,
-        hostConfig
-      });
-      const savedService = await newService.save();
-      console.log(`Service ${savedService._id} registered successfully`);
-      res.status(201).json(savedService);
+        const newService = new BackendService({
+          _id,
+          url,
+          endpoints,
+          hostConfig
+        });
+        await newService.save().then((service) => {
+          console.log(`Service ${service._id} registered successfully`);
+          res.status(201).json(service);
+        }).catch((error) => {
+          console.log(error);
+          res.status(500).json({ message: error.message });
+        });
       } else {
         backendServices[_id] = {
           _id,
@@ -86,11 +92,12 @@ app.post('/register-service', async (req, res) => {
 });
   
 // Heartbeat Endpoint
-app.post('/service-heartbeat/:id', async (req, res) => {
+app.post('/service-heartbeat', async (req, res) => {
+    const { _id } = req.body;
     try {
       if (isDbConnected) {
-        const service = await Service.findByIdAndUpdate(
-            req.params.id,
+        const service = await BackendService.findByIdAndUpdate(
+            _id,
             { lastHeartbeat: Date.now() },
             { new: true }
         );
@@ -100,7 +107,7 @@ app.post('/service-heartbeat/:id', async (req, res) => {
         }
         res.status(200).json(service);
       } else {
-        const service = backendServices[req.params.id];
+        const service = backendServices[_id];
         if (!service) {
             return res.status(404).json({ message: "Service not found" });
         }
@@ -114,19 +121,20 @@ app.post('/service-heartbeat/:id', async (req, res) => {
 });
   
 // Unregister a service
-app.delete('/unregister-service/:id', async (req, res) => {
+app.delete('/unregister-service', async (req, res) => {
+    const { _id } = req.body;
     try {
       if (isDbConnected) {
-        const service = await Service.findByIdAndDelete(req.params.id);
+        const service = await BackendService.findByIdAndDelete(_id);
         console.log(`Unregistered service ${service._id}`);
         // Service has been found and deleted successfully
         res.status(200).json({ message: `Service ${service._id} unregistered successfully` });
       } else {
-        const service = backendServices[req.params.id];
+        const service = backendServices[_id]
         if (!service) {
           return res.status(404).json({ message: "Service not found" });
         }
-        delete backendServices[req.params.id];
+        delete backendServices[_id];
         console.log(`Unregistered service ${service._id}`);
         // Service has been found and deleted successfully
         res.status(200).json({ message: `Service ${service._id} unregistered successfully` });
@@ -138,76 +146,102 @@ app.delete('/unregister-service/:id', async (req, res) => {
 
 
 // Register frontend server 
-app.post('/frontend/register-service', (req, res) => {
-    const { name, url } = req.body;
-  
-    // Use the URL as a unique identifier for the service
-    if (frontendServices[url]) {
-      return res.status(400).json({ message: 'Service is already registered.' });
+app.post('/frontend/register-service', async (req, res) => {
+    const { _id, url } = req.body;
+
+    if (isDbConnected) {
+      const newService = new FrontendService({
+        _id,
+        url
+      });
+      await newService.save().then((service) => {
+        console.log(`Frontend Service: ${service._id} registered successfully`);
+        res.status(200).json(service);
+      }).catch((err) => {
+        console.log(err);
+        res.status(500).json({message: err.message})
+      });
+  } else {
+      frontendServices[url] = {
+        _id,
+        url,
+        registeredAt: new Date()
+      };
+      console.log(`Service ${_id} registered successfully`);
+      res.status(201).send({ URL: Server_URL }); // 201 Created
     }
-  
-    // Add the service to the registered services object
-    frontendServices[url] = {
-      name,
-      url,
-      registeredAt: new Date()
-    };
-  
-    console.log(`Service ${name} registered successfully`);
-    res.status(201).send({ URL: Server_URL }); // 201 Created
 });
 
 // Unregister frontend server 
-app.delete('/frontend/unregister-service', (req, res) => {
-    const { name, url } = req.body;
-  
-    if (!frontendServices[url]) {
-      return res.status(404).json({ message: 'Service not found.' });
+app.delete('/frontend/unregister-service', async (req, res) => {
+    const { _id, url } = req.body;
+    if (isDbConnected) {
+        const service = await FrontendService.findByIdAndDelete(_id);
+        console.log(`Service ${_id} unregistered successfully`);
+        res.status(200).json({ message: 'Service unregistered successfully.' });
+    } else {
+      delete frontendServices[_id];
+      console.log(`Service ${_id} unregistered successfully`);
+      res.status(200).json({ message: 'Service unregistered successfully.' });
     }
-  
-    // Remove the service from the registered services object
-    delete frontendServices[url];
-  
-    console.log(`Service ${name} unregistered successfully`);
-    res.status(200).json({ message: 'Service unregistered successfully.' });
 });
 
+// heartbeat from frontend server
+app.post('/frontend/service-heartbeat', async (req, res) => {
+  const { _id, url } = req.body;
+  if (isDbConnected) {
+    const service = await FrontendService.findOneAndUpdate(
+      { url: url }, 
+      { lastHeartbeat: Date.now() }, 
+      { new: true }
+    );
+    if (!service) {
+      return res.status(404).json({ message: "Service not found" });
+    }
+    console.log(`Heartbeat from frontend service : ${_id}`);
+    res.status(200).json(service);
+  } else {
+    frontendServices[url].lastHeartbeat = Date.now();
+    console.log(`Heartbeat from frontend service : ${_id}`);
+    res.status(200).json(frontendServices[url]);
+  }
+});
   
 
 app.listen(port, () => {
     console.log(`Register server is running on port ${port}.`);
-    // Clean up services that have not sent a heartbeat in the last 30 seconds
+    // Clean up services that have not sent a heartbeat in a certain amount of time
       if (!isDbConnected) {
         setInterval(async () => {
         const services = Object.values(backendServices);
         for (const service of services) {
           const now = Date.now();
           const timeElapsedSinceLastHeartbeat = now - service.lastHeartbeat;
-          if (timeElapsedSinceLastHeartbeat > 300000) { // 5 minutes
+          if (timeElapsedSinceLastHeartbeat > 120000) { // 2 minutes
             try {
-              await Service.findByIdAndDelete(service._id); // Using await to ensure the operation completes
+              await BackendService.findByIdAndDelete(service._id); // Using await to ensure the operation completes
               console.log(`Unregistered service ${service._id}`);
             } catch (error) {
               console.error(`Error unregistering service ${service._id}: ${error}`);
             }
           }
         }
-      }, 10000);
+      }, 60000);// 10 seconds
     } else {
       setInterval(async () => {
-      const services = await Service.find();
+      const services = await BackendService.find();
       for (const service of services) {
         const now = Date.now();
         const timeElapsedSinceLastHeartbeat = now - service.lastHeartbeat;
-        if (timeElapsedSinceLastHeartbeat > 300000) { // 5 minutes
+        if (timeElapsedSinceLastHeartbeat > 120000) { // 2 minutes
           try {
-            await Service.findByIdAndDelete(service._id); // Using await to ensure the operation completes
+            await FrontendService.findByIdAndDelete(service._id); // Using await to ensure the operation completes
             console.log(`Unregistered service ${service._id}`);
           } catch (error) {
             console.error(`Error unregistering service ${service._id}: ${error}`);
           }
         }
       }
-    }, 10000);
+    }, 60000);
   }
 });

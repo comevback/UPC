@@ -1,8 +1,4 @@
 import axios from 'axios';
-//import { ParaContext } from '../Global';
-
-// Get data
-//const { API_URL, CENTRAL_SERVER_URL, WebSocketURL } = ParaContext._currentValue;
 
 // Check if the backend is connected
 export const checkConnection = async (API_URL) => {
@@ -33,7 +29,7 @@ export const getServices = async (CENTRAL_SERVER_URL) => {
 export const registerService = async (CENTRAL_SERVER_URL) => {
     try {
       const response = await axios.post(`${CENTRAL_SERVER_URL}/frontend/register-service`, {
-        name: 'React Frontend Service',
+        _id: 'React Frontend Service',
         url: window.location.origin,
       });
       console.log('Service registered, Server: ', response.data);
@@ -47,13 +43,26 @@ export const registerService = async (CENTRAL_SERVER_URL) => {
 export const unregisterService = async (CENTRAL_SERVER_URL) => {
     try {
       const response = await axios.delete(`${CENTRAL_SERVER_URL}/frontend/unregister-service`, {
-        name: 'React Frontend Service',
+        _id: 'React Frontend Service',
         url: window.location.origin,
       });
       console.log('Service unregistered:', response.data);
       return (response.data);
     } catch (error) {
       console.error('Failed to unregister service:', error);
+    }
+};
+
+// Send a heartbeat to the central server
+export const sendHeartbeat = async (CENTRAL_SERVER_URL) => {
+    try {
+        const response = await axios.post(`${CENTRAL_SERVER_URL}/frontend/service-heartbeat`, {
+            _id: 'React Frontend Service',
+            url: window.location.origin,
+        });
+        console.log('Heartbeat sent');
+    } catch (error) {
+        console.error('Failed to send heartbeat');
     }
 };
 
