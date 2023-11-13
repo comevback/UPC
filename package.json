@@ -8,5 +8,10 @@
   },
   "dependencies": {
     "concurrently": "^8.2.2"
-  }
+  },
+  "main": "main.js",
+  "version": "1.0.0",
+  "description": "UPC-system",
+  "author": "Xu Xiang",
+  "license": "MIT"
 }

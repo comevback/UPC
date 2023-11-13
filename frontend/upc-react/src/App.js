@@ -1,6 +1,6 @@
 import React, { useContext, useEffect } from 'react';
 import './App.css';
-import ApplicationForm from './Components/ApplicationForm';
+import Application from './Components/Application';
 import { registerService, unregisterService, sendHeartbeat } from './Tools/api.js';
 import { ParaProvider } from './Global.js';
 import { ParaContext } from './Global.js';
@@ -25,7 +25,7 @@ function App() {
   return (
     <div className="App">
       <ParaProvider>
-        <ApplicationForm />
+        <Application />
       </ParaProvider>
     </div>
   );

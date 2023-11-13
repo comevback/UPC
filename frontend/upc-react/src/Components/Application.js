@@ -1,18 +1,18 @@
 import React, { useContext, useState, useEffect } from 'react';
-import './ApplicationForm.css';
-import { getFiles, getResults, getImages } from '../Tools/api';
+import './Application.css';
+import { getFiles, getResults, getImages } from '../Tools/api.js';
 import { ParaContext } from '../Global.js';
-import FileList from './FileList';
-import ResultList from './ResultList';
-import UploadForm from './UploadForm';
-import ImagesList from './ImagesList';
-import Heading from './Heading';
+import FileList from './FileList.js';
+import ResultList from './ResultList.js';
+import UploadForm from './UploadForm.js';
+import ImagesList from './ImagesList.js';
+import Heading from './Heading.js';
 
 function ApplicationForm() {
     const [files, setFiles] = useState([]);
     const [results, setResults] = useState([]);
     const [images, setImages] = useState([]);
-    const { API_URL, CENTRAL_SERVER_URL, WebSocketURL } = useContext(ParaContext);
+    const { API_URL, API_NAME } = useContext(ParaContext);
 
     const refreshFiles = () => {
         getFiles(API_URL)
@@ -60,13 +60,20 @@ function ApplicationForm() {
 
     return (
         <div>
+            <div className='sources'>
+                <a href='./' rel="noopener noreferrer"><img src='UPC-logo-rm.png' alt='UPC logo' width='300px' height='300px'/></a>
+                <div>
+                    <h1>UPC - Generating and Processing</h1>
+                    <h2>Current Server: <a className='Serverlink' href={API_URL} target="_blank" rel="noopener noreferrer">{API_NAME}</a></h2>
+                </div>
+            </div>
             <Heading/>
-            <div className="shownFiles">
+            <div className="area">
                 <UploadForm refreshFiles={refreshFiles} refreshResults={refreshResults} refreshAll={refresh}/>
                 <ImagesList images={images} refreshImages={refreshImages} refreshAll={refresh}/>
             </div>
             
-            <div className='shownFiles'>
+            <div className='area'>
                 <FileList files={files} refreshFiles={refreshFiles} refreshResults={refreshResults} refreshAll={refresh}/>
                 <ResultList results={results} refreshFiles={refreshFiles} refreshResults={refreshResults} refreshAll={refresh}/>
             </div>

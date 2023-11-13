@@ -43,7 +43,6 @@ function UploadForm(props) {
     return (
         <div className="upload-form-container">
             <h1>Upload a file</h1>
-            <h2>{API_URL}</h2>
             <form className="upload-form" onSubmit={handleSubmit}>
                 <div className="upload-input">
                     <div className="upload-panel">

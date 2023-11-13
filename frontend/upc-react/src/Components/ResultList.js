@@ -26,7 +26,6 @@ function ResultList(props) {
     return (
         <div>
             <h1>Results</h1>
-            <h2>{API_URL}</h2>
             <ul className="result-list">
                 {props.results.map(result => (
                     <li className="result-item" key={result}>

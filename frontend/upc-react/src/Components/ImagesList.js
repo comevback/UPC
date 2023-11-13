@@ -49,7 +49,6 @@ const ImagesList = (props) => {
     return (
         <div>
             <h1>Docker Images</h1>
-            <h2>{API_URL}</h2>
             <ul className="image-list">
                 {props.images.map((image, index) => (
                     <li key={index} className="image-item">
