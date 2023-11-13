@@ -21,7 +21,9 @@
                     </a>
                     <div class="register-time">
                         <strong>Registered At:</strong>
-                        <%= new Date(service.registeredAt).toLocaleString() %><br>
+                        <%= new Date(service.createdAt).toLocaleString() %><br>
+                            <strong>Last Heartbeat:</strong>
+                            <%= new Date(service.lastHeartbeat).toLocaleString() %><br>
                     </div>
             </div>
             <% }) %>

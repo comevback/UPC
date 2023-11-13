@@ -99,4 +99,4 @@ if (await checkDatabaseConnection()) {
     FrontendService = {};
 }
 
-export {checkDatabaseConnection, BackendService, FrontendService}
+export { checkDatabaseConnection, BackendService, FrontendService }

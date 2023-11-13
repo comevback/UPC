@@ -41,6 +41,10 @@ app.get('/', async (req, res) => {
   }
 });
 
+
+// BACKEND SERVERS --------------------------------------------------------------------------------------------
+
+
 // List all registered services as json
 app.get('/list-services', async (req, res) => {
   try {
@@ -64,6 +68,7 @@ app.post('/register-service', async (req, res) => {
         const newService = new BackendService({
           _id,
           url,
+          createdAt: new Date(),
           endpoints,
           hostConfig
         });
@@ -89,6 +94,30 @@ app.post('/register-service', async (req, res) => {
     } catch (error) {
       res.status(500).json({ message: error.message });
     }
+});
+
+// Unregister a service
+app.delete('/unregister-service', async (req, res) => {
+  const { _id } = req.body;
+  try {
+    if (isDbConnected) {
+      const service = await BackendService.findByIdAndDelete(_id);
+      console.log(`Unregistered service ${service._id}`);
+      // Service has been found and deleted successfully
+      res.status(200).json({ message: `Service ${service._id} unregistered successfully` });
+    } else {
+      const service = backendServices[_id]
+      if (!service) {
+        return res.status(404).json({ message: "Service not found" });
+      }
+      delete backendServices[_id];
+      console.log(`Unregistered service ${service._id}`);
+      // Service has been found and deleted successfully
+      res.status(200).json({ message: `Service ${service._id} unregistered successfully` });
+    }
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
 });
   
 // Heartbeat Endpoint
@@ -119,30 +148,9 @@ app.post('/service-heartbeat', async (req, res) => {
         res.status(500).json({ message: error.message });
     }
 });
-  
-// Unregister a service
-app.delete('/unregister-service', async (req, res) => {
-    const { _id } = req.body;
-    try {
-      if (isDbConnected) {
-        const service = await BackendService.findByIdAndDelete(_id);
-        console.log(`Unregistered service ${service._id}`);
-        // Service has been found and deleted successfully
-        res.status(200).json({ message: `Service ${service._id} unregistered successfully` });
-      } else {
-        const service = backendServices[_id]
-        if (!service) {
-          return res.status(404).json({ message: "Service not found" });
-        }
-        delete backendServices[_id];
-        console.log(`Unregistered service ${service._id}`);
-        // Service has been found and deleted successfully
-        res.status(200).json({ message: `Service ${service._id} unregistered successfully` });
-      }
-    } catch (error) {
-      res.status(500).json({ message: error.message });
-    }
-});
+
+
+// FRONTEND SERVERS --------------------------------------------------------------------------------------------
 
 
 // Register frontend server 
@@ -152,7 +160,8 @@ app.post('/frontend/register-service', async (req, res) => {
     if (isDbConnected) {
       const newService = new FrontendService({
         _id,
-        url
+        url,
+        createdAt: new Date()
       });
       await newService.save().then((service) => {
         console.log(`Frontend Service: ${service._id} registered successfully`);
@@ -174,7 +183,7 @@ app.post('/frontend/register-service', async (req, res) => {
 
 // Unregister frontend server 
 app.delete('/frontend/unregister-service', async (req, res) => {
-    const { _id, url } = req.body;
+    const { _id } = req.body;
     if (isDbConnected) {
         const service = await FrontendService.findByIdAndDelete(_id);
         console.log(`Service ${_id} unregistered successfully`);
@@ -207,6 +216,9 @@ app.post('/frontend/service-heartbeat', async (req, res) => {
   }
 });
   
+
+// Start the Server --------------------------------------------------------------------------------------------
+
 
 app.listen(port, () => {
     console.log(`Register server is running on port ${port}.`);
