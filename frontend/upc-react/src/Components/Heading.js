@@ -27,7 +27,7 @@ const Heading = () => {
     return (
         <section className='heading'>
             <div className="server-with">
-                <a href="./" title={`UPC system`} ><img className="logo" src="UPC-system.png" alt="UPC system"></img></a>
+                <a href='./' title={`UPC system`} ><img className="logo" src="UPC-system.png" alt="UPC system"></img></a>
                 <span className="server-title">Home</span>
             </div>
             <div className="server-with">

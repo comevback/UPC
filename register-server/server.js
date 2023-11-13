@@ -2,13 +2,14 @@ import express from "express";
 import cors from 'cors';
 import { checkDatabaseConnection, BackendService, FrontendService, backendServices, frontendServices, readServicesFromFile, writeServicesToFile, CleanUpDataBase, CleanUpLocal } from "./Components/method.js";
 
+const Server_URL = 'http://localhost:8000';
+const port = 8000; 
 const app = express();
 app.use(express.json());
 app.use(express.static("public"));
 app.set('view engine', 'ejs');
 app.use(cors());
-const Server_URL = 'http://localhost:8000';
-const port = 8000; 
+
 
 // Read data from file on startup
 readServicesFromFile();
