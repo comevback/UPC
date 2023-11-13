@@ -63,7 +63,7 @@ function ApplicationForm() {
             <div className='sources'>
                 <a href='./' rel="noopener noreferrer"><img src='UPC-logo-rm.png' alt='UPC logo' width='300px' height='300px'/></a>
                 <div>
-                    <h1>UPC - Generating and Processing</h1>
+                    <h1 className='title'>UPC - Generate and Process</h1>
                     <h2>Current Server: <a className='Serverlink' href={API_URL} target="_blank" rel="noopener noreferrer">{API_NAME}</a></h2>
                 </div>
             </div>
