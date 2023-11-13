@@ -23,16 +23,17 @@ These instructions will get you a copy of the project up and running on your loc
 
 ### Installing
 
-Clone the repository:
+**Clone the repository:**
 
 ```bash
 git clone https://github.com/comevback/UPC-node.git
 cd UPC-node
 ```
 
-Install dependencies for the all:
+**Install dependencies for the all:**
 
-**Linux/MacOS**:
+(If you are using Windows, please use *git bash* or other kinds of bash)
+
 ```bash
 npm run install-all
 ```
@@ -42,12 +43,6 @@ chmod +x install.sh
 ./install.sh
 ```
 
-**Windows**:
-please use *git bash* or other kinds of bash on Windows
-```bash
-chmod +x install.sh
-./install.sh
-```
 
 ### Usage
 
