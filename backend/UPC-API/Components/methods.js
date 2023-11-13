@@ -6,7 +6,7 @@ import axios from "axios";
 import rateLimit from "express-rate-limit";
 
 // URL of the central server
-const CENTRAL_SERVER = 'http://localhost:8000'; // 替换为实际地址
+const CENTRAL_SERVER = 'http://localhost:8000'; // TODO: Change this to the URL of your central server
 
 // Get host information. ============================================
 export const getHostInfo = () => {
@@ -33,12 +33,12 @@ export const formatUptime = (seconds) => {
 };
 
 const hostInfo = getHostInfo();
-const id = 'API Service';
+const id = 'API Service'; // TODO: Change this to a unique ID for your service
 
 // Information about this service
 export const serviceInfo = {
   _id: id,
-  url: 'http://localhost:4000',
+  url: 'http://localhost:4000', // TODO: Change this to the URL of your service
   endpoints: [
     '/',
     '/register',
@@ -67,8 +67,8 @@ const storage = multer.diskStorage({
         cb(null, dir) // Destination folder
     },
     filename: (req, file, cb) => {
-        //cb(null, file.originalname + '_' + Date.now() + path.extname(file.originalname)) // Filename + timestamp 时间戳名，可以重复上传同一文件
-        cb(null, file.originalname) // Filename 原名，不能重复上传同一文件
+        //cb(null, file.originalname + '_' + Date.now() + path.extname(file.originalname)) // Filename + timestamp
+        cb(null, file.originalname) // Filename + timestamp originalname
     }
 });
 

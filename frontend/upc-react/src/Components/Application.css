@@ -5,9 +5,9 @@
 }
 
 .Serverlink{
-    color: rgb(47, 136, 154); /* 链接颜色 */
-    text-decoration: none; /* 移除下划线 */
-    transition: color 0.3s; /* 平滑颜色过渡效果 */
+    color: rgb(47, 136, 154); 
+    text-decoration: none; 
+    transition: color 0.3s; 
 }
 
 .Serverlink:hover, .Serverlink:focus{
