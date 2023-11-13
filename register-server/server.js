@@ -180,7 +180,7 @@ app.post('/frontend/register-service', async (req, res) => {
       frontendServices[url] = {
         _id,
         url,
-        registeredAt: new Date()
+        createdAt: new Date()
       };
       writeServicesToFile();
       console.log(`Service ${_id} registered successfully`);
