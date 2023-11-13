@@ -1,0 +1,21 @@
+{
+  "API Service": {
+    "_id": "API Service",
+    "url": "http://localhost:4000",
+    "endpoints": [
+      "/",
+      "/register",
+      "/login",
+      "/tasks",
+      "/api/upload",
+      "/api/files",
+      "/api/files/:filename",
+      "/api/results",
+      "/api/results/:filename",
+      "/api/images",
+      "/api/images/:imageName"
+    ],
+    "createdAt": "2023-11-13T01:28:09.568Z",
+    "lastHeartbeat": "2023-11-13T01:28:09.568Z"
+  }
+}

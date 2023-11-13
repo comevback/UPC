@@ -1,6 +1,7 @@
 import express from "express";
 import cors from 'cors';
 import { checkDatabaseConnection, BackendService, FrontendService } from "./Components/mongoDB.js";
+import { backendServices, frontendServices, readServicesFromFile, writeServicesToFile, CleanUpBackend, CleanUpFrontend } from "./Components/method.js";
 
 const app = express();
 app.use(express.json());
@@ -10,10 +11,11 @@ app.use(cors());
 const Server_URL = 'http://localhost:8000';
 const port = 8000; 
 
-let frontendServices = {}; // Store the registered frontend services
-let backendServices = {} // Store the registered backend services
-let isDbConnected = false;
+// Read data from file on startup
+readServicesFromFile();
 
+// Check if the database is connected, if not, use local storage instead of database
+let isDbConnected = false;
 checkDatabaseConnection().then((isConnected) => {
     if (isConnected) {
       console.log('Connected to MongoDB.');
@@ -23,6 +25,9 @@ checkDatabaseConnection().then((isConnected) => {
       isDbConnected = false;
     }
 });
+
+
+// Endpoints --------------------------------------------------------------------------------------------
 
 // Homepage
 app.get('/', async (req, res) => {
@@ -88,6 +93,7 @@ app.post('/register-service', async (req, res) => {
           createdAt: new Date(),
           lastHeartbeat: new Date()
         };
+        writeServicesToFile();
         console.log(`Service ${_id} registered successfully`);
         res.status(201).json({ message: 'Service registered successfully.' });
       }
@@ -111,6 +117,7 @@ app.delete('/unregister-service', async (req, res) => {
         return res.status(404).json({ message: "Service not found" });
       }
       delete backendServices[_id];
+      writeServicesToFile()
       console.log(`Unregistered service ${service._id}`);
       // Service has been found and deleted successfully
       res.status(200).json({ message: `Service ${service._id} unregistered successfully` });
@@ -176,6 +183,7 @@ app.post('/frontend/register-service', async (req, res) => {
         url,
         registeredAt: new Date()
       };
+      writeServicesToFile();
       console.log(`Service ${_id} registered successfully`);
       res.status(201).send({ URL: Server_URL }); // 201 Created
     }
@@ -190,6 +198,7 @@ app.delete('/frontend/unregister-service', async (req, res) => {
         res.status(200).json({ message: 'Service unregistered successfully.' });
     } else {
       delete frontendServices[_id];
+      writeServicesToFile();
       console.log(`Service ${_id} unregistered successfully`);
       res.status(200).json({ message: 'Service unregistered successfully.' });
     }
@@ -216,44 +225,10 @@ app.post('/frontend/service-heartbeat', async (req, res) => {
   }
 });
   
-
 // Start the Server --------------------------------------------------------------------------------------------
 
-
 app.listen(port, () => {
-    console.log(`Register server is running on port ${port}.`);
-    // Clean up services that have not sent a heartbeat in a certain amount of time
-      if (!isDbConnected) {
-        setInterval(async () => {
-        const services = Object.values(backendServices);
-        for (const service of services) {
-          const now = Date.now();
-          const timeElapsedSinceLastHeartbeat = now - service.lastHeartbeat;
-          if (timeElapsedSinceLastHeartbeat > 120000) { // 2 minutes
-            try {
-              await BackendService.findByIdAndDelete(service._id); // Using await to ensure the operation completes
-              console.log(`Unregistered service ${service._id}`);
-            } catch (error) {
-              console.error(`Error unregistering service ${service._id}: ${error}`);
-            }
-          }
-        }
-      }, 60000);// 10 seconds
-    } else {
-      setInterval(async () => {
-      const services = await BackendService.find();
-      for (const service of services) {
-        const now = Date.now();
-        const timeElapsedSinceLastHeartbeat = now - service.lastHeartbeat;
-        if (timeElapsedSinceLastHeartbeat > 120000) { // 2 minutes
-          try {
-            await FrontendService.findByIdAndDelete(service._id); // Using await to ensure the operation completes
-            console.log(`Unregistered service ${service._id}`);
-          } catch (error) {
-            console.error(`Error unregistering service ${service._id}: ${error}`);
-          }
-        }
-      }
-    }, 60000);
-  }
+  console.log(`Register server is running on port ${port}.`);
+  setInterval(CleanUpBackend, 60000); // Clean up backend services every 60 seconds
+  setInterval(CleanUpFrontend, 60000); // Clean up frontend services every 60 seconds
 });

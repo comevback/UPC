@@ -43,7 +43,9 @@ chmod +x install.sh
 ```
 
 **Windows**:
-```git bash
+please use *git bash* or other kinds of bash on Windows
+```bash
+chmod +x install.sh
 ./install.sh
 ```
 

@@ -5,7 +5,6 @@ dotenv.config("../.env");
 
 let BackendService, FrontendService;
 
-
 // test if the database is connected
 const checkDatabaseConnection = async () => {
   try {
