@@ -56,7 +56,7 @@ function ApplicationForm() {
         refreshFiles();
         refreshResults();
         refreshImages();
-    }, []);
+    }, [API_URL]);
 
     return (
         <div>

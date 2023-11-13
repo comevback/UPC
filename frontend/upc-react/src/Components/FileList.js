@@ -61,7 +61,6 @@ function FileList(props) {
         return (
             <div>
                 <h1>Uploaded</h1>
-                <h2>{WebSocketURL}</h2>
                 <div className="file-list">
                     <p>No files uploaded yet.</p>
                 </div>
