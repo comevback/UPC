@@ -167,7 +167,7 @@ app.post('/frontend/register-service', async (req, res) => {
         console.log(`Frontend Service: ${service._id} registered successfully`);
         res.status(200).json(service);
       }).catch((err) => {
-        console.log(err);
+        //console.error(err);
         res.status(500).json({message: err.message})
       });
   } else {
