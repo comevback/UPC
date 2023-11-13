@@ -9,7 +9,7 @@ import { dirname } from 'path';
 import { fileURLToPath } from 'url';
 import { exec, spawn } from "child_process";
 import WebSocket, {WebSocketServer} from "ws";
-import { serviceInfo, upload, limiter, registerService, sendHeartbeat } from "./Components/methods.js";
+import { serviceInfo, upload, limiter, registerService, unregisterService, sendHeartbeat } from "./Components/methods.js";
 
 const app = express();
 const port = 4000;
@@ -34,7 +34,7 @@ const gracefulShutdown = async () => {
       await unregisterService();
       console.log('Service unregistered and server is closing.');
     } catch (error) {
-      console.log('Failed to unregister service');
+      console.log('Failed to unregister service: ', error.message);
     } finally {
       server.close(() => {
         console.log('Server closed');

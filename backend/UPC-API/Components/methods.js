@@ -107,7 +107,7 @@ export const unregisterService = async () => {
       const response = await axios.delete(`${CENTRAL_SERVER}/unregister-service`, { data: { _id: id } });
       console.log('Service unregistered');
     } catch (error) {
-      console.error('Failed to unregister service:');
+      console.error('Failed to unregister service:', error.message);
     }
 };
 

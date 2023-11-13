@@ -1,7 +1,6 @@
 import express from "express";
 import cors from 'cors';
-import { checkDatabaseConnection, BackendService, FrontendService } from "./Components/mongoDB.js";
-import { backendServices, frontendServices, readServicesFromFile, writeServicesToFile, CleanUpBackend, CleanUpFrontend } from "./Components/method.js";
+import { checkDatabaseConnection, BackendService, FrontendService, backendServices, frontendServices, readServicesFromFile, writeServicesToFile, CleanUpDataBase, CleanUpLocal } from "./Components/method.js";
 
 const app = express();
 app.use(express.json());
@@ -229,6 +228,9 @@ app.post('/frontend/service-heartbeat', async (req, res) => {
 
 app.listen(port, () => {
   console.log(`Register server is running on port ${port}.`);
-  setInterval(CleanUpBackend, 60000); // Clean up backend services every 60 seconds
-  setInterval(CleanUpFrontend, 60000); // Clean up frontend services every 60 seconds
+  if (isDbConnected) {
+    setInterval(CleanUpDataBase, 60000);
+  } else {
+    setInterval(CleanUpLocal, 60000);
+  }
 });
