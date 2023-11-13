@@ -9,7 +9,7 @@ import { dirname } from 'path';
 import { fileURLToPath } from 'url';
 import { exec, spawn } from "child_process";
 import WebSocket, {WebSocketServer} from "ws";
-import { serviceInfo, upload, limiter, registerService, sendHeartbeat, gracefulShutdown} from "./Components/methods.js";
+import { serviceInfo, upload, limiter, registerService, sendHeartbeat } from "./Components/methods.js";
 
 const app = express();
 const port = 4000;
@@ -27,6 +27,21 @@ registerService();
 
 // Send a heartbeat every minute
 setInterval(sendHeartbeat, 60000);
+
+// Gracefully unregister the service when the process is terminated ============================================
+const gracefulShutdown = async () => {
+    try {
+      await unregisterService();
+      console.log('Service unregistered and server is closing.');
+    } catch (error) {
+      console.log('Failed to unregister service');
+    } finally {
+      server.close(() => {
+        console.log('Server closed');
+        process.exit(0);
+      });
+    }
+};
 
 // Handle process termination
 process.on('SIGTERM', gracefulShutdown);
@@ -325,6 +340,7 @@ app.post('/api/images/docker-run', (req, res) => {
       res.status(200).send(`Result saved to: /results/output-${fileName}.txt`);
     });
   });
+
 
 //Listen on port
 const server = app.listen(port, () => {

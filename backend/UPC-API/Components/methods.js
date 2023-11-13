@@ -111,18 +111,4 @@ export const unregisterService = async () => {
     }
 };
 
-// Gracefully unregister the service when the process is terminated ============================================
-export const gracefulShutdown = async () => {
-    try {
-      await unregisterService();
-      console.log('Service unregistered and server is closing.');
-    } catch (error) {
-      console.log('Failed to unregister service');
-    } finally {
-      server.close(() => {
-        console.log('Server closed');
-        process.exit(0);
-      });
-    }
-};
 
