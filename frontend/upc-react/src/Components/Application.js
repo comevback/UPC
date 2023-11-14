@@ -93,19 +93,19 @@ const ApplicationForm = () => {
                 </div>
             </div>
             <Heading/>
-            <button className='process-button' onClick={handleProcessClick} disabled={selectedFiles.length === 0 || selectedImages.length === 0}>Process</button>
+            <button className='command-button' onClick={handleProcessClick} disabled={selectedFiles.length === 0 || selectedImages.length === 0}>Process</button>
             <div className="area">
                 <UploadForm refreshFiles={refreshFiles} refreshResults={refreshResults} refreshAll={refresh}/>
+                <Console refresh={refresh}/>
                 <ImagesList images={images} selectedImages={selectedImages} setSelectedImages={setSelectedImages} refreshImages={refreshImages} refreshAll={refresh}/>
             </div>
             
             <div className='area'>
                 <FileList files={files} selectedFiles={selectedFiles} setSelectedFiles={setSelectedFiles} refreshFiles={refreshFiles} refreshResults={refreshResults} refreshAll={refresh}/>
+                <TempList temps={temps} refreshTemps={refreshTemps} refreshAll={refresh}/>
                 <ResultList results={results} refreshFiles={refreshFiles} refreshResults={refreshResults} refreshAll={refresh}/>
             </div>
             <div className='area'>
-                <Console refresh={refresh}/>
-                <TempList temps={temps} refreshTemps={refreshTemps} refreshAll={refresh}/>
             </div> 
         </div>
     );

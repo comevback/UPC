@@ -19,6 +19,7 @@
     display: flex;
     justify-content: space-around;
     align-items: center;
+    overflow: auto;
 }
 
 .title{
@@ -26,18 +27,21 @@
 }
 
 
-.button {
-    padding: 10px 20px;
-    background-color: #007BFF;
-    color: white;
+.command-button{
+    width: 100%;
+    padding: 0.5rem;
     border: none;
     border-radius: 5px;
+    background-color: gray;
+    color: white;
+    font-size: rem;
     cursor: pointer;
-    margin-top: 10px;
+    transition: 0.3s;
 }
 
-.button:hover {
-    background-color: #0056b3;
+.command-button:hover {
+    background-color: lightgray;
+    color: black;
 }
 
 

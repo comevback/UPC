@@ -9,10 +9,10 @@
     padding: 20px;
     border: 1px solid #ddd;
     border-radius: 5px;
-    width: 45vw; /* 45% of the viewport width */
-    max-width: 80vw; /* max out at 80% of the viewport width */
+    width: 30vw; /* 45% of the viewport width */
+    max-width: 30vw; /* max out at 80% of the viewport width */
     height: 30vh; /* 80% of the viewport height */
-    max-height: 80vh; /* max out at 80% of the viewport height */
+    max-height: 30vh; /* max out at 80% of the viewport height */
     background-color: #fff;
     overflow-y: auto;
     box-shadow: 0 4px 8px rgba(0,0,0,0.1);
