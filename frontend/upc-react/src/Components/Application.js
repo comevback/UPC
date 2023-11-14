@@ -81,7 +81,6 @@ const ApplicationForm = () => {
         refreshResults();
         refreshTemps();
         refreshImages();
-        window.scrollTo({ top: 303, behavior: 'smooth' });
     }, [API_URL]);
 
     return (
