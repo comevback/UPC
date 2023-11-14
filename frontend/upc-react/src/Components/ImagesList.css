@@ -33,7 +33,7 @@
     padding: 10px; /* padding inside each image item */
     border: 1px solid #eee; /* lighter border for the image item */
     margin: 5px 0; /* slight margin for separation */
-    min-height: 20px;
+    min-height: 40px;
     overflow-x: auto; /* allow vertical scrolling */
 }
 
