@@ -1,18 +1,31 @@
 import React, { useContext, useState, useEffect } from 'react';
 import './Application.css';
-import { getFiles, getResults, getImages } from '../Tools/api.js';
+import { getFiles, getResults, getTemps, getImages, process } from '../Tools/api.js';
 import { ParaContext } from '../Global.js';
 import FileList from './FileList.js';
 import ResultList from './ResultList.js';
 import UploadForm from './UploadForm.js';
+import TempList from './TempList.js';
 import ImagesList from './ImagesList.js';
 import Heading from './Heading.js';
+import Console from './Console.js';
 
-function ApplicationForm() {
+const ApplicationForm = () => {
     const [files, setFiles] = useState([]);
     const [results, setResults] = useState([]);
+    const [temps, setTemps] = useState([]);
     const [images, setImages] = useState([]);
+    const [selectedImages, setSelectedImages] = useState([]); // Store the selected files
+    const [selectedFiles, setSelectedFiles] = useState([]); // Store the selected files
     const { API_URL, API_NAME } = useContext(ParaContext);
+
+
+    const handleProcessClick = () => {
+        process(API_URL, selectedImages, selectedFiles);
+        setSelectedFiles([]);
+        setSelectedImages([]);
+        refreshTemps();
+    };
 
     const refreshFiles = () => {
         getFiles(API_URL)
@@ -34,6 +47,16 @@ function ApplicationForm() {
         });
     };
 
+    const refreshTemps = () => {
+        getTemps(API_URL)
+        .then(temps => {
+            setTemps(temps);
+        })
+        .catch(error => {
+            console.error('Error fetching temps:', error);
+        });
+    };
+
     const refreshImages = () => {
         getImages(API_URL)
         .then(images => {
@@ -48,6 +71,7 @@ function ApplicationForm() {
         refreshFiles();
         refreshResults();
         refreshImages();
+        refreshTemps();
         console.log("Resfreshed files, images and results");
     };
 
@@ -55,7 +79,9 @@ function ApplicationForm() {
         // Get the list of files when the component mounts
         refreshFiles();
         refreshResults();
+        refreshTemps();
         refreshImages();
+        window.scrollTo({ top: 303, behavior: 'smooth' });
     }, [API_URL]);
 
     return (
@@ -68,15 +94,20 @@ function ApplicationForm() {
                 </div>
             </div>
             <Heading/>
+            <button className='process-button' onClick={handleProcessClick} disabled={selectedFiles.length === 0 || selectedImages.length === 0}>Process</button>
             <div className="area">
                 <UploadForm refreshFiles={refreshFiles} refreshResults={refreshResults} refreshAll={refresh}/>
-                <ImagesList images={images} refreshImages={refreshImages} refreshAll={refresh}/>
+                <ImagesList images={images} selectedImages={selectedImages} setSelectedImages={setSelectedImages} refreshImages={refreshImages} refreshAll={refresh}/>
             </div>
             
             <div className='area'>
-                <FileList files={files} refreshFiles={refreshFiles} refreshResults={refreshResults} refreshAll={refresh}/>
+                <FileList files={files} selectedFiles={selectedFiles} setSelectedFiles={setSelectedFiles} refreshFiles={refreshFiles} refreshResults={refreshResults} refreshAll={refresh}/>
                 <ResultList results={results} refreshFiles={refreshFiles} refreshResults={refreshResults} refreshAll={refresh}/>
             </div>
+            <div className='area'>
+                <Console refresh={refresh}/>
+                <TempList temps={temps} refreshTemps={refreshTemps} refreshAll={refresh}/>
+            </div> 
         </div>
     );
 }

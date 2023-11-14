@@ -4,10 +4,22 @@ import { ParaContext } from '../Global.js';
 import './FileList.css';
 
 // FileList.js
-function FileList(props) {
+const FileList = (props) => {
     const [info, setInfo] = useState([]);
     const [activeInfoFile, setActiveInfoFile] = useState('');
     const { API_URL, WebSocketURL } = useContext(ParaContext);
+
+
+    // If click the checkbox, add the file to the selectedFiles
+    const handleCheckboxChange = (fileName) => {
+        const updatedSelectedFiles = props.selectedFiles.includes(fileName) 
+            ? props.selectedFiles.filter(file => file !== fileName)
+            : [...props.selectedFiles, fileName];
+        
+        console.log('Updated selected files:', updatedSelectedFiles);
+        props.setSelectedFiles(updatedSelectedFiles);
+    };
+    
 
     // ============================== WebSocket ==================================
     useEffect(() => {
@@ -62,7 +74,7 @@ function FileList(props) {
             <div>
                 <h1>Uploaded</h1>
                 <div className="file-list">
-                    <p>No files uploaded yet.</p>
+                    <p>No file uploaded yet.</p>
                 </div>
             </div>
         );
@@ -73,8 +85,10 @@ function FileList(props) {
             <h1>Uploaded</h1>
             <ul className="file-list">
                 {props.files.map(file => (
-                    <li className="file-item" key={file}>
+                    <li className={`file-item ${props.selectedFiles.includes(file) ? 'selected' : ''}`} key={file}>
                         <div className='name-and-buttons'>
+                            <input type='checkbox' className='checkbox' checked={props.selectedFiles.includes(file)}
+                                onChange={() => handleCheckboxChange(file)} />
                             <span>{file}</span>
                             <div className='buttons'>
                                 <button onClick={() => handleFileClick(file)} >Generate Image</button>

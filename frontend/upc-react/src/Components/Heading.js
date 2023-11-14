@@ -49,7 +49,7 @@ const Heading = () => {
                     {backendServices.map((service, index) => (
                         <div className="server-with">
                             <a title={`Choose this Server: ${service.url}`} onClick={() => chooseAPIserver(service)}><img className="logo" src="API-server.png" alt="API-server"></img></a>
-                            <span className="server-title">{index + 1}: {service._id}</span>
+                            <span className="server-title">{index + 1}:({service._id})</span>
                         </div>
                     ))
                     }

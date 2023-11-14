@@ -4,7 +4,7 @@ import { uploadData } from '../Tools/api';
 import { ParaContext } from "../Global.js";
 import './UploadForm.css';
 
-function UploadForm(props) {
+const UploadForm = (props) => {
     const [file, setFile] = useState([]);
     const [uploadStatus, setUploadStatus] = useState('○');
     const { API_URL } = useContext(ParaContext);

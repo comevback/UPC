@@ -36,6 +36,10 @@
     overflow-x: auto; /* allow vertical scrolling */
 }
 
+.image-item.selected {
+    background-color: #d5f4d5;
+}
+
 .name-and-buttons{
     display: flex;
     justify-content: space-between;

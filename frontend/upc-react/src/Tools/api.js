@@ -96,6 +96,16 @@ export const getResults = async (API_URL) => {
     }
 };
 
+// Get the list of temps
+export const getTemps = async (API_URL) => {
+    try {
+        const response = await axios.get(`${API_URL}/api/temps`);
+        return response.data;
+    } catch (error) {
+        console.error('Error fetching temps:', error);
+    }
+};
+
 //delete a file
 export const deleteFile = async (API_URL, fileName) => {
     try {
@@ -115,6 +125,17 @@ export const deleteResult = async (API_URL, fileName) => {
         return response.data;
     } catch (error) {
         console.error('Error deleting result:', error);
+    }
+};
+
+//delete a temp
+export const deleteTemp = async (API_URL, fileName) => {
+    try {
+        const response = await axios.delete(`${API_URL}/api/temps/${fileName}`);
+        console.log(response.data);
+        return response.data;
+    } catch (error) {
+        console.error('Error deleting temp:', error);
     }
 };
 
@@ -153,6 +174,25 @@ export const downloadResult = async (API_URL, fileName) => {
         link.click();
     } catch (error) {
         console.error('Error downloading result:', error);
+    }
+};
+
+// Download a temp
+export const downloadTemp = async (API_URL, fileName) => {
+    try {
+        const response = await axios({
+            url: `${API_URL}/api/temps/${fileName}`,
+            method: 'GET',
+            responseType: 'blob',
+        });
+        const url = window.URL.createObjectURL(new Blob([response.data]));
+        const link = document.createElement('a');
+        link.href = url;
+        link.setAttribute('download', fileName);
+        document.body.appendChild(link);
+        link.click();
+    } catch (error) {
+        console.error('Error downloading temp:', error);
     }
 };
 
@@ -206,11 +246,24 @@ export const deleteImage = async (API_URL, fileName) => {
     }
 };
 
-// export const runImage = async () => {
-//     try {
-//       const response = await axios.post('${API_URL}/api/images/docker-run', { imageName, fileName });
-//       console.log(response.data); // 
-//     } catch (error) {
-//       console.error('Error running docker:', error);
-//     }
-// };
+// Process the images
+export const process = async (API_URL, imageName, fileNames) => {
+    try {
+      const response = await axios.post(`${API_URL}/api/process`, { imageName, fileNames });
+      console.log(response.data);
+    } catch (error) {
+      console.error('Error running docker:', error);
+    }
+};
+
+// send a command to the backend
+export const sendCommand = async (API_URL, command) => {
+    try {
+      const response = await axios.post(`${API_URL}/api/command`, { command });
+      console.log(response.data);
+    } catch (error) {
+      console.error('Error sending command:', error);
+    }
+};
+
+

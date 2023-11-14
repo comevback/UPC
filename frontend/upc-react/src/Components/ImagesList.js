@@ -11,6 +11,17 @@ const ImagesList = (props) => {
         props.refreshImages();
     }, [API_URL]);
 
+    // If click the checkbox, add the file to the selectedImages
+    const handleCheckboxChange = (imageName) => {
+        const updatedSelectedImages = props.selectedImages.includes(imageName) 
+            ? props.selectedImages.filter(file => file !== imageName)
+            : [...props.selectedImages, imageName];
+        
+        console.log('Updated selected files:', updatedSelectedImages);
+        props.setSelectedImages(updatedSelectedImages);
+    };
+
+
     const handleViewClick = async (image) => {
 
         // Check if the activeImageInfo is already set to the clicked image
@@ -51,8 +62,10 @@ const ImagesList = (props) => {
             <h1>Docker Images</h1>
             <ul className="image-list">
                 {props.images.map((image, index) => (
-                    <li key={index} className="image-item">
+                    <li className={`image-item ${props.selectedImages.includes(image) ? 'selected' : ''}`} key={index}>
                         <div className='name-and-buttons'>
+                            <input type='checkbox' className='checkbox' checked={props.selectedImages.includes(image)}
+                            onChange={() => handleCheckboxChange(image)} />
                             <span>{image}</span>
                             <div className="buttons">
                                 <button onClick={() => handleViewClick(image)}>View</button>

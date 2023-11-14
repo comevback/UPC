@@ -9,7 +9,7 @@ import { dirname } from 'path';
 import { fileURLToPath } from 'url';
 import { exec, spawn } from "child_process";
 import WebSocket, {WebSocketServer} from "ws";
-import { serviceInfo, upload, limiter, registerService, unregisterService, sendHeartbeat } from "./Components/methods.js";
+import { serviceInfo, upload, limiter, registerService, unregisterService, sendHeartbeat, sortFiles } from "./Components/methods.js";
 
 const app = express();
 const port = 4000;
@@ -19,6 +19,7 @@ const __dirname = dirname(__filename);
 app.use(bodyParser.urlencoded({extended:true}));
 app.use(express.static("public"));
 app.set('view engine', 'ejs');
+app.use(express.json()); // for parsing application/json
 app.use(cors());
 //app.use(limiter);
 
@@ -97,6 +98,23 @@ app.get('/api/results', async (req, res) => {
     });
 });
 
+// Route to get the list of all temp
+app.get('/api/temps', async (req, res) => {
+    const directoryPath = path.join(__dirname, 'temps');
+    if (!fs.existsSync(directoryPath)) {
+        fs.mkdirSync(directoryPath);
+    }
+    fs.readdir(directoryPath, (err, files) => {
+        if (err) {
+            return res.status(500).send('Unable to scan directory: ' + err);
+        }
+        // ignore the .gitkeep file
+        files = files.filter(file => file !== '.gitkeep');
+        // Return the list of files
+        res.send(files);
+    });
+});
+
 // Route to get the list of all images
 app.get('/api/images', (req, res) => {
     exec('docker images --format "{{.Repository}}:{{.Tag}}" | sort', (err, stdout, stderr) => {
@@ -158,6 +176,12 @@ app.get('/api/files/:filename', (req, res) => {
 // Route to download a result
 app.get('/api/results/:filename', (req, res) => {
     const filePath = path.join(__dirname, 'results', req.params.filename);
+    res.download(filePath);
+});
+
+// Route to download a temp
+app.get('/api/temps/:filename', (req, res) => {
+    const filePath = path.join(__dirname, 'temps', req.params.filename);
     res.download(filePath);
 });
 
@@ -227,7 +251,7 @@ app.post('/api/files/:filename', async(req, res) => {
         pack.on('close', async(code) => {
             if (code === 0) {
                 console.log(`pack build completed successfully.`);
-                await fs.promises.rm(appPath, { recursive: true });
+                await fs.promises.rm(appPath, { recursive: true }); // Delete the unzipped folder
                 console.log('unzipped folder deleted');
                 res.status(200).send({ message: 'Image built successfully' });
             } else {
@@ -241,6 +265,72 @@ app.post('/api/files/:filename', async(req, res) => {
         res.status(500).send({ message: 'Error unzipping file' });
     }
 
+});
+
+// Route to Run a image with or without input files
+app.post('/api/process', async(req, res) => {
+    const { imageName, fileNames } = req.body;
+    // put the files matching the fileNames in the uploads folder into the anonymous directory
+    const filePath = path.join(__dirname, 'uploads');
+    const tempPath = path.join(__dirname, 'temps'); // Create a temporary directory to store the files
+    if (!fs.existsSync(tempPath)) {
+        fs.mkdirSync(tempPath);
+    }
+    const resultPath = path.join(__dirname, 'results');
+    const files = fs.readdirSync(filePath); // Get the list of files in the uploads folder
+    const matchedFiles = files.filter(file => fileNames.includes(file)); // Filter the files to only include the ones in the fileNames array
+    console.log('Files to copy:', matchedFiles);
+    // Copy the files to the temp directory
+    matchedFiles.forEach(file => {
+        fs.copyFileSync(path.join(filePath, file), path.join(tempPath, file));
+    });
+
+
+    //use spawn to run the command, use --mount to mount the temp directory
+    const docker_process = spawn('docker', [
+        'run', 
+        '--rm', 
+        '-v', `${tempPath}:/workspace/input`, 
+        '-v', `${resultPath}:/workspace/output`, 
+        imageName, 
+        ...sortFiles(matchedFiles) //
+    ]);
+
+    // (docker inspect --format='{{.Config.WorkingDir}}' your-image-name) this command can get the working directory of the image
+
+    //use websocket to send the output to the client
+    docker_process.stdout.on('data', (data) => {
+        console.log(`stdout: ${data}`);
+        // Send the output to all connected WebSocket clients
+        wss.clients.forEach(function each(client) {
+          if (client.readyState === WebSocket.OPEN) {
+            client.send(data.toString());
+          }
+        });
+    });
+    //use websocket to send the error to the client
+    docker_process.stderr.on('data', (data) => {
+        console.error(`stderr: ${data}`);
+        // Send the Error to all connected WebSocket clients
+        wss.clients.forEach(function each(client) {
+          if (client.readyState === WebSocket.OPEN) {
+            client.send(data.toString());
+          }
+        });
+    });
+    //use websocket to send the result to the client
+    docker_process.on('close', async(code) => {
+        if (code === 0) {
+            console.log(`docker run completed successfully.`);
+            // Delete all the files in the temp directory
+            await fs.promises.rm(tempPath, { recursive: true });
+            console.log('temp folder deleted');
+            res.status(200).send({ message: 'Docker run completed successfully' });
+        } else {
+            console.error(`docker run failed with code ${code}`);
+            res.status(500).send({ message: 'Error running docker' });
+        }
+    });
 });
 
 // Route to delete a file
@@ -305,6 +395,37 @@ app.delete('/api/results/:filename', (req, res) => {
     });
 });
 
+// Route to delete a temp
+app.delete('/api/temps/:filename', (req, res) => {
+    const filePath = path.join(__dirname, 'temps', req.params.filename);
+    fs.lstat(filePath, (err, stats) => {
+        if (err) {
+            // if file does not exist or path is invalid, handle the error
+            return res.status(500).send('Error when visiting the file path: ' + err.message);
+        }
+
+        if (stats.isDirectory()) {
+            // if it is a directory, delete it recursively
+            fs.rm(filePath, { recursive: true }, (err) => {
+                if (err) {
+                    return res.status(500).send('Can not find the file'+ err.message);
+                }
+                res.send('directory deleted successfully');
+            });
+        } else {
+            // if it is not a directory, try to delete the file
+            fs.unlink(filePath, (err) => {
+                if (err) {
+                    // if file can not be deleted, handle the error
+                    return res.status(500).send('Unable to delete the file: ' + err.message);
+                }
+                // send success response after deleting the file
+                res.send('File deleted successfully');
+            });
+        }
+    });
+});
+
 // Route to delete an image
 app.delete('/api/images/:imageName', (req, res) => {
     const { imageName } = req.params;
@@ -335,7 +456,45 @@ app.post('/api/images/docker-run', (req, res) => {
       // Send the output to all connected WebSocket clients
       res.status(200).send(`Result saved to: /results/output-${fileName}.txt`);
     });
-  });
+});
+
+
+// Route to execute a command and use ws to send the output to the client
+app.post('/api/command', (req, res) => {
+    console.log(req.body);
+    const { command } = req.body; // Get the command from the request body
+    console.log(`Executing command: ${command}`);
+
+    const child = exec(command, { shell: true });
+
+    // Send the output to all connected WebSocket clients
+    child.stdout.on('data', (data) => {
+        console.log(`stdout: ${data}`);
+        wss.clients.forEach(function each(client) {
+            if (client.readyState === WebSocket.OPEN) {
+            client.send(data.toString());
+            }
+        });
+    });
+    // Send the Error to all connected WebSocket clients
+    child.stderr.on('data', (data) => {
+        console.error(`stderr: ${data}`);
+        wss.clients.forEach(function each(client) {
+            if (client.readyState === WebSocket.OPEN) {
+            client.send(data.toString());
+            }
+        });
+    });
+    // Send the output to all connected WebSocket clients
+    child.on('close', (code) => {
+        console.log(`child process exited with code ${code}`);
+        wss.clients.forEach(function each(client) {
+            if (client.readyState === WebSocket.OPEN) {
+            client.send(`child process exited with code ${code}`);
+            }
+        });
+    });
+});
 
 
 //Listen on port

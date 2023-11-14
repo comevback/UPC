@@ -112,3 +112,10 @@ export const unregisterService = async () => {
 };
 
 
+// sort the matched files ============================================
+export const sortFiles = (files) => {
+  // if the file is a python file, put it in the front
+  const pyFiles = files.filter(file => file.endsWith('.py'));
+  const otherFiles = files.filter(file => !file.endsWith('.py'));
+  return pyFiles.concat(otherFiles);
+}
