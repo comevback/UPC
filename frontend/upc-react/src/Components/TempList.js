@@ -5,11 +5,11 @@ import './TempList.css';
 
 
 const TempList = (props) => {
-    const { API_URL, WebSocketURL } = useContext(ParaContext);
+    const { API_URL } = useContext(ParaContext);
 
     useEffect(() => {
         props.refreshTemps();
-    }, [API_URL, props.refreshTemps]);
+    }, [API_URL]);
 
     return (
         <div>

@@ -1,12 +1,13 @@
 import React, { useContext, useEffect, useState } from 'react';
 import { sendCommand } from '../Tools/api.js';
 import { ParaContext } from '../Global.js';
+import { io } from 'socket.io-client';
 import './Console.css';
 
 
 const Console = (props) => {
     const [info, setInfo] = useState([]);
-    const { API_URL, WebSocketURL } = useContext(ParaContext);
+    const { API_URL } = useContext(ParaContext);
     const [command, setCommand] = useState('');
 
     const handleSubmit = async (event) => {
@@ -19,39 +20,39 @@ const Console = (props) => {
         props.refresh();
 
         // Create a new WebSocket
-        const newSocket = new WebSocket(WebSocketURL);
+        const socket = io(API_URL);
+
+        // Listen for connection open
+        socket.on('connection', () => {
+            console.log('Connected to WebSocket server');
+        });
 
         // Listen for messages
-        newSocket.onmessage = (event) => {
-            // Update the state with the message from the server
+        socket.on('commandMessage', (data) => {
             setInfo(prevInfo => {
-                console.log(prevInfo); // 调试输出
-                return Array.isArray(prevInfo) ? [...prevInfo, event.data] : [event.data];
+                return Array.isArray(prevInfo) ? [...prevInfo, data] : [data];
             });
-            
-        };
+        });
 
         // Listen for WebSocket connection open
-        newSocket.onopen = (event) => {
-            console.log('WebSocket connected:', event);
-        };
+        socket.on('open', () => {
+            console.log('Connected to WebSocket server');
+        });
 
         // Listen for WebSocket errors
-        newSocket.onerror = (event) => {
-            console.error('WebSocket error:', event);
-            setInfo(event.data);
-        };
+        socket.on('commandError', (error) => {
+            console.error('Error:', error);
+        });
 
         // Listen for WebSocket connection close
-        newSocket.onclose = (event) => {
-            console.log('WebSocket disconnected:', event);
-            setInfo(event.data);
-        };
+        socket.on('close', () => {
+            console.log('Disconnected from WebSocket server');
+        });
 
         // Close the WebSocket connection when the component unmounts
         return () => {
             console.log('Closing WebSocket connection');
-            newSocket.close();
+            socket.close();
             setInfo([]);
         };
 

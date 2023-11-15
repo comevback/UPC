@@ -7,19 +7,11 @@ import path from 'path';
 import extract from "extract-zip";
 import { dirname } from 'path';
 import { fileURLToPath } from 'url';
-import { exec, spawn } from "child_process"; 
-import http from "http";
-import { Server } from "socket.io";    
+import { exec, spawn } from "child_process";
+import WebSocket, {WebSocketServer} from "ws";      
 import { serviceInfo, upload, limiter, registerService, unregisterService, sendHeartbeat, sortFiles } from "./Components/methods.js";
 
 const app = express();
-const server = http.createServer(app);
-const io = new Server(server, {
-    cors: {
-      origin: "*",
-      methods: ["GET", "POST"]
-    }
-  });
 const port = 4000;
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
@@ -205,7 +197,11 @@ app.post('/api/files/:filename', async(req, res) => {
 
     if (!filename.endsWith('.zip')) {
         console.log('Invalid file type');
-        io.emit('geneError', 'Invalid file type, Shoud be .zip file');
+        wss.clients.forEach(function each(client) {
+            if (client.readyState === WebSocket.OPEN) {
+              client.send('Invalid file type, Shoud be .zip file');
+            }
+          });
         return res.status(400).send({ message: 'Invalid file type, Shoud be .zip file' });
     }
     if (!fs.existsSync(filePath)) {
@@ -234,14 +230,22 @@ app.post('/api/files/:filename', async(req, res) => {
         pack.stdout.on('data', (data) => {
             console.log(`stdout: ${data}`);
             // Send the output to all connected WebSocket clients
-            io.emit('geneMessage', data.toString());
+            wss.clients.forEach(function each(client) {
+              if (client.readyState === WebSocket.OPEN) {
+                client.send(data.toString());
+              }
+            });
         });
     
 
         pack.stderr.on('data', (data) => {
             console.error(`stderr: ${data}`);
             // Send the Error to all connected WebSocket clients
-            io.emit('geneError', data.toString());
+            wss.clients.forEach(function each(client) {
+              if (client.readyState === WebSocket.OPEN) {
+                client.send(data.toString());
+              }
+            });
         });
 
         pack.on('close', async(code) => {
@@ -298,13 +302,21 @@ app.post('/api/process', async(req, res) => {
     docker_process.stdout.on('data', (data) => {
         console.log(`stdout: ${data}`);
         // Send the output to all connected WebSocket clients
-        io.emit('runMessage', data.toString());
+        wss.clients.forEach(function each(client) {
+          if (client.readyState === WebSocket.OPEN) {
+            client.send(data.toString());
+          }
+        });
     });
     //use websocket to send the error to the client
     docker_process.stderr.on('data', (data) => {
         console.error(`stderr: ${data}`);
         // Send the Error to all connected WebSocket clients
-        io.emit('runError', data.toString());
+        wss.clients.forEach(function each(client) {
+          if (client.readyState === WebSocket.OPEN) {
+            client.send(data.toString());
+          }
+        });
     });
     //use websocket to send the result to the client
     docker_process.on('close', async(code) => {
@@ -458,33 +470,47 @@ app.post('/api/command', (req, res) => {
     // Send the output to all connected WebSocket clients
     child.stdout.on('data', (data) => {
         console.log(`stdout: ${data}`);
-        io.emit('commandMessage', data.toString());
+        wss.clients.forEach(function each(client) {
+            if (client.readyState === WebSocket.OPEN) {
+            client.send(data.toString());
+            }
+        });
     });
     // Send the Error to all connected WebSocket clients
     child.stderr.on('data', (data) => {
         console.error(`stderr: ${data}`);
-        io.emit('commandError', data.toString());
+        wss.clients.forEach(function each(client) {
+            if (client.readyState === WebSocket.OPEN) {
+            client.send(data.toString());
+            }
+        });
     });
     // Send the output to all connected WebSocket clients
     child.on('close', (code) => {
         console.log(`child process exited with code ${code}`);
-        io.emit('commandMessage', `child process exited with code ${code}`);
+        wss.clients.forEach(function each(client) {
+            if (client.readyState === WebSocket.OPEN) {
+            client.send(`child process exited with code ${code}`);
+            }
+        });
     });
 });
 
 
 //Listen on port
-server.listen(port, () => {
+const server = app.listen(port, () => {
     console.log(`Server is running on port ${port}.`);
 });
 
+// Create a new WebSocket server
+const wss = new WebSocketServer({ server });
 
 // Listen for new connections
-io.on('connection', (socket) => {
-    console.log('New WebSocket connection');
-    // Send the service info to the client
-    socket.emit('message', serviceInfo);
-    socket.on('disconnect', () => {
-        console.log('WebSocket disconnected');
-    });
+wss.on('connection', function connection(ws) {
+  console.log('websocket: A new client connected');
+  ws.on('message', function incoming(message) {
+    console.log('received: %s', message);
+  });
+  // Send a message to the client
+  ws.send('Server: Successfully connected to the server');
 });

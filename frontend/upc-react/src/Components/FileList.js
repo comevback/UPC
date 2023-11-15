@@ -1,13 +1,14 @@
 import { useState, useEffect, useContext } from 'react';
 import { downloadFile, generateImage, deleteFile } from '../Tools/api';
-import { ParaContext } from '../Global.js';        
+import { ParaContext } from '../Global.js';
+import io from 'socket.io-client';     
 import './FileList.css';
 
 // FileList.js
 const FileList = (props) => {
     const [info, setInfo] = useState([]);
     const [activeInfoFile, setActiveInfoFile] = useState('');
-    const { API_URL, WebSocketURL } = useContext(ParaContext);
+    const { API_URL } = useContext(ParaContext);
 
 
     // If click the checkbox, add the file to the selectedFiles
@@ -26,38 +27,46 @@ const FileList = (props) => {
         props.refreshFiles();
 
         // Create a new WebSocket
-        const newSocket = new WebSocket(WebSocketURL);
+        const socket = io(API_URL);
 
+        // Listen for connection open
+        socket.on('connection', () => {
+            console.log('Connected to WebSocket server');
+        });
+
+        // Listen for connection close
+        socket.on('disconnect', () => {
+            console.log('Disconnected from WebSocket server');
+        });
+        
         // Listen for messages
-        newSocket.onmessage = (event) => {
-            // Update the state with the message from the server
-            setInfo(event.data);
-        };
-
-        // Listen for WebSocket connection open
-        newSocket.onopen = (event) => {
-            console.log('WebSocket connected:', event);
-        };
+        socket.on('message', (data) => {
+            setInfo(data);
+            console.log('Received message from server:', data);
+        });
 
         // Listen for WebSocket errors
-        newSocket.onerror = (event) => {
-            console.error('WebSocket error:', event);
-            setInfo(event.data);
-        };
+        socket.on('error', (error) => {
+            console.error('Error:', error);
+        });
 
-        // Listen for WebSocket connection close
-        newSocket.onclose = (event) => {
-            console.log('WebSocket disconnected:', event);
-            setInfo(event.data);
-        };
+        // Listen for geneMessage
+        socket.on('geneMessage', (data) => {
+            setInfo(data);
+        });
+
+        // Listen for geneError
+        socket.on('geneError', (data) => {
+            setInfo(data);
+        });
+
 
         // Close the WebSocket connection when the component unmounts
         return () => {
-            console.log('Closing WebSocket connection');
-            newSocket.close();
+            socket.close();
             setInfo([]);
         };
-    }, [API_URL, WebSocketURL]);
+    }, [API_URL]);
 
     // ============================== WebSocket ==================================
 

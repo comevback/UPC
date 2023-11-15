@@ -4,7 +4,7 @@ import { getServices } from "../Tools/api.js";
 import './Heading.css';
 
 const Heading = () => {
-    const { API_URL, setAPI_URL, setAPI_NAME, CENTRAL_SERVER_URL, setWebSocketURL} = useContext(ParaContext);
+    const { API_URL, setAPI_URL, setAPI_NAME, CENTRAL_SERVER_URL} = useContext(ParaContext);
     const [backendServices, setBackendServices] = useState([]);
     const [isShow, setIsShow] = useState(false);
 
@@ -19,9 +19,6 @@ const Heading = () => {
     const chooseAPIserver = (service) => {
         setAPI_URL(service.url);
         setAPI_NAME(service._id);
-        // convert the http:// to ws://
-        const wsURL = service.url.startsWith('https') ? service.url.replace('https', 'wss') : service.url.replace('http', 'ws');
-        setWebSocketURL(wsURL);
     };
 
     return (
