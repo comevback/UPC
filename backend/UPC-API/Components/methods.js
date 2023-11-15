@@ -33,7 +33,7 @@ export const formatUptime = (seconds) => {
 };
 
 const hostInfo = getHostInfo();
-const id = 'API Service: 192.168.0.103'; // TODO: Change this to a unique ID for your service
+const id = 'API: 192.168.0.103'; // TODO: Change this to a unique ID for your service
 
 // Information about this service
 export const serviceInfo = {
