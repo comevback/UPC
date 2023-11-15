@@ -1,11 +1,3 @@
-#!/bin/bash
-
-# install node modules
-(npm install concurrently)
-(cd backend/UPC-API && npm install)
-(cd frontend/upc-react && npm install)
-(cd register-server && npm install)
-
 # get local ip address
 os_name=$(uname -s)
 

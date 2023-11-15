@@ -6,7 +6,7 @@ import axios from "axios";
 import rateLimit from "express-rate-limit";
 
 // URL of the central server
-const CENTRAL_SERVER = 'http://localhost:8000'; // TODO: Change this to the URL of your central server
+const CENTRAL_SERVER = 'http://192.168.0.103:8000'; // TODO: Change this to the URL of your central server
 
 // Get host information. ============================================
 export const getHostInfo = () => {
@@ -33,12 +33,12 @@ export const formatUptime = (seconds) => {
 };
 
 const hostInfo = getHostInfo();
-const id = 'API Service PC 1'; // TODO: Change this to a unique ID for your service
+const id = 'API Service: 192.168.0.103'; // TODO: Change this to a unique ID for your service
 
 // Information about this service
 export const serviceInfo = {
   _id: id,
-  url: 'http://localhost:4000', // TODO: Change this to the URL of your service
+  url: 'http://192.168.0.103:4000', // TODO: Change this to the URL of your service
   endpoints: [
     '/',
     '/register',
