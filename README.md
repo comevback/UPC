@@ -55,7 +55,7 @@ chmod +x setArgs.sh
 ./setArgs.sh
 ```
 
-### Usage
+## Usage
 
 *If you want to use Database to store the registered service, create a .env file on register-server folder, and add a line as:*
 ```.env
@@ -64,13 +64,12 @@ MongoURL={your-mongoDB-RUL}
 
 *otherwise the data will be loacl.*
 
----
 **Run Frontend-Server Backend-Server and Register-Server at the same time:**
 
 ```bash
 npm start
 ```
----
+
 **Or run individual part:**
 
 Register-Server:
@@ -100,10 +99,10 @@ npm start
 5. Upload files and process,
 6. Download the results.
 
-### Contributing
+## Contributing
 
 Xu Xiang
 
-### License
+## License
 
 This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
