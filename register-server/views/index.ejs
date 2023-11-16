@@ -35,13 +35,13 @@
                             <strong>Documentation:</strong> <br><a href="<%= service.url %>" target="_blank">
                                 <%= service.url %>
                             </a><br>
-                            <strong>Endpoints:</strong>
+                            <strong>HostInfo:</strong>
                             <ul>
-                                <% service.endpoints.forEach(function(endpoint) { %>
+                                <% for (const key in service.hostInfo) { %>
                                     <li>
-                                        <%= endpoint %>
+                                        <%= key %>: <%= service.hostInfo[key] %>
                                     </li>
-                                    <% }) %>
+                                    <% } %>
                             </ul>
                             <div class="register-time">
                                 <strong>CreatedAt At:</strong>

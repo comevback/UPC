@@ -54,12 +54,12 @@ const checkDatabaseConnection = async () => {
         type: String,
         required: true
       }],
-      hostConfig: {
+      hostInfo: {
         architecture: String,
         cpus: Number,
-        totalMemory: Number,
-        freeMemory: Number,
-        uptime: Number,
+        totalMemory: String,
+        freeMemory: String,
+        uptime: String,
         platform: String,
         release: String
       },

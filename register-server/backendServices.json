@@ -17,5 +17,33 @@
     ],
     "createdAt": "2023-11-13T02:07:44.963Z",
     "lastHeartbeat": "2023-11-13T02:07:44.963Z"
+  },
+  "API: 192.168.0.103": {
+    "_id": "API: 192.168.0.103",
+    "url": "http://192.168.0.103:4000",
+    "endpoints": [
+      "/",
+      "/register",
+      "/login",
+      "/tasks",
+      "/api/upload",
+      "/api/files",
+      "/api/files/:filename",
+      "/api/results",
+      "/api/results/:filename",
+      "/api/images",
+      "/api/images/:imageName"
+    ],
+    "hostInfo": {
+      "architecture": "arm64",
+      "cpus": 10,
+      "totalMemory": "16.00 GB",
+      "freeMemory": "0.21 GB",
+      "uptime": "2d 16h 0m",
+      "platform": "darwin",
+      "release": "23.1.0"
+    },
+    "createdAt": "2023-11-16T05:35:29.433Z",
+    "lastHeartbeat": "2023-11-16T05:35:29.433Z"
   }
 }

@@ -33,8 +33,9 @@ checkDatabaseConnection().then((isConnected) => {
 app.get('/', async (req, res) => {
   try {
       if (isDbConnected) {
-        const backend_services = await BackendService.find();
-        const frontend_services = await FrontendService.find();
+        const backend_services = await BackendService.find().lean();  // Lean() is to convert the mongoose object to a plain JS object
+        const frontend_services = await FrontendService.find().lean(); // Lean() is to convert the mongoose object to a plain JS object
+        console.log(backend_services);
         res.render('index.ejs', { backend_services, frontend_services });
       } else {
         const backend_services = Object.values(backendServices); // Convert the object to an array
@@ -67,7 +68,7 @@ app.get('/list-services', async (req, res) => {
 
 // Register a service
 app.post('/register-service', async (req, res) => {
-    const { _id, url, endpoints, hostConfig } = req.body;
+    const { _id, url, endpoints, hostInfo } = req.body;
     try {
       if (isDbConnected) {
         const newService = new BackendService({
@@ -75,7 +76,7 @@ app.post('/register-service', async (req, res) => {
           url,
           createdAt: new Date(),
           endpoints,
-          hostConfig
+          hostInfo
         });
         await newService.save().then((service) => {
           console.log(`Service ${service._id} registered successfully`);
@@ -89,7 +90,7 @@ app.post('/register-service', async (req, res) => {
           _id,
           url,
           endpoints,
-          hostConfig,
+          hostInfo,
           createdAt: new Date(),
           lastHeartbeat: new Date()
         };
