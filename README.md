@@ -89,7 +89,7 @@ Frontend-Server:
 cd frontend/upc-react
 npm start
 ```
----
+
 ## Workflow
 
 1. Start the React(frontend) API(backend) servers and Register-Server.
