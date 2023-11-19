@@ -101,7 +101,7 @@ const checkDatabaseConnection = async () => {
       FrontendService = {};
   }
   
-  export { checkDatabaseConnection, BackendService, FrontendService }
+export { checkDatabaseConnection, BackendService, FrontendService }
 
 
 

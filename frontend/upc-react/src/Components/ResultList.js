@@ -16,7 +16,7 @@ const ResultList = (props) => {
             <div>
                 <h1>Results</h1>
                 <div className="result-list">
-                    <p>No Result file yet.</p>
+                    <p>No Result file yet</p>
                 </div>
             </div>
         );

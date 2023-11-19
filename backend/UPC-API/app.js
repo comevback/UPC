@@ -62,7 +62,7 @@ app.get("/", (req, res) => {
 
 //Connection test
 app.get('/api', (req, res) => {
-    res.send(serviceInfo);
+    res.send("Connected to API server");
 });
 
 //Route to update files to the server

@@ -90,7 +90,7 @@ export const registerService = async () => {
       console.error('Failed to register service');
     }
 };
-  
+
 // Send a heartbeat to the central server ============================================
 export const sendHeartbeat = async () => {
     try {
@@ -100,7 +100,7 @@ export const sendHeartbeat = async () => {
       console.error('Failed to send heartbeat');
     }
 };
-  
+
 // Unregister the service. ============================================
 export const unregisterService = async () => {
     try {

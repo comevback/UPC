@@ -1,6 +1,6 @@
 import React, { useContext, useState, useEffect } from 'react';
 import './Application.css';
-import { getFiles, getResults, getTemps, getImages, process } from '../Tools/api.js';
+import { checkConnection, getFiles, getResults, getTemps, getImages, process } from '../Tools/api.js';
 import { ParaContext } from '../Global.js';
 import FileList from './FileList.js';
 import ResultList from './ResultList.js';
@@ -11,14 +11,20 @@ import Heading from './Heading.js';
 import Console from './Console.js';
 
 const ApplicationForm = () => {
+    const [connected, setConnected] = useState(false);
     const [files, setFiles] = useState([]);
     const [results, setResults] = useState([]);
     const [temps, setTemps] = useState([]);
     const [images, setImages] = useState([]);
     const [selectedImages, setSelectedImages] = useState([]); // Store the selected files
     const [selectedFiles, setSelectedFiles] = useState([]); // Store the selected files
-    const { API_URL, API_NAME } = useContext(ParaContext);
+    const { API_URL } = useContext(ParaContext);
 
+    // Check if the backend is connected
+    const checkBackend = async() => {
+        const connectSitu = await checkConnection(API_URL);
+        setConnected(connectSitu);
+    };
 
     const handleProcessClick = () => {
         process(API_URL, selectedImages, selectedFiles);
@@ -77,10 +83,13 @@ const ApplicationForm = () => {
 
     useEffect(() => {
         // Get the list of files when the component mounts
-        refreshFiles();
-        refreshResults();
-        refreshTemps();
-        refreshImages();
+        checkBackend();
+        if (connected) {
+            refreshFiles();
+            refreshResults();
+            refreshTemps();
+            refreshImages();
+        }
     }, [API_URL]);
 
     return (
@@ -89,7 +98,7 @@ const ApplicationForm = () => {
                 <a href='./' rel="noopener noreferrer"><img src='UPC-logo-rm.png' alt='UPC logo' width='300px' height='300px'/></a>
                 <div>
                     <h1 className='title'>UPC - Generate and Process</h1>
-                    <h2>Current Server: <a className='Serverlink' href={API_URL} target="_blank" rel="noopener noreferrer">{API_NAME}</a></h2>
+                    <h2>Current Server: <a className='Serverlink' href={connected? API_URL : "./"} target="_blank" rel="noopener noreferrer">{connected? API_URL : "API not connected"}</a></h2>
                 </div>
             </div>
             <Heading/>

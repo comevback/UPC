@@ -1,19 +1,6 @@
 import axios from 'axios';
 
-// Check if the backend is connected
-export const checkConnection = async (API_URL) => {
-    try {
-        const response = await axios.get(`${API_URL}/api`);
-        if(response.status === 200){
-            return (response.data);
-        } else {
-            return false;
-        }
-    } catch (error) {
-        console.error('Error connecting backend:', error);
-    }
-};
-
+// With Central Server ----------------------------------------------------------------------------------------
 
 // Get the list of services
 export const getServices = async (CENTRAL_SERVER_URL) => {
@@ -67,6 +54,20 @@ export const sendHeartbeat = async (CENTRAL_SERVER_URL) => {
 };
 
 // With API server --------------------------------------------------------------------------------------------
+
+// Check if the backend is connected
+export const checkConnection = async (API_URL) => {
+    try {
+        const response = await axios.get(`${API_URL}/api`);
+        if(response.status >= 200 && response.status < 300){
+            return (true);
+        } else {
+            return false;
+        }
+    } catch (error) {
+        console.error('Error connecting backend:', error);
+    }
+};
 
 export const uploadData = async (API_URL, data) => {
         try {
