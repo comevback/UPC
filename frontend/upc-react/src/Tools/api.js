@@ -66,6 +66,8 @@ export const sendHeartbeat = async (CENTRAL_SERVER_URL) => {
     }
 };
 
+// With API server --------------------------------------------------------------------------------------------
+
 export const uploadData = async (API_URL, data) => {
         try {
                 const response = await axios.post(`${API_URL}/api/upload`, data);
@@ -83,6 +85,7 @@ export const getFiles = async (API_URL) => {
         return response.data;
     } catch (error) {
         console.error('Error fetching files:', error);
+        return [];
     }
 };
 
@@ -93,6 +96,7 @@ export const getResults = async (API_URL) => {
         return response.data;
     } catch (error) {
         console.error('Error fetching results:', error);
+        return [];
     }
 };
 
@@ -103,6 +107,7 @@ export const getTemps = async (API_URL) => {
         return response.data;
     } catch (error) {
         console.error('Error fetching temps:', error);
+        return [];
     }
 };
 
@@ -214,6 +219,7 @@ export const getImages = async (API_URL) => {
         return response.data;
     } catch (error) {
         console.error('Error fetching images:', error);
+        return [];
     }
 }
 
