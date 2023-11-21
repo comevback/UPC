@@ -18,10 +18,8 @@ backend_method="./backend/UPC-API/Components/methods.js"
 # replace the ip address in the methods.js file
 if [ "$os_name" = "Linux" ]; then
     sed -i "s/const CENTRAL_SERVER = '.*';/const CENTRAL_SERVER = 'http:\/\/${ip_address}:8000';/" $backend_method
-    sed -i "s/url: '.*',/url: 'http:\/\/${ip_address}:4000',/" $backend_method
-    sed -i "s/const id = '.*';/const id = 'API: ${ip_address}';/" $backend_method
+    sed -i "s/const hostURL = '.*',/const hostURL: 'http:\/\/${ip_address}:4000',/" $backend_method
 elif [ "$os_name" = "Darwin" ]; then
     sed -i '' "s/const CENTRAL_SERVER = '.*';/const CENTRAL_SERVER = 'http:\/\/${ip_address}:8000';/" $backend_method
-    sed -i '' "s/url: '.*',/url: 'http:\/\/${ip_address}:4000',/" $backend_method
-    sed -i '' "s/const id = '.*';/const id = 'API: ${ip_address}';/" $backend_method
+    sed -i '' "s/const hostURL: '.*',/const hostURL: 'http:\/\/${ip_address}:4000',/" $backend_method
 fi
