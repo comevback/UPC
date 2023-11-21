@@ -6,6 +6,7 @@ import axios from "axios";
 import rateLimit from "express-rate-limit";
 
 const hostURL = 'http://localhost:4000'; // TODO: Change this to the URL of your service
+const id = `API: ${hostURL}`; // TODO: Change this to a unique ID for your service
 
 // URL of the central server
 const CENTRAL_SERVER = 'http://localhost:8000'; // TODO: Change this to the URL of your central server
@@ -35,12 +36,11 @@ export const formatUptime = (seconds) => {
 };
 
 const hostInfo = getHostInfo();
-const id = `API: ${hostURL}`; // TODO: Change this to a unique ID for your service
 
 // Information about this service
 export const serviceInfo = {
   _id: id,
-  url: 'http://localhost:4000', // TODO: Change this to the URL of your service
+  url: hostURL, // TODO: Change this to the URL of your service
   endpoints: [
     '/',
     '/register',
