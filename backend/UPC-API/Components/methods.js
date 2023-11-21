@@ -5,8 +5,10 @@ import os from 'os';
 import axios from "axios";
 import rateLimit from "express-rate-limit";
 
+const hostURL = 'http://localhost:4000'; // TODO: Change this to the URL of your service
+
 // URL of the central server
-const CENTRAL_SERVER = 'http://192.168.0.103:8000'; // TODO: Change this to the URL of your central server
+const CENTRAL_SERVER = 'http://localhost:8000'; // TODO: Change this to the URL of your central server
 
 // Get host information. ============================================
 export const getHostInfo = () => {
@@ -33,12 +35,12 @@ export const formatUptime = (seconds) => {
 };
 
 const hostInfo = getHostInfo();
-const id = 'API: 192.168.0.103'; // TODO: Change this to a unique ID for your service
+const id = `API: ${hostURL}`; // TODO: Change this to a unique ID for your service
 
 // Information about this service
 export const serviceInfo = {
   _id: id,
-  url: 'http://192.168.0.103:4000', // TODO: Change this to the URL of your service
+  url: 'http://localhost:4000', // TODO: Change this to the URL of your service
   endpoints: [
     '/',
     '/register',
@@ -87,7 +89,7 @@ export const registerService = async () => {
       const response = await axios.post(`${CENTRAL_SERVER}/register-service`, serviceInfo);
       console.log('Service registered');
     } catch (error) {
-      console.error('Failed to register service');
+      console.error('Failed to register service' + error.message);
     }
 };
 
@@ -95,9 +97,9 @@ export const registerService = async () => {
 export const sendHeartbeat = async () => {
     try {
       const response = await axios.post(`${CENTRAL_SERVER}/service-heartbeat`, serviceInfo);
-      console.log('Heartbeat sent');
+      console.log('Heartbeat sent: ————' + new Date(Date.now()).toLocaleString());
     } catch (error) {
-      console.error('Failed to send heartbeat');
+      console.error('Failed to send heartbeat' + error.message);
     }
 };
 

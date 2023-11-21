@@ -7,7 +7,8 @@
     "install-all": "npm install --prefix ./backend/UPC-API && npm install --prefix ./frontend/upc-react && npm install --prefix ./register-server && npm install concurrently"
   },
   "dependencies": {
-    "concurrently": "^8.2.2"
+    "concurrently": "^8.2.2",
+    "winston": "^3.11.0"
   },
   "main": "main.js",
   "version": "1.0.0",

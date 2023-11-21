@@ -43,11 +43,11 @@ export const unregisterService = async (CENTRAL_SERVER_URL) => {
 // Send a heartbeat to the central server
 export const sendHeartbeat = async (CENTRAL_SERVER_URL) => {
     try {
-        const response = await axios.post(`${CENTRAL_SERVER_URL}/frontend/service-heartbeat`, {
+        await axios.post(`${CENTRAL_SERVER_URL}/frontend/service-heartbeat`, {
             _id: 'React Frontend Service',
             url: window.location.origin,
         });
-        console.log('Heartbeat sent');
+        console.log('Heartbeat sent: ————' + new Date(Date.now()).toLocaleString());
     } catch (error) {
         console.error('Failed to send heartbeat');
     }

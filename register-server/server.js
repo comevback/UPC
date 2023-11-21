@@ -138,7 +138,7 @@ app.post('/service-heartbeat', async (req, res) => {
             { lastHeartbeat: Date.now() },
             { new: true }
         );
-        console.log(`Heartbeat from backend service : ${service._id}`);
+        console.log(`Heartbeat from backend service: (${service._id}): ————` + new Date(Date.now()).toLocaleString());
         if (!service) {
             return res.status(404).json({ message: "Service not found" });
         }
@@ -149,7 +149,7 @@ app.post('/service-heartbeat', async (req, res) => {
             return res.status(404).json({ message: "Service not found" });
         }
         service.lastHeartbeat = Date.now();
-        console.log(`Heartbeat from backend service : ${service._id}`);
+        console.log(`Heartbeat from backend service: (${service._id}): ————` + new Date(Date.now()).toLocaleString());
         res.status(200).json(service);
       }
     } catch (error) {
@@ -175,7 +175,7 @@ app.post('/frontend/register-service', async (req, res) => {
         console.log(`Frontend Service: ${service._id} registered successfully`);
         res.status(200).json(service);
       }).catch((err) => {
-        //console.error(err);
+        console.error(err);
         res.status(500).json({message: err.message})
       });
   } else {
@@ -217,12 +217,12 @@ app.post('/frontend/service-heartbeat', async (req, res) => {
     if (!service) {
       return res.status(404).json({ message: "Service not found" });
     }
-    console.log(`Heartbeat from frontend service : ${_id}`);
-    res.status(200).json(service);
+    console.log(`Heartbeat from frontend service: (${_id}): ————` + new Date(Date.now()).toLocaleString());
+    res.status(200)
   } else {
     frontendServices[url].lastHeartbeat = Date.now();
-    console.log(`Heartbeat from frontend service : ${_id}`);
-    res.status(200).json(frontendServices[url]);
+    console.log(`Heartbeat from frontend service: (${_id}): ————` + new Date(Date.now()).toLocaleString());
+    res.status(200)
   }
 });
   
