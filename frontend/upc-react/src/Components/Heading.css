@@ -57,6 +57,7 @@
 
 .services-show{
     opacity: 1;
+    overflow-x: auto;
 }
 
 .server-with{
