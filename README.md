@@ -24,7 +24,7 @@ These instructions will get you a copy of the project up and running on your loc
 ### Run Backend API server by docker:
 
 ```bash
-docker run -e HOST_URL={http://yourhost:4000} -e CENTRAL_SERVER={http://yourcentralserver:8000} -v /var/run/docker.sock:/var/run/docker.sock -p 4000:4000 afterlifexx/upc-api:1.0
+docker run -e HOST_URL={http://your_API_host:4000} -e CENTRAL_SERVER={http://your_central_server:8000} -v /var/run/docker.sock:/var/run/docker.sock -p 4000:4000 afterlifexx/upc-api:1.0
 ```
 for example:
 ```bash
