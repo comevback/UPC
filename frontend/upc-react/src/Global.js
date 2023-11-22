@@ -1,9 +1,9 @@
 import { createContext, useState } from 'react';
 
 // Get data
-const INITIAL_API_URL = 'http://localhost:4000'; // replace with your backend URL
-const INITIAL_API_NAME = 'API Service'; // replace with your backend name
-const INITIAL_CENTRAL_SERVER_URL = 'http://localhost:8000'; // replace with your central register server URL
+const INITIAL_API_URL = process.env.INITIAL_API_URL || 'http://localhost:4000'; // replace with your backend URL
+const INITIAL_API_NAME = process.env.INITIAL_API_NAME || 'API Service'; // replace with your backend name
+const INITIAL_CENTRAL_SERVER_URL = process.env.INITIAL_CENTRAL_SERVER_URL || 'http://localhost:8000'; // replace with your central register server URL
 
 const defaultValue = {
     API_URL: INITIAL_API_URL,
