@@ -23,6 +23,12 @@ These instructions will get you a copy of the project up and running on your loc
 
 ### Installing
 
+## RUN BACKEND API_SERVER by DOCKER:
+
+```bash
+docker run -e HOST_URL=http://yourhost:4000 -e CENTRAL_SERVER=http://yourcentralserver:8000 -v /var/run/docker.sock:/var/run/docker.sock -p 4000:4000 afterlifexx/upc-api:1.0
+```
+
 1. **Clone the repository**:
 
 ```bash
