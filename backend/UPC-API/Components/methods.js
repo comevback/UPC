@@ -89,7 +89,7 @@ export const registerService = async () => {
       const response = await axios.post(`${CENTRAL_SERVER}/register-service`, serviceInfo);
       console.log('Service registered');
     } catch (error) {
-      console.error('Failed to register service' + error.message);
+      console.error('Failed to register service:' + error.message);
     }
 };
 
@@ -99,7 +99,7 @@ export const sendHeartbeat = async () => {
       const response = await axios.post(`${CENTRAL_SERVER}/service-heartbeat`, serviceInfo);
       console.log('Heartbeat sent: ————' + new Date(Date.now()).toLocaleString());
     } catch (error) {
-      console.error('Failed to send heartbeat' + error.message);
+      console.error('Failed to send heartbeat:' + error.message);
     }
 };
 
