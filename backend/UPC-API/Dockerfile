@@ -1,6 +1,9 @@
 # Use an official Node runtime as a parent image
 FROM node:20-alpine
 
+#ENV HOST_URL=http://localhost:4000
+#ENV CENTRAL_SERVER=http://localhost:8000
+
 # Set the working directory
 WORKDIR /usr/src/app
 

@@ -5,10 +5,10 @@ import os from 'os';
 import axios from "axios";
 import rateLimit from "express-rate-limit";
 
-const hostURL = 'http://localhost:4000'; // TODO: Change this to the URL of your service
+const hostURL = process.env.HOST_URL || 'http://localhost:4000'; // TODO: Change this to the URL of your service
 
 // URL of the central server
-const CENTRAL_SERVER = 'http://localhost:8000'; // TODO: Change this to the URL of your central server
+const CENTRAL_SERVER = process.env.CENTRAL_SERVER || 'http://localhost:8000'; // TODO: Change this to the URL of your central server
 
 // Get host information. ============================================
 export const getHostInfo = () => {
