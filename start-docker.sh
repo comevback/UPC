@@ -35,14 +35,14 @@ echo -e "\033[37mYour Host's Local IP Address: \033[1;33m$ip_address\033[0m"
 echo ""
 
 # Ask user to input API host URL
-echo -e "\033[1;37m1. Please enter your API host URL\033[0m \033[0;37m(press Enter for default:\033[0m \033[32m$ip_address:4000\033[0m\033[0;30m):\033[0m"
+echo -e "\033[1;37m1. Please enter your API host URL\033[0m \033[0;37m(press Enter for default:\033[0m \033[32m$ip_address:4000\033[0m\033[0;37m):\033[0m"
 read API_URL
 API_URL=${API_URL:-http://$ip_address:4000}
 echo -e "\033[97mAPI Host URL: \033[1;32m\033[4m$API_URL\033[0m"
 echo ""
 
 # Ask user to input central register server URL
-echo -e "\033[1;37m2. Please enter your central register server URL\033[0m \033[0;37m(press Enter for default:\033[0m \033[32m$ip_address:8000\033[0m\033[0;30m):\033[0m "
+echo -e "\033[1;37m2. Please enter your central register server URL\033[0m \033[0;37m(press Enter for default:\033[0m \033[32m$ip_address:8000\033[0m\033[0;37m):\033[0m "
 read CENTRAL_SERVER
 CENTRAL_SERVER=${CENTRAL_SERVER:-http://$ip_address:8000}
 echo -e "\033[97mCentral Register Server URL: \033[1;32m\033[4m$CENTRAL_SERVER\033[0m"
