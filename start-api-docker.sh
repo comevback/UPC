@@ -10,7 +10,7 @@ elif [ "$os_name" = "Darwin" ]; then
     ip_address=$(ifconfig | grep 'inet ' | grep -v '127.0.0.1' | awk '{print $2}' | head -n 1)
 else
     echo "Unsupported OS"
-    exit 1
+    ip_address=localhost
 fi
 
 echo -e "\033[1;37mYour Local IP Address: \033[1;33m$ip_address\033[0m"

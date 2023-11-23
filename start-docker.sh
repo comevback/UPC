@@ -10,7 +10,8 @@ elif [ "$os_name" = "Darwin" ]; then
     ip_address=$(ifconfig | grep 'inet ' | grep -v '127.0.0.1' | awk '{print $2}' | head -n 1)
 else
     echo "Unsupported OS"
-    exit 1
+    #exit 1
+    ip_address=localhost
 fi
 
 echo -e "\033[2J\033[0;0H"
@@ -54,14 +55,6 @@ HOST_URL=$API_URL
 CENTRAL_SERVER=$CENTRAL_SERVER
 INITIAL_API_URL=$API_URL
 INITIAL_CENTRAL_SERVER_URL=$CENTRAL_SERVER
-
-echo -e "docker run -e HOST_URL=$HOST_URL \
-           -e CENTRAL_SERVER=$CENTRAL_SERVER \
-           -e INITIAL_API_URL=$INITIAL_API_URL \
-           -e INITIAL_CENTRAL_SERVER_URL=$INITIAL_CENTRAL_SERVER_URL \
-           -v /var/run/docker.sock:/var/run/docker.sock \
-           -p 3000:3000 -p 4000:4000 -p 8000:8000 \
-           afterlifexx/upc-system:1.0"
 
 # replace the ip address in files, and start the docker container
 docker run -e HOST_URL=$HOST_URL \
