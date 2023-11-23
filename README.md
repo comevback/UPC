@@ -25,7 +25,7 @@ These instructions will get you a copy of the project up and running on your loc
 
 ## Run by Docker
 
-###Script：
+### Script：
 
 All Services at once:
 ```bash
@@ -55,7 +55,7 @@ chmod +x start-register-docker.sh
 ./start-register-docker.sh
 ```
 
-###Docker command:
+### Docker command:
 
 Run all services at once:
 ```bash
