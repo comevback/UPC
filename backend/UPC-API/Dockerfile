@@ -22,8 +22,8 @@ RUN (curl -sSL "https://github.com/buildpacks/pack/releases/download/v0.32.1/pac
 # Copy project files into the docker image
 COPY . .
 
-# Expose port 3000
-EXPOSE 3000
+# Expose port 4000
+EXPOSE 4000
 
 # Define the command to run when the container starts
 CMD ["npm", "start"]
