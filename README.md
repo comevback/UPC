@@ -21,7 +21,41 @@ These instructions will get you a copy of the project up and running on your loc
 - buildpack: https://buildpacks.io/docs/tools/pack
 - MongoDB(optional): https://www.mongodb.com
 
-### Run by Docker
+---
+
+## Run by Docker
+
+###Script：
+
+all services at once:
+```bash
+curl -sSL https://raw.githubusercontent.com/comevback/UPC-node/main/start-docker.sh -o start-docker.sh
+chmod +x start-docker.sh
+./start-docker.sh
+```
+
+API-service:
+```bash
+curl -sSL https://raw.githubusercontent.com/comevback/UPC-node/main/start-docker.sh -o start-api-docker.sh
+chmod +x start-docker.sh
+./start-docker.sh
+```
+
+Frontend-service:
+```bash
+curl -sSL https://raw.githubusercontent.com/comevback/UPC-node/main/start-docker.sh -o start-react-docker.sh
+chmod +x start-docker.sh
+./start-docker.sh
+```
+
+Register-service:
+```bash
+curl -sSL https://raw.githubusercontent.com/comevback/UPC-node/main/start-docker.sh -o start-register-docker.sh
+chmod +x start-docker.sh
+./start-docker.sh
+```
+
+###Docker command:
 
 Run all services at once:
 ```bash
@@ -31,6 +65,10 @@ docker run -e HOST_URL={http://your_API_host:4000} -e CENTRAL_SERVER={http://you
 for example(all services at once):
 ```bash
 docker run -e HOST_URL=http://192.168.0.103:4000 -e CENTRAL_SERVER=http://192.168.0.103:8000 -e INITIAL_API_URL=http://192.168.0.103:4000 -e INITIAL_CENTRAL_SERVER_URL=http://192.168.0.103:8000 -v /var/run/docker.sock:/var/run/docker.sock -p 3000:3000 -p 4000:4000 -p 8000:8000 afterlifexx/upc-system:1.0
+```
+
+```bash
+docker run -e HOST_URL=http://172.28.235.225:4000 -e CENTRAL_SERVER=http://172.28.235.225:8000 -e INITIAL_API_URL=http://172.28.235.225:4000 -e INITIAL_CENTRAL_SERVER_URL=http://172.28.235.225:8000 -v /var/run/docker.sock:/var/run/docker.sock -p 3000:3000 -p 4000:4000 -p 8000:8000 afterlifexx/upc-system:1.0
 ```
 
 API-service:
@@ -52,7 +90,7 @@ Frontend-service:
 docker run  -e INITIAL_API_URL={http://your_API_host:4000} -e INITIAL_CENTRAL_SERVER_URL={http://your_central_server:8000} -p 3000:3000 afterlifexx/upc-react:1.0
 ```
 
-
+---
 
 ### Installing
 
