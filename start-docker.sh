@@ -79,7 +79,7 @@ INITIAL_CENTRAL_SERVER_URL=$CENTRAL_SERVER
 
 # replace the ip address in files, and start the docker container
 if [ "${os_name}" = "Windows" ]; then
-    docker run -e HOST_URL=$HOST_URL \
+    sudo docker run -e HOST_URL=$HOST_URL \
             -e CENTRAL_SERVER=$CENTRAL_SERVER \
             -e INITIAL_API_URL=$INITIAL_API_URL \
             -e INITIAL_CENTRAL_SERVER_URL=$INITIAL_CENTRAL_SERVER_URL \
@@ -87,7 +87,7 @@ if [ "${os_name}" = "Windows" ]; then
             -p 3000:3000 -p 4000:4000 -p 8000:8000 -it --rm \
             afterlifexx/upc-system:1.0
 else
-    docker run -e HOST_URL=$HOST_URL \
+    sudo docker run -e HOST_URL=$HOST_URL \
             -e CENTRAL_SERVER=$CENTRAL_SERVER \
             -e INITIAL_API_URL=$INITIAL_API_URL \
             -e INITIAL_CENTRAL_SERVER_URL=$INITIAL_CENTRAL_SERVER_URL \

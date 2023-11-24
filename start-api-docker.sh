@@ -78,13 +78,13 @@ INITIAL_CENTRAL_SERVER_URL=$CENTRAL_SERVER
 
 # replace the ip address in files, and start the docker container
 if [ "${os_name}" = "Windows" ]; then
-    docker run -e HOST_URL=$HOST_URL \
+    sudo docker run -e HOST_URL=$HOST_URL \
            -e CENTRAL_SERVER=$CENTRAL_SERVER \
            -v "//var/run/docker.sock:/var/run/docker.sock" \
            -p 4000:4000 -it --rm \
            afterlifexx/upc-api:1.0
 else
-    docker run -e HOST_URL=$HOST_URL \
+    sudo docker run -e HOST_URL=$HOST_URL \
             -e CENTRAL_SERVER=$CENTRAL_SERVER \
             -v /var/run/docker.sock:/var/run/docker.sock \
             -p 4000:4000 -it --rm \

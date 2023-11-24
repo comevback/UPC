@@ -55,4 +55,4 @@ echo -e "${green}|                                   Register Server            
 echo -e "${green}---------------------------------------------------------------------------------------${end_style}"
 
 # Run the docker container
-docker run -it --rm -p 8000:8000 afterlifexx/upc-register:1.0
+sudo docker run -it --rm -p 8000:8000 afterlifexx/upc-register:1.0

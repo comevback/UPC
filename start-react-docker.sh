@@ -78,7 +78,7 @@ INITIAL_API_URL=$API_URL
 INITIAL_CENTRAL_SERVER_URL=$CENTRAL_SERVER
 
 # replace the ip address in files, and start the docker container
-docker run -e INITIAL_API_URL=$INITIAL_API_URL \
+sudo docker run -e INITIAL_API_URL=$INITIAL_API_URL \
            -e INITIAL_CENTRAL_SERVER_URL=$INITIAL_CENTRAL_SERVER_URL \
            -p 3000:3000 -it --rm \
            afterlifexx/upc-react:1.0
