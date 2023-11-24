@@ -31,6 +31,8 @@ app.use(express.json()); // for parsing application/json
 app.use(cors());
 //app.use(limiter);
 
+// Register Or Heartbeat ======================================================================================
+
 let isRegistered = false;
 
 const Register = async () => {
@@ -84,7 +86,7 @@ const gracefulShutdown = async () => {
 // Handle process termination
 process.on('SIGTERM', gracefulShutdown);
 
-//--------------------------------------------------------------------------------------
+// Routers ======================================================================================
 
 //basic
 app.get("/", (req, res) => {
