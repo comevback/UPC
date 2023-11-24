@@ -62,6 +62,8 @@ CENTRAL_SERVER=${CENTRAL_SERVER:-http://$ip_address:8000}
 echo -e "\033[97mCentral Register Server URL: ${green}\033[4m$CENTRAL_SERVER${end_style}"
 echo ""
 
+sleep 1
+
 echo -e "\033[2J\033[0;0H"
 echo -e "${green}---------------------------------------------------------------------------------------${end_style}"
 echo -e "${green}|                               UPC System Start Script                               |${end_style}"
