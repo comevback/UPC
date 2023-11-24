@@ -3,7 +3,7 @@
 </div>
 <h1 align="center">UPC-node</h1>
 
-Full-stack application that using Docker and Buildpack to generate and process tasks. It consists of a Express backend and a React frontend.
+Full-stack application that using Docker and Buildpack to generate and process tasks. Consists of a Express backend and a React frontend.
 
 ---
 
