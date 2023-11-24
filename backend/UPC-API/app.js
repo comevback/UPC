@@ -31,11 +31,42 @@ app.use(express.json()); // for parsing application/json
 app.use(cors());
 //app.use(limiter);
 
-// Register the service
-registerService();
+let isRegistered = false;
+
+const Register = async () => {
+    const response = await registerService();
+    if (response) {
+        isRegistered = true;
+        console.log('Service registered');
+    } else {
+        isRegistered = false;
+        console.log('Failed to register service, isRegisterd: ' + isRegistered);
+    }
+};
+
+const Heartbeat = async () => {
+    const response = await sendHeartbeat();
+    if (response) {
+        console.log('Heartbeat sent: ————' + new Date(Date.now()).toLocaleString());
+    } else {
+        isRegistered = false;
+    }
+}
+
+Register();
+
+// 
+setInterval(() => {
+    if (isRegistered) {
+        Heartbeat();
+    } else {
+        Register();
+    };
+}, 60000);
+
 
 // Send a heartbeat every minute
-setInterval(sendHeartbeat, 60000);
+
 
 // Gracefully unregister the service when the process is terminated ============================================
 const gracefulShutdown = async () => {
@@ -52,7 +83,6 @@ const gracefulShutdown = async () => {
 
 // Handle process termination
 process.on('SIGTERM', gracefulShutdown);
-
 
 //--------------------------------------------------------------------------------------
 

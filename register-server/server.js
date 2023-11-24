@@ -78,10 +78,12 @@ app.post('/register-service', async (req, res) => {
           endpoints,
           hostInfo
         });
-        await newService.save().then((service) => {
+        await BackendService.findOneAndUpdate({ _id: _id }, newService, { upsert: true }) // upsert: true means if the service is not found, insert it
+        .then((service) => {
           console.log(`Service ${service._id} registered successfully`);
           res.status(201).json(service);
-        }).catch((error) => {
+        })
+        .catch((error) => {
           console.log(error);
           res.status(500).json({ message: error.message });
         });
@@ -171,12 +173,14 @@ app.post('/frontend/register-service', async (req, res) => {
         url,
         createdAt: new Date()
       });
-      await newService.save().then((service) => {
-        console.log(`Frontend Service: ${service._id} registered successfully`);
-        res.status(200).json(service);
-      }).catch((err) => {
-        console.error(err);
-        res.status(500).json({message: err.message})
+      await FrontendService.findOneAndUpdate({ _id: _id }, newService, { upsert: true }) // upsert: true means if the service is not found, insert it
+      .then((service) => {
+        console.log(`Service ${service._id} registered successfully`);
+        res.status(201).json(service);
+      })
+      .catch((error) => {
+        console.log(error);
+        res.status(500).json({ message: error.message });
       });
   } else {
       frontendServices[url] = {

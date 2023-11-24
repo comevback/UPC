@@ -86,20 +86,31 @@ export const limiter = rateLimit({
 // Register the service ============================================
 export const registerService = async () => {
     try {
-      await axios.post(`${CENTRAL_SERVER}/register-service`, serviceInfo);
-      console.log('Service registered');
+      const response = await axios.post(`${CENTRAL_SERVER}/register-service`, serviceInfo);
+      if (response.status >= 200 && response.status < 300) {
+        return true;
+      } else {
+        console.error('Failed to register service: ' + response.statusText);
+        return false;
+      }
     } catch (error) {
       console.error('Failed to register service:' + error.message);
+      return false;
     }
 };
 
 // Send a heartbeat to the central server ============================================
 export const sendHeartbeat = async () => {
     try {
-      await axios.post(`${CENTRAL_SERVER}/service-heartbeat`, serviceInfo);
-      console.log('Heartbeat sent: ————' + new Date(Date.now()).toLocaleString());
+      const response = await axios.post(`${CENTRAL_SERVER}/service-heartbeat`, serviceInfo);
+      if (response.status == 200){
+        return true;
+      } else {
+        return false;
+      }
     } catch (error) {
       console.error('Failed to send heartbeat:' + error.message);
+      return false;
     }
 };
 
