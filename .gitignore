@@ -129,7 +129,7 @@ dist
 .yarn/install-state.gz
 .pnp.*
 
-.DS_store
+.DS_Store
 uploads/*
 !uploads/.gitkeep
 results/*
@@ -139,3 +139,4 @@ temps/*
 uploads/
 results/
 temps/
+*.mp4
