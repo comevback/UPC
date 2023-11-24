@@ -57,12 +57,12 @@ const Heartbeat = async () => {
 
 Register();
 
-// 
+
 setInterval(() => {
-    if (isRegistered) {
-        Heartbeat();
-    } else {
+    if (!isRegistered) {
         Register();
+    } else {
+        Heartbeat();
     };
 }, 60000);
 
