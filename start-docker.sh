@@ -6,6 +6,14 @@ white="\033[0;37m"
 green="\033[1;32m"
 end_style="\033[0m"
 
+if command -v sudo &> /dev/null
+then
+    SUDO="sudo"
+else
+    SUDO=""
+fi
+
+
 #  get local ip address according to the operating system
 if [ "$os_name" = "Linux" ]; then
     ip_address=$(hostname -I | awk '{print $1}')
@@ -79,7 +87,7 @@ INITIAL_CENTRAL_SERVER_URL=$CENTRAL_SERVER
 
 # replace the ip address in files, and start the docker container
 if [ "${os_name}" = "Windows" ]; then
-    docker run -e HOST_URL=$HOST_URL \
+    $SUDO docker run -e HOST_URL=$HOST_URL \
             -e CENTRAL_SERVER=$CENTRAL_SERVER \
             -e INITIAL_API_URL=$INITIAL_API_URL \
             -e INITIAL_CENTRAL_SERVER_URL=$INITIAL_CENTRAL_SERVER_URL \
@@ -87,7 +95,7 @@ if [ "${os_name}" = "Windows" ]; then
             -p 3000:3000 -p 4000:4000 -p 8000:8000 -it --rm \
             afterlifexx/upc-system:1.0
 else
-    docker run -e HOST_URL=$HOST_URL \
+    $SUDO docker run -e HOST_URL=$HOST_URL \
             -e CENTRAL_SERVER=$CENTRAL_SERVER \
             -e INITIAL_API_URL=$INITIAL_API_URL \
             -e INITIAL_CENTRAL_SERVER_URL=$INITIAL_CENTRAL_SERVER_URL \

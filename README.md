@@ -34,6 +34,11 @@ chmod +x start-docker.sh &&
 ./start-docker.sh
 ```
 
+If permission denied, run:
+```bash
+sudo ./start-docker.sh
+```
+
 API-service:
 ```bash
 curl -sSL https://raw.githubusercontent.com/comevback/UPC-node/main/start-api-docker.sh -o start-api-docker.sh &&

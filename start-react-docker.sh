@@ -6,6 +6,14 @@ white="\033[0;37m"
 green="\033[1;32m"
 end_style="\033[0m"
 
+if command -v sudo &> /dev/null
+then
+    SUDO="sudo"
+else
+    SUDO=""
+fi
+
+
 #  get local ip address according to the operating system
 if [ "$os_name" = "Linux" ]; then
     ip_address=$(hostname -I | awk '{print $1}')
@@ -78,7 +86,7 @@ INITIAL_API_URL=$API_URL
 INITIAL_CENTRAL_SERVER_URL=$CENTRAL_SERVER
 
 # replace the ip address in files, and start the docker container
-docker run -e INITIAL_API_URL=$INITIAL_API_URL \
+$SUDO docker run -e INITIAL_API_URL=$INITIAL_API_URL \
            -e INITIAL_CENTRAL_SERVER_URL=$INITIAL_CENTRAL_SERVER_URL \
            -p 3000:3000 -it --rm \
            afterlifexx/upc-react:1.0

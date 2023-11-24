@@ -6,6 +6,14 @@ white="\033[0;37m"
 green="\033[1;32m"
 end_style="\033[0m"
 
+if command -v sudo &> /dev/null
+then
+    SUDO="sudo"
+else
+    SUDO=""
+fi
+
+
 #  get local ip address according to the operating system
 if [ "$os_name" = "Linux" ]; then
     ip_address=$(hostname -I | awk '{print $1}')
@@ -55,4 +63,4 @@ echo -e "${green}|                                   Register Server            
 echo -e "${green}---------------------------------------------------------------------------------------${end_style}"
 
 # Run the docker container
-docker run -it --rm -p 8000:8000 afterlifexx/upc-register:1.0
+$SUDO docker run -it --rm -p 8000:8000 afterlifexx/upc-register:1.0
