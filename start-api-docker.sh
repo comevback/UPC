@@ -13,7 +13,6 @@ else
     SUDO=""
 fi
 
-
 #  get local ip address according to the operating system
 if [ "$os_name" = "Linux" ]; then
     ip_address=$(hostname -I | awk '{print $1}')
@@ -24,9 +23,6 @@ else
     os_name=Windows
     ip_address=localhost
 fi
-
-echo -e "\033[1;37mYour Local IP Address: \033[1;33m$ip_address${end_style}"
-echo ""
 
 echo -e "\033[2J\033[0;0H"
 echo -e "${white}---------------------------------------------------------------------------------------${end_style}"

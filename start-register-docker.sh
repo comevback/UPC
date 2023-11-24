@@ -13,7 +13,6 @@ else
     SUDO=""
 fi
 
-
 #  get local ip address according to the operating system
 if [ "$os_name" = "Linux" ]; then
     ip_address=$(hostname -I | awk '{print $1}')

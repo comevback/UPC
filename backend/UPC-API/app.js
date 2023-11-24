@@ -11,6 +11,7 @@ import { exec, spawn } from "child_process";
 import http from "http";
 import { Server } from "socket.io";    
 import { serviceInfo, upload, limiter, registerService, unregisterService, sendHeartbeat, sortFiles } from "./Components/methods.js";
+import { set } from "mongoose";
 
 const app = express();
 const server = http.createServer(app);
@@ -42,7 +43,9 @@ const gracefulShutdown = async () => {
     try {
       await unregisterService();
       console.log('Service unregistered and server is closing.');
-      process.exit(0);
+      setTimeout(() => {
+        process.exit(0);
+      }, 3000);
     } catch (error) {
       console.log('Failed to unregister service: ', error.message);
     } 
@@ -50,7 +53,6 @@ const gracefulShutdown = async () => {
 
 // Handle process termination
 process.on('SIGTERM', gracefulShutdown);
-process.on('SIGINT', gracefulShutdown);
 
 
 //--------------------------------------------------------------------------------------
