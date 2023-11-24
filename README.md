@@ -3,8 +3,6 @@
 </div>
 <h1 align="center">UPC-node</h1>
 
----
-
 Full-stack application that using Docker and Buildpack to generate and process tasks. It consists of a Express backend and a React frontend.
 
 ---
@@ -22,11 +20,9 @@ Full-stack application that using Docker and Buildpack to generate and process t
 
 ## Run by Docker
 
-### Script：
+### Script:
 
-<video width="320" height="240" controls>
-  <source src="./UPC-script-demo.mp4" type="video/mp4">
-</video>
+<img src='./UPC-script-demo.gif' alt='UPC logo' width='600px'/>
 
 - All Services at once:
 ```bash
