@@ -1,0 +1,96 @@
+.sources{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-bottom: 1px solid #d0d0d0;
+}
+
+.Serverlink{
+    color: rgb(47, 136, 154); 
+    text-decoration: none; 
+    transition: color 0.3s; 
+}
+
+.Serverlink:hover, .Serverlink:focus{
+    text-decoration: underline;
+}
+
+.area{
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    overflow: auto;
+}
+
+.title{
+    font-size: 2.7rem;
+}
+
+
+.command-button{
+    width: 100%;
+    padding: 0.5rem;
+    border: none;
+    border-radius: 5px;
+    background-color: gray;
+    color: white;
+    font-size: rem;
+    cursor: pointer;
+    transition: 0.3s;
+}
+
+.command-button:hover {
+    background-color: lightgray;
+    color: black;
+}
+
+
+h1{
+    font-family: 'Courier New', Courier, monospace;
+}
+
+h2{
+    font-family: 'Courier New', Courier, monospace;
+}
+
+p{
+    font-family: 'Courier New', Courier, monospace;
+}
+
+span{
+    font-family: 'Courier New', Courier, monospace;
+    overflow: auto;
+}
+
+ul{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin: 20px auto;
+    padding: 20px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    width: 45vw; /* 45% of the viewport width */
+    max-width: 80vw; /* max out at 80% of the viewport width */
+    height: 30vh; /* 80% of the viewport height */
+    max-height: 80vh; /* max out at 80% of the viewport height */
+    overflow-y: auto; /* allow vertical scrolling */
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1); /* subtle shadow for depth */
+}
+
+li{
+    display: flex;
+    align-items: center;
+    flex-direction: column;
+    list-style-type: none;
+    margin: 10px 0;
+    padding: 10px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    width: 40vw;
+    text-align: center;
+    min-height: 20px;
+    background-color: #f5f5f5;
+    justify-content: space-between;
+    overflow-x: auto;
+}
