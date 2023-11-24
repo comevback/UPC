@@ -29,29 +29,29 @@ These instructions will get you a copy of the project up and running on your loc
 
 All Services at once:
 ```bash
-curl -sSL https://raw.githubusercontent.com/comevback/UPC-node/main/start-docker.sh -o start-docker.sh
-chmod +x start-docker.sh
+curl -sSL https://raw.githubusercontent.com/comevback/UPC-node/main/start-docker.sh -o start-docker.sh &&
+chmod +x start-docker.sh &&
 ./start-docker.sh
 ```
 
 API-service:
 ```bash
-curl -sSL https://raw.githubusercontent.com/comevback/UPC-node/main/start-api-docker.sh -o start-api-docker.sh
-chmod +x start-api-docker.sh
+curl -sSL https://raw.githubusercontent.com/comevback/UPC-node/main/start-api-docker.sh -o start-api-docker.sh &&
+chmod +x start-api-docker.sh &&
 ./start-api-docker.sh
 ```
 
 Frontend-service:
 ```bash
-curl -sSL https://raw.githubusercontent.com/comevback/UPC-node/main/start-react-docker.sh -o start-react-docker.sh
-chmod +x start-react-docker.sh
+curl -sSL https://raw.githubusercontent.com/comevback/UPC-node/main/start-react-docker.sh -o start-react-docker.sh &&
+chmod +x start-react-docker.sh &&
 ./start-react-docker.sh
 ```
 
 Register-service:
 ```bash
-curl -sSL https://raw.githubusercontent.com/comevback/UPC-node/main/start-register-docker.sh -o start-register-docker.sh
-chmod +x start-register-docker.sh
+curl -sSL https://raw.githubusercontent.com/comevback/UPC-node/main/start-register-docker.sh -o start-register-docker.sh &&
+chmod +x start-register-docker.sh &&
 ./start-register-docker.sh
 ```
 
