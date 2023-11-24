@@ -1,5 +1,7 @@
 # UPC-node
 
+![Logo](./UPC-logo-rm.png "UPC-LOGO")
+
 This project is a full-stack application that provides a platform for generating and managing UPC codes. It consists of a Node.js backend and a React frontend.
 
 ## Features
