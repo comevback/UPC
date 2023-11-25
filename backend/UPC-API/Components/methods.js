@@ -5,7 +5,7 @@ import os from 'os';
 import axios from "axios";
 import rateLimit from "express-rate-limit";
 
-const hostURL = process.env.HOST_URL || 'http://localhost:4000'; // TODO: Change this to the URL of your service
+const hostURL = process.env.API_URL || 'http://localhost:4000'; // TODO: Change this to the URL of your service
 
 // URL of the central server
 const CENTRAL_SERVER = process.env.CENTRAL_SERVER || 'http://localhost:8000'; // TODO: Change this to the URL of your central server
@@ -76,14 +76,14 @@ const storage = multer.diskStorage({
 
 export const upload = multer({ storage });
 
-//Rate limit ============================================
+//Rate limit =======================================================================================
 export const limiter = rateLimit({
     windowMs: 15 * 60 * 1000, // 15 minutes
     max: 100, // limit each IP to 100 requests per windowMs
     message: "Too many requests from this IP, please try again later."
 });
 
-// Register the service ============================================
+// Register the service ============================================================================
 export const registerService = async () => {
     try {
       const response = await axios.post(`${CENTRAL_SERVER}/register-service`, serviceInfo);
@@ -114,7 +114,7 @@ export const sendHeartbeat = async () => {
     }
 };
 
-// Unregister the service. ============================================
+// Unregister the service. ============================================================
 export const unregisterService = async () => {
     try {
       await axios.delete(`${CENTRAL_SERVER}/unregister-service`, { data: { _id: id } });
@@ -125,7 +125,7 @@ export const unregisterService = async () => {
 };
 
 
-// sort the matched files ============================================
+// sort the matched files ==================================================================
 export const sortFiles = (files) => {
   // if the file is a python file, put it in the front
   const pyFiles = files.filter(file => file.endsWith('.py'));

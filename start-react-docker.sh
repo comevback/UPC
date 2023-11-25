@@ -44,19 +44,26 @@ echo ""
 echo -e "\033[37mYour Host's Local IP Address: \033[1;33m$ip_address${end_style}"
 echo ""
 
+echo -e "\033[1;37m1. Please enter your React \033[1;31mPORT${end_style} ${white}(press Enter for default:${end_style} \033[32m3000${end_style}${white}):${end_style}"
+read PORT
+PORT=${PORT:-3000}
+echo -e "\033[97mReact URL: ${green}\033[4mhttp://$ip_address:$PORT${end_style}"
+
 # Ask user to input API host URL
-echo -e "\033[1;37m1. Please enter your API host URL${end_style} ${white}(press Enter for default:${end_style} \033[32m$ip_address:4000${end_style}${white}):${end_style}"
+echo -e "\033[1;37m2. Please enter your API host URL${end_style} ${white}(press Enter for default:${end_style} \033[32mhttp://$ip_address:4000${end_style}${white}):${end_style}"
 read API_URL
 API_URL=${API_URL:-http://$ip_address:4000}
 echo -e "\033[97mAPI Host URL: ${green}\033[4m$API_URL${end_style}"
 echo ""
 
 # Ask user to input central register server URL
-echo -e "\033[1;37m2. Please enter your central register server URL${end_style} ${white}(press Enter for default:${end_style} \033[32m$ip_address:8000${end_style}${white}):${end_style} "
+echo -e "\033[1;37m3. Please enter your central register server URL${end_style} ${white}(press Enter for default:${end_style} \033[32mhttp://$ip_address:8000${end_style}${white}):${end_style} "
 read CENTRAL_SERVER
 CENTRAL_SERVER=${CENTRAL_SERVER:-http://$ip_address:8000}
 echo -e "\033[97mCentral Register Server URL: ${green}\033[4m$CENTRAL_SERVER${end_style}"
 echo ""
+
+sleep 1
 
 echo -e "\033[2J\033[0;0H"
 echo -e "${green}---------------------------------------------------------------------------------------${end_style}"
@@ -84,5 +91,6 @@ INITIAL_CENTRAL_SERVER_URL=$CENTRAL_SERVER
 # replace the ip address in files, and start the docker container
 $SUDO docker run -e INITIAL_API_URL=$INITIAL_API_URL \
            -e INITIAL_CENTRAL_SERVER_URL=$INITIAL_CENTRAL_SERVER_URL \
-           -p 3000:3000 -it --rm \
+           -e PORT=$PORT \
+           -p $PORT:$PORT -it --rm \
            afterlifexx/upc-react:1.0

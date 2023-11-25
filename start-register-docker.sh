@@ -43,6 +43,12 @@ echo ""
 echo -e "\033[37mYour Host's Local IP Address: \033[1;33m$ip_address${end_style}"
 echo ""
 
+echo -e "\033[1;37m1. Please enter your Register \033[1;31mPORT${end_style} ${white}(press Enter for default:${end_style} \033[32m8000${end_style}${white}):${end_style}"
+read PORT
+REGI_PORT=${PORT:-8000}
+echo -e "\033[97mRegister Server URL: ${green}\033[4mhttp://$ip_address:$REGI_PORT${end_style}"
+
+
 sleep 1
 
 echo -e "\033[2J\033[0;0H"
@@ -62,4 +68,5 @@ echo -e "${green}|                                   Register Server            
 echo -e "${green}---------------------------------------------------------------------------------------${end_style}"
 
 # Run the docker container
-$SUDO docker run -it --rm -p 8000:8000 afterlifexx/upc-register:1.0
+$SUDO docker run -e REGI_PORT=$REGI_PORT -it --rm -p $REGI_PORT:$REGI_PORT afterlifexx/upc-register:1.0
+

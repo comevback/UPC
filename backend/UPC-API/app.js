@@ -20,7 +20,7 @@ const io = new Server(server, {
       methods: ["GET", "POST"]
     }
   });
-const port = 4000;
+const port = process.env.API_PORT || 4000;
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
 
