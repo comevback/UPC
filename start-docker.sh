@@ -95,9 +95,9 @@ if [ "${os_name}" = "Windows" ]; then
             -e API_PORT=$API_PORT \
             -e CENTRAL_SERVER=$CENTRAL_SERVER \
             -e REGI_PORT=$REGI_PORT \
-            -e API_PORT=$API_PORT \
             -e INITIAL_API_URL=$API_URL \
             -e INITIAL_CENTRAL_SERVER_URL=$CENTRAL_SERVER \
+            -e PORT=$PORT \
             -v "//var/run/docker.sock:/var/run/docker.sock" \
             -p $API_PORT:$API_PORT -p $PORT:$PORT -p $REGI_PORT:$REGI_PORT \
             -it --rm \
@@ -107,8 +107,8 @@ else
             -e API_PORT=$API_PORT \
             -e CENTRAL_SERVER=$CENTRAL_SERVER \
             -e REGI_PORT=$REGI_PORT \
-            -e INITIAL_API_URL=$INITIAL_API_URL \
-            -e INITIAL_CENTRAL_SERVER_URL=$INITIAL_CENTRAL_SERVER_URL \
+            -e INITIAL_API_URL=$API_URL \
+            -e INITIAL_CENTRAL_SERVER_URL=$CENTRAL_SERVER \
             -e PORT=$PORT \
             -v /var/run/docker.sock:/var/run/docker.sock \
             -p $API_PORT:$API_PORT -p $PORT:$PORT -p $REGI_PORT:$REGI_PORT \
