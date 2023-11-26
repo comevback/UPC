@@ -41,22 +41,32 @@ echo -e "${white}|                                     UPC System               
 echo -e "${white}---------------------------------------------------------------------------------------${end_style}"
 
 echo ""
-echo -e "\033[37mYour Host's Local IP Address: \033[1;33m$ip_address${end_style}"
+echo -e "\033[37mYour Host's Local IP Address: \033[1;33mhttp://$ip_address${end_style}"
 echo ""
 
 # Ask user to input API host URL
-echo -e "\033[1;37m1. Please enter your API host URL${end_style} ${white}(press Enter for default:${end_style} \033[32m$ip_address:4000${end_style}${white}):${end_style}"
-read API_URL
-API_URL=${API_URL:-http://$ip_address:4000}
+echo -e "\033[1;37m1. Please enter your API host URL${end_style} ${white}(press Enter for default:${end_style} \033[32mhttp://$ip_address:4000${end_style}${white}):${end_style}"
+read URL
+API_URL=${URL:-http://$ip_address:4000}
+API_PORT=$(echo $API_URL | cut -d':' -f3)
+API_PORT=${API_PORT:-4000}
 echo -e "\033[97mAPI Host URL: ${green}\033[4m$API_URL${end_style}"
 echo ""
 
 # Ask user to input central register server URL
-echo -e "\033[1;37m2. Please enter your central register server URL${end_style} ${white}(press Enter for default:${end_style} \033[32m$ip_address:8000${end_style}${white}):${end_style} "
+echo -e "\033[1;37m2. Please enter your central register server URL${end_style} ${white}(press Enter for default:${end_style} \033[32mhttp://$ip_address:8000${end_style}${white}):${end_style} "
 read CENTRAL_SERVER
 CENTRAL_SERVER=${CENTRAL_SERVER:-http://$ip_address:8000}
+REGI_PORT=$(echo $CENTRAL_SERVER | cut -d':' -f3)
+REGI_PORT=${REGI_PORT:-8000}
 echo -e "\033[97mCentral Register Server URL: ${green}\033[4m$CENTRAL_SERVER${end_style}"
 echo ""
+
+# Ask user to input React port
+echo -e "\033[1;37m1. Please enter your React \033[1;31mPORT${end_style} ${white}(press Enter for default:${end_style} \033[32m3000${end_style}${white}):${end_style}"
+read REACT_PORT
+PORT=${REACT_PORT:-3000}
+echo -e "\033[97mReact URL: ${green}\033[4mhttp://$ip_address:$PORT${end_style}"
 
 sleep 1
 
@@ -78,26 +88,30 @@ echo -e "${green}---------------------------------------------------------------
 
 
 # define the environment variables
-HOST_URL=$API_URL
-CENTRAL_SERVER=$CENTRAL_SERVER
-INITIAL_API_URL=$API_URL
-INITIAL_CENTRAL_SERVER_URL=$CENTRAL_SERVER
 
 # replace the ip address in files, and start the docker container
 if [ "${os_name}" = "Windows" ]; then
-    $SUDO docker run -e HOST_URL=$HOST_URL \
+    $SUDO docker run -e API_URL=$API_URL \
+            -e API_PORT=$API_PORT \
             -e CENTRAL_SERVER=$CENTRAL_SERVER \
-            -e INITIAL_API_URL=$INITIAL_API_URL \
-            -e INITIAL_CENTRAL_SERVER_URL=$INITIAL_CENTRAL_SERVER_URL \
+            -e REGI_PORT=$REGI_PORT \
+            -e API_PORT=$API_PORT \
+            -e INITIAL_API_URL=$API_URL \
+            -e INITIAL_CENTRAL_SERVER_URL=$CENTRAL_SERVER \
             -v "//var/run/docker.sock:/var/run/docker.sock" \
-            -p 3000:3000 -p 4000:4000 -p 8000:8000 -it --rm \
+            -p $API_PORT:$API_PORT -p $PORT:$PORT -p $REGI_PORT:$REGI_PORT \
+            -it --rm \
             afterlifexx/upc-system:1.0
 else
-    $SUDO docker run -e HOST_URL=$HOST_URL \
+    $SUDO docker run -e API_URL=$API_URL \
+            -e API_PORT=$API_PORT \
             -e CENTRAL_SERVER=$CENTRAL_SERVER \
+            -e REGI_PORT=$REGI_PORT \
             -e INITIAL_API_URL=$INITIAL_API_URL \
             -e INITIAL_CENTRAL_SERVER_URL=$INITIAL_CENTRAL_SERVER_URL \
+            -e PORT=$PORT \
             -v /var/run/docker.sock:/var/run/docker.sock \
-            -p 3000:3000 -p 4000:4000 -p 8000:8000 -it --rm \
+            -p $API_PORT:$API_PORT -p $PORT:$PORT -p $REGI_PORT:$REGI_PORT \
+            -it --rm \
             afterlifexx/upc-system:1.0
 fi
