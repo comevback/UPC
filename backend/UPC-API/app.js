@@ -256,8 +256,8 @@ app.post('/api/files/:filename', async(req, res) => {
         await fs.promises.rm(appPath, { recursive: true });
         console.log('Previous unzipped folder deleted');
     }
-    
-    await extract(filePath, { dir: extractPath });
+
+    extract(filePath, { dir: extractPath });
     console.log('File unzipped successfully');
 
     //unzip the file
