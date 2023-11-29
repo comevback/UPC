@@ -111,7 +111,6 @@ else
             -e INITIAL_CENTRAL_SERVER_URL=$CENTRAL_SERVER \
             -e PORT=$PORT \
             -v /var/run/docker.sock:/var/run/docker.sock \
-            # -v /Users/xuxiang/Downloads/uploads:/usr/src/app/backend/UPC-API/uploads \
             -p $API_PORT:$API_PORT -p $PORT:$PORT -p $REGI_PORT:$REGI_PORT \
             -it --rm \
             afterlifexx/upc-system:1.0
