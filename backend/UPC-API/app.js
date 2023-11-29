@@ -259,8 +259,13 @@ app.post('/api/files/:filename', async(req, res) => {
             await fs.promises.rm(appPath, { recursive: true });
             console.log('Previous unzipped folder deleted');
         }
-        await extract(filePath, { dir: extractPath });
-        console.log('File unzipped successfully');
+        extract(filePath, { dir: extractPath }, function(err) {
+            if (err) {
+                console.error('Error during extraction:', err);
+                return res.status(500).send({ message: 'Error unzipping file' });
+            }
+            console.log('File unzipped successfully');
+        });
 
         // Replace docker run with pack build command
         const pack = spawn('pack', [
@@ -286,7 +291,7 @@ app.post('/api/files/:filename', async(req, res) => {
         pack.on('close', async(code) => {
             const endTime = Date.now();
             const timeTaken = (endTime - startTime)/1000 ;
-            console.log(`Time elapsed: ${timeTaken}s`);
+            console.log(`Time took: ${timeTaken}s`);
 
             if (code === 0) {
                 console.log(`pack build completed successfully.`);
@@ -360,7 +365,7 @@ app.post('/api/process', async(req, res) => {
     docker_process.on('close', async(code) => {
         const endTime = Date.now();
         const timeTaken = (endTime - startTime)/1000 ;
-        console.log(`Time elapsed: ${timeTaken}s`);
+        console.log(`Time took: ${timeTaken}s`);
 
         if (code === 0) {
             console.log(`docker run completed successfully.`);
