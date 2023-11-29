@@ -252,20 +252,18 @@ app.post('/api/files/:filename', async(req, res) => {
         return res.status(400).send({ message: 'File does not exist' });
     }
 
+    if (fs.existsSync(appPath)) {
+        await fs.promises.rm(appPath, { recursive: true });
+        console.log('Previous unzipped folder deleted');
+    }
+    
+    await extract(filePath, { dir: extractPath });
+    console.log('File unzipped successfully');
+
     //unzip the file
     try {
         //if the file is already unzipped, delete the unzipped folder
-        if (fs.existsSync(appPath)) {
-            await fs.promises.rm(appPath, { recursive: true });
-            console.log('Previous unzipped folder deleted');
-        }
-        extract(filePath, { dir: extractPath }, function(err) {
-            if (err) {
-                console.error('Error during extraction:', err);
-                return res.status(500).send({ message: 'Error unzipping file' });
-            }
-            console.log('File unzipped successfully');
-        });
+        
 
         // Replace docker run with pack build command
         const pack = spawn('pack', [
