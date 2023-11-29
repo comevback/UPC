@@ -68,7 +68,7 @@ const FileList = (props) => {
         };
     }, [API_URL]);
 
-    // ============================== WebSocket ==================================
+    // =============================== WebSocket ==================================
 
     // If click the file, Show the info, and generate the image, refresh the file list
     const handleFileClick = async(file) => {
@@ -106,7 +106,7 @@ const FileList = (props) => {
                                     await deleteFile(API_URL, file);
                                     props.refreshFiles();
                                 }}>Delete</button>
-                            </div> 
+                            </div>
                         </div>
                         {activeInfoFile === file && (
                             <div className='info'>

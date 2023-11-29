@@ -253,16 +253,6 @@ export const deleteImage = async (API_URL, fileName) => {
     }
 };
 
-// Process the images
-export const process = async (API_URL, imageName, fileNames) => {
-    try {
-      const response = await axios.post(`${API_URL}/api/process`, { imageName, fileNames });
-      console.log(response.data);
-    } catch (error) {
-      console.error('Error running docker:', error);
-    }
-};
-
 // send a command to the backend
 export const sendCommand = async (API_URL, command) => {
     try {
@@ -270,6 +260,16 @@ export const sendCommand = async (API_URL, command) => {
       console.log(response.data);
     } catch (error) {
       console.error('Error sending command:', error);
+    }
+};
+
+// Process the images
+export const process = async (API_URL, imageName, fileNames) => {
+    try {
+      const response = await axios.post(`${API_URL}/api/process`, { imageName, fileNames });
+      console.log(response.data);
+    } catch (error) {
+      console.error('Error running docker:', error);
     }
 };
 

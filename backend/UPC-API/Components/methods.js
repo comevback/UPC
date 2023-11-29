@@ -4,6 +4,7 @@ import fs from 'fs';
 import os from 'os';
 import axios from "axios";
 import rateLimit from "express-rate-limit";
+import { exec } from 'child_process';
 
 const hostURL = process.env.API_URL || 'http://localhost:4000'; // TODO: Change this to the URL of your service
 
@@ -131,4 +132,64 @@ export const sortFiles = (files) => {
   const pyFiles = files.filter(file => file.endsWith('.py'));
   const otherFiles = files.filter(file => !file.endsWith('.py'));
   return pyFiles.concat(otherFiles);
+}
+
+// Process the uploaded files ============================================================
+export const processFiles = async (imageName, fileNames) => {
+  const processedFiles = [];
+  for (const file of files) {
+    const result = await processFile(file);
+    processedFiles.push(result);
+  }
+  return processedFiles;
+};
+
+
+// (docker inspect --format='{{.Config.WorkingDir}}' your-image-name) this command can get the working directory of the image
+// (docker inspect --format='{{.Config.Entrypoint}}' your-image-name) this command can get the entrypoint of the image
+// (docker inspect --format='{{.Config.Cmd}}' your-image-name) this command can get the cmd of the image
+
+//get the working directory of the image
+export const getWorkingDir = async(imageName) => {
+  return new Promise((resolve, reject) => {
+      exec(`docker inspect --format='{{.Config.WorkingDir}}' ${imageName}`, (err, stdout, stderr) => {
+          if (err) {
+              // Error handling
+              console.error(`Error inspecting image: ${err}`);
+              reject(stderr);
+          } else {
+              resolve(stdout.trim());
+          }
+      });
+  });
+}
+
+//get the entrypoint of the image
+export const getEntrypoint = async(imageName) => {
+  return new Promise((resolve, reject) => {
+      exec(`docker inspect --format='{{.Config.Entrypoint}}' ${imageName}`, (err, stdout, stderr) => {
+          if (err) {
+              // Error handling
+              console.error(`Error inspecting image: ${err}`);
+              reject(stderr);
+          } else {
+              resolve(stdout.trim());
+          }
+      });
+  });
+}
+
+//get the cmd of the image
+export const getCmd = async(imageName) => {
+  return new Promise((resolve, reject) => {
+      exec(`docker inspect --format='{{.Config.Cmd}}' ${imageName}`, (err, stdout, stderr) => {
+          if (err) {
+              // Error handling
+              console.error(`Error inspecting image: ${err}`);
+              reject(stderr);
+          } else {
+              resolve(stdout.trim());
+          }
+      });
+  });
 }

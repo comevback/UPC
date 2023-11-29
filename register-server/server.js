@@ -35,7 +35,6 @@ app.get('/', async (req, res) => {
       if (isDbConnected) {
         const backend_services = await BackendService.find().lean();  // Lean() is to convert the mongoose object to a plain JS object
         const frontend_services = await FrontendService.find().lean(); // Lean() is to convert the mongoose object to a plain JS object
-        console.log(backend_services);
         res.render('index.ejs', { backend_services, frontend_services });
       } else {
         const backend_services = Object.values(backendServices); // Convert the object to an array

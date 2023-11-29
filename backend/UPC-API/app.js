@@ -10,7 +10,7 @@ import { fileURLToPath } from 'url';
 import { exec, spawn } from "child_process"; 
 import http from "http";
 import { Server } from "socket.io";    
-import { serviceInfo, upload, limiter, registerService, unregisterService, sendHeartbeat, sortFiles } from "./Components/methods.js";
+import { serviceInfo, upload, limiter, registerService, unregisterService, sendHeartbeat, sortFiles, getWorkingDir, getEntrypoint, getCmd } from "./Components/methods.js";
 
 const app = express();
 const server = http.createServer(app);
@@ -171,9 +171,10 @@ app.get('/api/images', (req, res) => {
 });
 
 //view the image details
-app.get('/api/images/:imageName', (req, res) => {
+app.get('/api/images/:imageName', async(req, res) => {
     const { imageName } = req.params;
-    exec(`docker image inspect ${imageName}`, (err, stdout, stderr) => {
+
+    exec(`docker inspect ${imageName}`, (err, stdout, stderr) => {
         if (err) {
             // Error handling
             console.error(`Error inspecting image: ${err}`);
@@ -184,11 +185,14 @@ app.get('/api/images/:imageName', (req, res) => {
                 const imageDetails = JSON.parse(stdout);
                 // Create a new array with the formatted details
                 const formattedDetails = imageDetails.map(detail => ({
-                    RepositoryTags: detail.RepoTags,
+                    WorkingDir: detail.Config.WorkingDir,
+                    Entrypoint: detail.Config.Entrypoint,
+                    Cmd: detail.Config.Cmd,
                     Id: detail.Id,
                     Created: detail.Created,
                     Size: `${(detail.Size / 1024 / 1024).toFixed(2)} MB`,
                     Architecture: detail.Architecture,
+                    RepositoryTags: detail.RepoTags,
                     Os: detail.Os,
                     DockerVersion: detail.DockerVersion,
                     // more details can be added here
@@ -228,6 +232,8 @@ app.get('/api/temps/:filename', (req, res) => {
 
 // Generate Image after upload and unzip file
 app.post('/api/files/:filename', async(req, res) => {
+    const startTime = Date.now();
+
     const { filename } = req.params;
     const baseFileName = path.basename(filename, '.zip');
     const filePath = path.join(__dirname, 'uploads', filename);
@@ -278,14 +284,20 @@ app.post('/api/files/:filename', async(req, res) => {
         });
 
         pack.on('close', async(code) => {
+            const endTime = Date.now();
+            const timeTaken = (endTime - startTime)/1000 ;
+            console.log(`Time elapsed: ${timeTaken}s`);
+
             if (code === 0) {
                 console.log(`pack build completed successfully.`);
                 await fs.promises.rm(appPath, { recursive: true }); // Delete the unzipped folder
                 console.log('unzipped folder deleted');
-                res.status(200).send({ message: 'Image built successfully' });
+                io.emit('geneMessage', `[${timeTaken}s] Image built successfully.`);
+                res.status(200).send({ message: 'Image built successfully'});
             } else {
                 console.error(`pack build failed with code ${code}`);
-                res.status(500).send({ message: 'Error building image' });
+                io.emit('geneError', `[${timeTaken}s] Error building image.`);
+                res.status(500).send({ message: 'Error building image'});
             }
         });
         
@@ -293,11 +305,12 @@ app.post('/api/files/:filename', async(req, res) => {
         console.error('Error unzipping file:', error);
         res.status(500).send({ message: 'Error unzipping file' });
     }
-
 });
 
 // Route to Run a image with or without input files
 app.post('/api/process', async(req, res) => {
+    const startTime = Date.now();
+
     const { imageName, fileNames } = req.body;
     // put the files matching the fileNames in the uploads folder into the anonymous directory
     const filePath = path.join(__dirname, 'uploads');
@@ -314,18 +327,22 @@ app.post('/api/process', async(req, res) => {
         fs.copyFileSync(path.join(filePath, file), path.join(tempPath, file));
     });
 
+    const WorkingDir = await getWorkingDir(imageName);
+    const Entrypoint = await getEntrypoint(imageName);
+    const Cmd = await getCmd(imageName);
+    console.log(`WorkingDir: ${WorkingDir}`);
+    console.log(`Entrypoint: ${Entrypoint}`);
+    console.log(`Cmd: ${Cmd}`);
 
     //use spawn to run the command, use --mount to mount the temp directory
     const docker_process = spawn('docker', [
         'run', 
         '--rm', 
-        '-v', `${tempPath}:/workspace/input`, 
-        '-v', `${resultPath}:/workspace/output`, 
+        '-v', `${tempPath}:${WorkingDir}/input`, 
+        '-v', `${resultPath}:${WorkingDir}/output`, 
         imageName, 
         ...sortFiles(matchedFiles) //
     ]);
-
-    // (docker inspect --format='{{.Config.WorkingDir}}' your-image-name) this command can get the working directory of the image
 
     //use websocket to send the output to the client
     docker_process.stdout.on('data', (data) => {
@@ -341,14 +358,20 @@ app.post('/api/process', async(req, res) => {
     });
     //use websocket to send the result to the client
     docker_process.on('close', async(code) => {
+        const endTime = Date.now();
+        const timeTaken = (endTime - startTime)/1000 ;
+        console.log(`Time elapsed: ${timeTaken}s`);
+
         if (code === 0) {
             console.log(`docker run completed successfully.`);
             // Delete all the files in the temp directory
             await fs.promises.rm(tempPath, { recursive: true });
+            io.emit('runMessage', `[${timeTaken}s] Docker run completed successfully.`);
             console.log('temp folder deleted');
             res.status(200).send({ message: 'Docker run completed successfully' });
         } else {
             console.error(`docker run failed with code ${code}`);
+            io.emit('runError', `[${timeTaken}s] Error running docker.`);
             res.status(500).send({ message: 'Error running docker' });
         }
     });

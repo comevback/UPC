@@ -5,7 +5,7 @@ import { ParaContext } from "../Global.js";
 import './UploadForm.css';
 
 const UploadForm = (props) => {
-    const [file, setFile] = useState([]);
+    const [files, setFiles] = useState([]);
     const [uploadStatus, setUploadStatus] = useState('○');
     const { API_URL } = useContext(ParaContext);
 
@@ -14,7 +14,7 @@ const UploadForm = (props) => {
     }, [API_URL]);
 
     const handleFileChange = (event) => {
-        setFile(Array.from(event.target.files));
+        setFiles(Array.from(event.target.files));
         setUploadStatus('○');
     };
 
@@ -23,7 +23,7 @@ const UploadForm = (props) => {
         const formData = new FormData();
         // Create an empty FormData object
         
-        file.forEach((file) => {
+        files.forEach((file) => {
             formData.append('file', file);
         });// Add the file to formData
 
@@ -35,10 +35,15 @@ const UploadForm = (props) => {
             setUploadStatus('✗');
         } // Display the result from the server
         props.refreshFiles(); // Refresh the list of files
-        setFile([]); // Clear the file input
+        setFiles([]); // Clear the file input
     };
 
-
+    let uploadStatusClass = 'upload-status';
+    if (uploadStatus === '✓') {
+        uploadStatusClass += ' success';
+    } else if  (uploadStatus === '✗') {
+        uploadStatusClass += ' failure';
+    }
 
     return (
         <div className="upload-form-container">
@@ -46,10 +51,10 @@ const UploadForm = (props) => {
             <form className="upload-form" onSubmit={handleSubmit}>
                 <div className="upload-input">
                     <div className="upload-panel">
-                        <input type="file" id="file-input" onChange={handleFileChange} multiple />
+                        <input type="file" id="file-input" onChange={handleFileChange} webkitdirectory directory multiple />
                         <button type="submit">Upload</button>
                     </div>
-                    <div className="upload-status">{uploadStatus}</div>
+                    <div className={`upload-status ${uploadStatus === '✓' ? 'success' : uploadStatus === '✗' ? 'failure' : ''}`}>{uploadStatus}</div>
                 </div>
                 {/*
                 <ol class="upload-instructions">

@@ -16,7 +16,7 @@ const ApplicationForm = () => {
     const [results, setResults] = useState([]);
     const [temps, setTemps] = useState([]);
     const [images, setImages] = useState([]);
-    const [selectedImages, setSelectedImages] = useState([]); // Store the selected files
+    const [selectedImages, setSelectedImages] = useState(""); // Store the selected files
     const [selectedFiles, setSelectedFiles] = useState([]); // Store the selected files
     const { API_URL } = useContext(ParaContext);
 
@@ -94,6 +94,7 @@ const ApplicationForm = () => {
 
     return (
         <div>
+            <Heading/>
             <div className='sources'>
                 <a href='./' rel="noopener noreferrer"><img src='UPC-logo-rm.png' alt='UPC logo' width='300px' height='300px'/></a>
                 <div>
@@ -101,7 +102,6 @@ const ApplicationForm = () => {
                     <h2>Current Server: <a className='Serverlink' href={connected? API_URL : "./"} target="_blank" rel="noopener noreferrer">{connected? API_URL : "API not connected"}</a></h2>
                 </div>
             </div>
-            <Heading/>
             <button className='command-button' onClick={handleProcessClick} disabled={selectedImages.length === 0}>Process</button>
             <div className="area">
                 <UploadForm refreshFiles={refreshFiles} refreshResults={refreshResults} refreshAll={refresh}/>
@@ -114,8 +114,6 @@ const ApplicationForm = () => {
                 <TempList temps={temps} refreshTemps={refreshTemps} refreshAll={refresh}/>
                 <ResultList results={results} refreshFiles={refreshFiles} refreshResults={refreshResults} refreshAll={refresh}/>
             </div>
-            <div className='area'>
-            </div> 
         </div>
     );
 }

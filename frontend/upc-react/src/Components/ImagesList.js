@@ -13,12 +13,15 @@ const ImagesList = (props) => {
 
     // If click the checkbox, add the file to the selectedImages
     const handleCheckboxChange = (imageName) => {
-        const updatedSelectedImages = props.selectedImages.includes(imageName) 
-            ? props.selectedImages.filter(file => file !== imageName)
-            : [...props.selectedImages, imageName];
+        // const updatedSelectedImages = props.selectedImages.includes(imageName) 
+        //     ? props.selectedImages.filter(file => file !== imageName)
+        //     : [...props.selectedImages, imageName];
         
-        console.log('Updated selected files:', updatedSelectedImages);
-        props.setSelectedImages(updatedSelectedImages);
+        // console.log('Updated selected files:', updatedSelectedImages);
+        // props.setSelectedImages(updatedSelectedImages);    // This is the original code, set selectedImages as a Array.
+
+        props.setSelectedImages(imageName);
+        console.log('Updated selected files:', imageName);  // This is the new code, set selectedImages as a String.
     };
 
 
@@ -69,18 +72,18 @@ const ImagesList = (props) => {
                             <span>{image}</span>
                             <div className="buttons">
                                 <button onClick={() => handleViewClick(image)}>View</button>
-                                <button onClick={() => handleDeleteClick(image)}>Delete</button>
-                                <button >Run</button>
+                                <button onClick={() => handleDeleteClick(image)}>delete</button>
                             </div>
                         </div>
                         {activeImageInfo && activeImageInfo.RepositoryTags.includes(image) && (
                             <div className='info'>
-                                <p>ID: {activeImageInfo.Id}</p>
-                                <p>Created: {new Date(activeImageInfo.Created).toLocaleDateString()}</p>
+                                <p>WorkingDir: {activeImageInfo.WorkingDir}</p>
+                                <p>Entrypoint: {activeImageInfo.Entrypoint}</p>
+                                <p>Cmd: {activeImageInfo.Cmd}</p>
                                 <p>Size: {activeImageInfo.Size}</p>
                                 <p>Architecture: {activeImageInfo.Architecture}</p>
-                                <p>OS: {activeImageInfo.Os}</p>
-                                <p>Docker Version: {activeImageInfo.DockerVersion || 'Unknown'}</p>
+                                <p>Created: {new Date(activeImageInfo.Created).toLocaleDateString()}</p>
+                                <p>ID: {activeImageInfo.Id}</p>
                             </div>
                         )}
                     </li>
