@@ -15,8 +15,6 @@ jobs:
           username: ${{ secrets.DOCKER_HUB_USERNAME }}
           password: ${{ secrets.DOCKER_HUB_ACCESS_TOKEN }}
 
-      ======================================================================================================
-
       - uses: actions/checkout@v3
       - name: Build the Docker image
         run: docker build . --file Dockerfile --tag afterlifexx/upc-system:1.0
@@ -29,8 +27,6 @@ jobs:
 
       - name: Build the Docker image for Register Service
         run: docker build ./register-server --file ./register-server/Dockerfile --tag afterlifexx/upc-register:1.0
-
-      ======================================================================================================
 
       - name: Push the Docker image to the Dockerhub
         run: docker push afterlifexx/upc-system:1.0
