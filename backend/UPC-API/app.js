@@ -256,58 +256,49 @@ app.post('/api/files/:filename', async(req, res) => {
         await fs.promises.rm(appPath, { recursive: true });
         console.log('Previous unzipped folder deleted');
     }
-
-    extract(filePath, { dir: extractPath });
+    
+    await extract(filePath, { dir: extractPath });
     console.log('File unzipped successfully');
 
     //unzip the file
-    try {
-        //if the file is already unzipped, delete the unzipped folder
-        
 
-        // Replace docker run with pack build command
-        const pack = spawn('pack', [
-            'build', 
-            baseFileName.toLowerCase(),               // This is the image name
-            '--path', appPath,        // Path to the application code
-            '--builder', 'paketobuildpacks/builder-jammy-base'
-        ]);
+    const pack = spawn('pack', [
+        'build', 
+        baseFileName.toLowerCase(),               // This is the image name
+        '--path', appPath,        // Path to the application code
+        '--builder', 'paketobuildpacks/builder-jammy-base'
+    ]);
 
-        pack.stdout.on('data', (data) => {
-            console.log(`stdout: ${data}`);
-            // Send the output to all connected WebSocket clients
-            io.emit('geneMessage', data.toString());
-        });
-    
+    pack.stdout.on('data', (data) => {
+        console.log(`stdout: ${data}`);
+        // Send the output to all connected WebSocket clients
+        io.emit('geneMessage', data.toString());
+    });
 
-        pack.stderr.on('data', (data) => {
-            console.error(`stderr: ${data}`);
-            // Send the Error to all connected WebSocket clients
-            io.emit('geneError', data.toString());
-        });
 
-        pack.on('close', async(code) => {
-            const endTime = Date.now();
-            const timeTaken = (endTime - startTime)/1000 ;
-            console.log(`Time took: ${timeTaken}s`);
+    pack.stderr.on('data', (data) => {
+        console.error(`stderr: ${data}`);
+        // Send the Error to all connected WebSocket clients
+        io.emit('geneError', data.toString());
+    });
 
-            if (code === 0) {
-                console.log(`pack build completed successfully.`);
-                await fs.promises.rm(appPath, { recursive: true }); // Delete the unzipped folder
-                console.log('unzipped folder deleted');
-                io.emit('geneMessage', `[${timeTaken}s] Image built successfully.`);
-                res.status(200).send({ message: 'Image built successfully'});
-            } else {
-                console.error(`pack build failed with code ${code}`);
-                io.emit('geneError', `[${timeTaken}s] Error building image.`);
-                res.status(500).send({ message: 'Error building image'});
-            }
-        });
-        
-    } catch (error) {
-        console.error('Error unzipping file:', error);
-        res.status(500).send({ message: 'Error unzipping file' });
-    }
+    pack.on('close', async(code) => {
+        const endTime = Date.now();
+        const timeTaken = (endTime - startTime)/1000 ;
+        console.log(`Time took: ${timeTaken}s`);
+
+        if (code === 0) {
+            console.log(`pack build completed successfully.`);
+            await fs.promises.rm(appPath, { recursive: true }); // Delete the unzipped folder
+            console.log('unzipped folder deleted');
+            io.emit('geneMessage', `[${timeTaken}s] Image built successfully.`);
+            res.status(200).send({ message: 'Image built successfully'});
+        } else {
+            console.error(`pack build failed with code ${code}`);
+            io.emit('geneError', `[${timeTaken}s] Error building image.`);
+            res.status(500).send({ message: 'Error building image'});
+        }
+    });
 });
 
 // Route to Run a image with or without input files
