@@ -4,6 +4,7 @@ import bodyParser from "body-parser";
 import cors from 'cors';
 import fs from 'fs';
 import path from 'path';
+import pty from 'node-pty';
 import { dirname } from 'path';
 import { fileURLToPath } from 'url';
 import { exec, spawn } from "child_process"; 
@@ -554,5 +555,33 @@ io.on('connection', (socket) => {
     socket.emit('message', serviceInfo);
     socket.on('disconnect', () => {
         console.log('WebSocket disconnected');
+    });
+});
+
+// Listen for new connections
+io.on('connection', (socket) => {
+    console.log('New WebSocket connection');
+    // Send the service info to the client
+    socket.emit('message', serviceInfo);
+
+    const shell = pty.spawn(process.platform === 'win32' ? 'cmd.exe' : 'bash', [], {
+        name: 'xterm-color',
+        cols: 80,
+        rows: 30,
+        cwd: process.env.HOME,
+        env: process.env
+    });
+    
+    shell.on('data', (data) => {
+        socket.emit('output', data);
+    });
+
+    socket.on('input', (input) => {
+        shell.write(input);
+    });
+
+    socket.on('disconnect', () => {
+        shell.kill();
+        console.log('User disconnected');
     });
 });

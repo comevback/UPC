@@ -9,6 +9,7 @@ import TempList from './TempList.js';
 import ImagesList from './ImagesList.js';
 import Heading from './Heading.js';
 import Console from './Console.js';
+import Term from './Term.js';
 
 const ApplicationForm = () => {
     const [connected, setConnected] = useState(false);
@@ -113,6 +114,9 @@ const ApplicationForm = () => {
                 <Console refresh={refresh}/>
                 <TempList temps={temps} refreshTemps={refreshTemps} refreshAll={refresh}/>
                 <ResultList results={results} refreshFiles={refreshFiles} refreshResults={refreshResults} refreshAll={refresh}/>
+            </div>
+            <div className='area'>
+                <Term/>
             </div>
         </div>
     );
