@@ -257,7 +257,24 @@ app.post('/api/files/:filename', async(req, res) => {
         console.log('Previous unzipped folder deleted');
     }
     
-    await extract(filePath, { dir: extractPath });
+    //await extract(filePath, { dir: extractPath });
+
+    const unzip = spawn('unzip', ['-o', filePath, '-d', extractPath]);
+
+    unzip.stdout.on('data', (data) => {
+        console.log(`stdout: ${data}`);
+    });
+
+    unzip.stderr.on('data', (data) => {
+        console.error(`stderr: ${data}`);
+    });
+
+    unzip.on('close', (code) => {
+        if (code !== 0) {
+            console.error(`unzip process exited with code ${code}`);
+            return res.status(500).send({ message: 'Error unzipping file' });
+        }
+    });
     console.log('File unzipped successfully');
 
     //unzip the file
