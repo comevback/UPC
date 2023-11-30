@@ -11,7 +11,13 @@ WORKDIR /usr/src/app
 COPY package*.json ./
 
 # Install docker and curl and python3 and make and g++
-RUN  apt update && apt install -y nodejs npm docker-ce-cli curl python3 make g++ && rm -rf /var/lib/apt/lists/*
+RUN apt-get update && \
+    apt-get install -y apt-transport-https ca-certificates curl gnupg2 software-properties-common && \
+    curl -fsSL https://download.docker.com/linux/debian/gpg | apt-key add - && \
+    add-apt-repository "deb [arch=amd64] https://download.docker.com/linux/debian $(lsb_release -cs) stable" && \
+    apt-get update && \
+    apt-get install -y docker-ce-cli && \
+    rm -rf /var/lib/apt/lists/*
 
 # Install project dependencies
 RUN npm install
