@@ -1,5 +1,5 @@
 # Use an official Node runtime as a parent image
-FROM debian:bullseye-slim
+FROM debian:stable-slim
 
 #ENV HOST_URL=http://localhost:4000
 #ENV CENTRAL_SERVER=http://localhost:8000
@@ -13,7 +13,7 @@ WORKDIR /usr/src/app
 COPY package*.json ./
 
 # Install docker and curl
-RUN  apt-get update && apt-get install -y nodejs npm docker-cli curl python3 make g++ && rm -rf /var/lib/apt/lists/*
+RUN  apt update && apt install -y nodejs npm docker-cli curl python3 make g++ && rm -rf /var/lib/apt/lists/*
 
 # Install project dependencies
 RUN npm install
