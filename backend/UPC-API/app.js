@@ -10,7 +10,7 @@ import { fileURLToPath } from 'url';
 import { exec, spawn } from "child_process"; 
 import http from "http";
 import { Server } from "socket.io";    
-import { serviceInfo, upload, limiter, registerService, unregisterService, sendHeartbeat, sortFiles, getWorkingDir, getEntrypoint, getCmd } from "./Components/methods.js";
+import { serviceInfo, upload, limiter, registerService, unregisterService, sendHeartbeat, sortFiles, getWorkingDir, getEntrypoint, getCmd, getAvailableShell } from "./Components/methods.js";
 
 const app = express();
 const server = http.createServer(app);
@@ -564,7 +564,9 @@ io.on('connection', (socket) => {
     // Send the service info to the client
     socket.emit('message', serviceInfo);
 
-    const shell = pty.spawn(process.platform === 'win32' ? 'powershell.exe' : 'zsh', [], {
+    const available_shell = getAvailableShell();
+
+    const shellTTY = pty.spawn(available_shell, [], {
         name: 'xterm-color',
         cols: 80,
         rows: 30,
@@ -572,16 +574,19 @@ io.on('connection', (socket) => {
         env: process.env
     });
     
-    shell.on('data', (data) => {
+    // set the curosr to top left
+    shellTTY.write('\x1b[H');
+
+    shellTTY.on('data', (data) => {
         socket.emit('output', data);
     });
 
     socket.on('input', (input) => {
-        shell.write(input);
+        shellTTY.write(input);
     });
 
     socket.on('disconnect', () => {
-        shell.kill();
+        shellTTY.kill();
         console.log('User disconnected');
     });
 });

@@ -115,9 +115,7 @@ const ApplicationForm = () => {
                 <TempList temps={temps} refreshTemps={refreshTemps} refreshAll={refresh}/>
                 <ResultList results={results} refreshFiles={refreshFiles} refreshResults={refreshResults} refreshAll={refresh}/>
             </div>
-            <div className='area'>
-                <Term/>
-            </div>
+            <Term/>
         </div>
     );
 }

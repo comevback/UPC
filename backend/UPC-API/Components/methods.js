@@ -4,7 +4,7 @@ import fs from 'fs';
 import os from 'os';
 import axios from "axios";
 import rateLimit from "express-rate-limit";
-import { exec } from 'child_process';
+import { exec, execSync } from 'child_process';
 
 const hostURL = process.env.API_URL || 'http://localhost:4000'; // TODO: Change this to the URL of your service
 
@@ -192,4 +192,21 @@ export const getCmd = async(imageName) => {
           }
       });
   });
+}
+
+// detect the available shell
+export const getAvailableShell = () => {
+  const shells = ['zsh', 'bash', 'sh', 'csh', 'ksh', 'powershell', 'cmd'];
+
+  for (let shell of shells) {
+      try {
+          // check if the shell exists
+          execSync(`which ${shell}`);
+          return shell; // if the shell exists, return it
+      } catch (e) {
+          // if the shell doesn't exist, try the next one
+      }
+  }
+
+  return null; // if no shells exist, return null
 }

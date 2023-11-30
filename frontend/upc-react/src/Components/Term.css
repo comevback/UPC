@@ -1,4 +1,8 @@
 #terminal{
+    font-family: 'Fira Code', monospace; 
+    font-size: 1.2rem;
     text-align: left;
-    background-color: #000000;
+    background-color: #7d7d7d;
+    height: 350px;
+    width: 100%;
 }

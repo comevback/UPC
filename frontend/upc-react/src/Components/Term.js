@@ -12,30 +12,39 @@ const Term = () => {
     const fitAddon = useRef(new FitAddon());
     const socket = useRef(null);
     const { API_URL } = useContext(ParaContext);
+    
 
     useEffect(() => {
-        socket.current = io(API_URL);
-        terminal.current = new Terminal();
-        terminal.current.loadAddon(fitAddon.current);
-        terminal.current.open(terminalRef.current);
-        fitAddon.current.fit();
+        console.log("Term is mounted");
+            socket.current = io(API_URL);
+            terminal.current = new Terminal({
+                theme: {
+                    background: '#1d1f21',
+                    foreground: '#ffffff',
+                    cursor: 'yellow',
+                    // 其他您想要自定义的样式...
+                }
+            });
+            terminal.current.loadAddon(fitAddon.current);
+            terminal.current.open(terminalRef.current);
+            fitAddon.current.fit()
 
-        socket.current.on('output', (data) => {
-            terminal.current.write(data);
-        });
+            socket.current.on('output', (data) => {
+                terminal.current.write(data);
+            });
 
-        terminal.current.onData((data) => {
-            socket.current.emit('input', data);
-        });
+            terminal.current.onData((data) => {
+                socket.current.emit('input', data);
+            });
 
-        return () => {
-            terminal.current.dispose();
-            socket.current.disconnect();
-        };
+            return () => {
+                terminal.current.dispose();
+                socket.current.disconnect();
+            };
     }, []);
 
     return (
-            <div id='terminal' ref={terminalRef} style={{ width: '100%', height: '300px' }} />
+            <div id='terminal' ref={terminalRef} />
     );
 };
 
