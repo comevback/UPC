@@ -99,7 +99,7 @@ const ApplicationForm = () => {
                 <a href='./' rel="noopener noreferrer"><img src='UPC-logo-rm.png' alt='UPC logo' width='300px' height='300px'/></a>
                 <div>
                     <h1 className='title'>UPC - Generate and Process</h1>
-                    <h2>Current Server: <a className='Serverlink' href={connected? API_URL : "./"} target="_blank" rel="noopener noreferrer">{connected? API_URL : "API not connected"}</a></h2>
+                    <h2>Current Server: <a className={`Serverlink ${connected ? '' : 'notConnected'}`} href={connected? API_URL : "./"} target="_blank" rel="noopener noreferrer">{connected? API_URL : "Not connected"}</a></h2>
                 </div>
             </div>
             <button className='command-button' onClick={handleProcessClick} disabled={selectedImages.length === 0}>Process</button>

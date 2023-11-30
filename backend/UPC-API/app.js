@@ -4,7 +4,6 @@ import bodyParser from "body-parser";
 import cors from 'cors';
 import fs from 'fs';
 import path from 'path';
-import extract from "extract-zip";
 import { dirname } from 'path';
 import { fileURLToPath } from 'url';
 import { exec, spawn } from "child_process"; 

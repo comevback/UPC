@@ -11,6 +11,10 @@
     transition: color 0.3s; 
 }
 
+.Serverlink.notConnected{
+    color: rgb(210, 0, 0);
+}
+
 .Serverlink:hover, .Serverlink:focus{
     text-decoration: underline;
 }
