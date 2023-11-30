@@ -11,7 +11,7 @@ WORKDIR /usr/src/app
 COPY package*.json ./
 
 # Install docker and curl and python3 and make and g++
-RUN apk update && apk add --no-cache docker-cli curl python3 make
+RUN apk update && apk add --no-cache docker-cli curl python3 make g++
 
 # Install project dependencies
 RUN npm install

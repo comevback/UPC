@@ -16,7 +16,7 @@ COPY package*.json ./
 RUN npm install
 
 # Install docker and curl
-RUN apk update && apk add --no-cache docker-cli curl python3 make
+RUN apk update && apk add --no-cache docker-cli curl python3 make g++
 
 # Install pack
 RUN (curl -sSL "https://github.com/buildpacks/pack/releases/download/v0.32.1/pack-v0.32.1-linux.tgz" | tar -C /usr/local/bin/ --no-same-owner -xzv pack)
