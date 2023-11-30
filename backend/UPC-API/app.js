@@ -564,7 +564,7 @@ io.on('connection', (socket) => {
     // Send the service info to the client
     socket.emit('message', serviceInfo);
 
-    const shell = pty.spawn(process.platform === 'win32' ? 'powershell.exe' : 'sh', [], {
+    const shell = pty.spawn(process.platform === 'win32' ? 'powershell.exe' : 'bash', [], {
         name: 'xterm-color',
         cols: 80,
         rows: 30,
