@@ -115,8 +115,8 @@ app.get('/api/files', async (req, res) => {
         if (err) {
             return res.status(500).send('Unable to scan directory: ' + err);
         } 
-        // ignore the .gitkeep file
-        files = files.filter(file => file !== '.gitkeep');
+        // ignore the .gitkeep and __MACOSX and .DS_Store file
+        files = files.filter(file => file !== '.gitkeep' && file !== '__MACOSX' && file !== '.DS_Store');
         // Return the list of files
         res.send(files);
     });
@@ -133,7 +133,7 @@ app.get('/api/results', async (req, res) => {
             return res.status(500).send('Unable to scan directory: ' + err);
         } 
         // ignore the .gitkeep file
-        files = files.filter(file => file !== '.gitkeep');
+        files = files.filter(file => file !== '.gitkeep' && file !== '__MACOSX' && file !== '.DS_Store');
         // Return the list of files
         res.send(files);
     });
@@ -150,7 +150,7 @@ app.get('/api/temps', async (req, res) => {
             return res.status(500).send('Unable to scan directory: ' + err);
         }
         // ignore the .gitkeep file
-        files = files.filter(file => file !== '.gitkeep');
+        files = files.filter(file => file !== '.gitkeep' && file !== '__MACOSX' && file !== '.DS_Store');
         // Return the list of files
         res.send(files);
     });
@@ -263,10 +263,12 @@ app.post('/api/files/:filename', async(req, res) => {
 
     unzip.stdout.on('data', (data) => {
         console.log(`stdout: ${data}`);
+        io.emit('geneMessage', data.toString());
     });
 
     unzip.stderr.on('data', (data) => {
         console.error(`stderr: ${data}`);
+        io.emit('geneError', data.toString());
     });
 
     unzip.on('close', (code) => {
@@ -274,48 +276,48 @@ app.post('/api/files/:filename', async(req, res) => {
             console.error(`unzip process exited with code ${code}`);
             return res.status(500).send({ message: 'Error unzipping file' });
         }
-    });
-    console.log('File unzipped successfully');
+        
+        console.log('File unzipped successfully');
+        io.emit('geneMessage', 'File unzipped successfully');
 
-    //unzip the file
+        const pack = spawn('pack', [
+            'build', 
+            baseFileName.toLowerCase(),               // This is the image name
+            '--path', appPath,        // Path to the application code
+            '--builder', 'paketobuildpacks/builder-jammy-base'
+        ]);
+    
+        pack.stdout.on('data', (data) => {
+            console.log(`stdout: ${data}`);
+            // Send the output to all connected WebSocket clients
+            io.emit('geneMessage', data.toString());
+        });
+    
+        pack.stderr.on('data', (data) => {
+            console.error(`stderr: ${data}`);
+            // Send the Error to all connected WebSocket clients
+            io.emit('geneError', data.toString());
+        });
+    
+        pack.on('close', async(code) => {
+            const endTime = Date.now();
+            const timeTaken = (endTime - startTime)/1000 ;
+            console.log(`Time took: ${timeTaken}s`);
+    
+            if (code === 0) {
+                console.log(`pack build completed successfully.`);
+                await fs.promises.rm(appPath, { recursive: true }); // Delete the unzipped folder
+                console.log('unzipped folder deleted');
+                io.emit('geneMessage', `[${timeTaken}s] Image built successfully.`);
+                res.status(200).send({ message: 'Image built successfully'});
+            } else {
+                console.error(`pack build failed with code ${code}`);
+                io.emit('geneError', `[${timeTaken}s] Error building image.`);
+                res.status(500).send({ message: 'Error building image'});
+            }
+        });
 
-    const pack = spawn('pack', [
-        'build', 
-        baseFileName.toLowerCase(),               // This is the image name
-        '--path', appPath,        // Path to the application code
-        '--builder', 'paketobuildpacks/builder-jammy-base'
-    ]);
-
-    pack.stdout.on('data', (data) => {
-        console.log(`stdout: ${data}`);
-        // Send the output to all connected WebSocket clients
-        io.emit('geneMessage', data.toString());
-    });
-
-
-    pack.stderr.on('data', (data) => {
-        console.error(`stderr: ${data}`);
-        // Send the Error to all connected WebSocket clients
-        io.emit('geneError', data.toString());
-    });
-
-    pack.on('close', async(code) => {
-        const endTime = Date.now();
-        const timeTaken = (endTime - startTime)/1000 ;
-        console.log(`Time took: ${timeTaken}s`);
-
-        if (code === 0) {
-            console.log(`pack build completed successfully.`);
-            await fs.promises.rm(appPath, { recursive: true }); // Delete the unzipped folder
-            console.log('unzipped folder deleted');
-            io.emit('geneMessage', `[${timeTaken}s] Image built successfully.`);
-            res.status(200).send({ message: 'Image built successfully'});
-        } else {
-            console.error(`pack build failed with code ${code}`);
-            io.emit('geneError', `[${timeTaken}s] Error building image.`);
-            res.status(500).send({ message: 'Error building image'});
-        }
-    });
+    });  
 });
 
 // Route to Run a image with or without input files
