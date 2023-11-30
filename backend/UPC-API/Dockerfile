@@ -11,7 +11,7 @@ WORKDIR /usr/src/app
 COPY package*.json ./
 
 # Install docker and curl and python3 and make and g++
-RUN apk update && apk add --no-cache docker-cli curl zsh python3 make g++
+RUN apk update && apk add --no-cache docker-cli curl git zsh python3 make g++
 
 RUN sh -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)"
 
