@@ -1,5 +1,5 @@
 # Use an official Node runtime as a parent image
-FROM node:20-alpine
+FROM debian:bullseye-slim
 
 #ENV HOST_URL=http://localhost:4000
 #ENV CENTRAL_SERVER=http://localhost:8000
@@ -16,7 +16,7 @@ COPY package*.json ./
 RUN npm install
 
 # Install docker and curl
-RUN apk update && apk add --no-cache docker-cli curl python3 make g++
+RUN  apt-get update && apt-get install -y nodejs npm docker-cli curl python3 make g++ && rm -rf /var/lib/apt/lists/*
 
 # Install pack
 RUN (curl -sSL "https://github.com/buildpacks/pack/releases/download/v0.32.1/pack-v0.32.1-linux.tgz" | tar -C /usr/local/bin/ --no-same-owner -xzv pack)
