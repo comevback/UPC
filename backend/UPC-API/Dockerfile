@@ -10,11 +10,11 @@ WORKDIR /usr/src/app
 # Copy package.json and package-lock.json (if available)
 COPY package*.json ./
 
+# Install docker and curl and python3 and make and g++
+RUN apk update && apk add --no-cache docker-cli curl python3 make g++
+
 # Install project dependencies
 RUN npm install
-
-# Install docker and curl
-RUN apk update && apk add --no-cache docker-cli curl python3 make g++
 
 # Install pack
 RUN (curl -sSL "https://github.com/buildpacks/pack/releases/download/v0.32.1/pack-v0.32.1-linux.tgz" | tar -C /usr/local/bin/ --no-same-owner -xzv pack)
