@@ -573,9 +573,6 @@ io.on('connection', (socket) => {
         cwd: process.env.HOME,
         env: process.env
     });
-    
-    // set the curosr to top left
-    shellTTY.write('\x1b[H');
 
     shellTTY.on('data', (data) => {
         socket.emit('output', data);
