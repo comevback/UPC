@@ -13,7 +13,7 @@ WORKDIR /usr/src/app
 COPY package*.json ./
 
 # Install docker and curl
-RUN  apt update && apt install -y nodejs npm docker-cli curl python3 make g++ && rm -rf /var/lib/apt/lists/*
+RUN  apt update && apt install -y nodejs npm docker-ce-cli curl python3 make g++ && rm -rf /var/lib/apt/lists/*
 
 # Install project dependencies
 RUN npm install
