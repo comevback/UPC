@@ -111,11 +111,11 @@ const ApplicationForm = () => {
             </div>
             
             <div className='area'>
-                <Console refresh={refresh}/>
+                <Term/>
                 <TempList temps={temps} refreshTemps={refreshTemps} refreshAll={refresh}/>
                 <ResultList results={results} refreshFiles={refreshFiles} refreshResults={refreshResults} refreshAll={refresh}/>
             </div>
-            <Term/>
+            
         </div>
     );
 }

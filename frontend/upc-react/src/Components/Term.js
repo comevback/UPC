@@ -15,19 +15,13 @@ const Term = () => {
     
 
     useEffect(() => {
-        console.log("Term is mounted");
+        requestAnimationFrame(() => {
+            console.log("Terminal is being rendered")
             socket.current = io(API_URL);
-            terminal.current = new Terminal({
-                theme: {
-                    background: '#1d1f21',
-                    foreground: '#ffffff',
-                    cursor: 'yellow',
-                    // 其他您想要自定义的样式...
-                }
-            });
+            terminal.current = new Terminal();
             terminal.current.loadAddon(fitAddon.current);
             terminal.current.open(terminalRef.current);
-            fitAddon.current.fit()
+            setTimeout(() => {fitAddon.current.fit()}, 100);
 
             socket.current.on('output', (data) => {
                 terminal.current.write(data);
@@ -41,10 +35,14 @@ const Term = () => {
                 terminal.current.dispose();
                 socket.current.disconnect();
             };
+        });
     }, []);
 
     return (
-            <div id='terminal' ref={terminalRef} />
+        <div>
+            <h1>Terminal</h1>
+            <div id='terminal' ref={terminalRef}/>
+        </div>     
     );
 };
 

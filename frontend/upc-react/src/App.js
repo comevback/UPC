@@ -10,6 +10,7 @@ function App() {
   const { CENTRAL_SERVER_URL } = useContext(ParaContext);
 
   useEffect(() => {
+    console.log('app is being rendered');
     // Register the service
     registerService(CENTRAL_SERVER_URL);
 
