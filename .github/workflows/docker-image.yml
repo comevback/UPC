@@ -17,16 +17,16 @@ jobs:
 
       - uses: actions/checkout@v3
       - name: Build the Docker image
-        run: docker build . --file Dockerfile --tag afterlifexx/upc-system:1.0
+        run: docker build . --file Dockerfile --tag afterlifexx/upc-system
 
       - name: Build the Docker image for backend
-        run: docker build ./backend/UPC-API --file ./backend/UPC-API/Dockerfile --tag afterlifexx/upc-api:1.0
+        run: docker build ./backend/UPC-API --file ./backend/UPC-API/Dockerfile --tag afterlifexx/upc-api
 
       - name: Build the Docker image for frontend
-        run: docker build ./frontend/upc-react --file ./frontend/upc-react/Dockerfile --tag afterlifexx/upc-react:1.0
+        run: docker build ./frontend/upc-react --file ./frontend/upc-react/Dockerfile --tag afterlifexx/upc-react
 
       - name: Build the Docker image for Register Service
-        run: docker build ./register-server --file ./register-server/Dockerfile --tag afterlifexx/upc-register:1.0
+        run: docker build ./register-server --file ./register-server/Dockerfile --tag afterlifexx/upc-register
 
       - name: Push the Docker image to the Dockerhub
         run: docker push afterlifexx/upc-system
