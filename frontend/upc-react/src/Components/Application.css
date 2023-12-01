@@ -1,29 +1,41 @@
-.sources{
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    border-bottom: 1px solid #d0d0d0;
-}
-
-.Serverlink{
-    color: rgb(1, 173, 15); 
-    text-decoration: none; 
-    transition: color 0.3s; 
-}
-
-.Serverlink.notConnected{
-    color: rgb(210, 0, 0);
-}
-
-.Serverlink:hover, .Serverlink:focus{
-    text-decoration: underline;
-}
 
 .area{
     display: flex;
     justify-content: space-around;
     align-items: center;
     overflow: auto;
+}
+
+.term-and-logo{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 35vh;
+    min-height: 35vh;
+    max-height: 35vh;
+    height: 100%;
+    width: 100%;
+}
+
+.term{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    overflow-x: auto;
+    height: 35vh;
+    transition:ease-in-out 0.5s;
+    transform: translateX(100%);
+}
+
+.term.active {
+    transform: translateX(0%);
+    height: 35vh;
+    max-height: 35vh;
+    height: 100%;
+    overflow: auto;
+    transition: transform 0.5s ease-in-out;
+    /* flex-shrink: 0.5; */
+    flex-shrink: 0.5;
 }
 
 .title{
@@ -74,8 +86,8 @@ ul{
     padding: 20px;
     border: 1px solid #ddd;
     border-radius: 5px;
-    width: 45vw; /* 45% of the viewport width */
-    max-width: 80vw; /* max out at 80% of the viewport width */
+    width: 45vw;
+    max-width: 45vw;
     height: 30vh; /* 80% of the viewport height */
     max-height: 80vh; /* max out at 80% of the viewport height */
     overflow-y: auto; /* allow vertical scrolling */
@@ -91,7 +103,6 @@ li{
     padding: 10px;
     border: 1px solid #ddd;
     border-radius: 5px;
-    width: 40vw;
     text-align: center;
     min-height: 20px;
     background-color: #f5f5f5;

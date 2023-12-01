@@ -35,3 +35,6 @@ const TempList = (props) => {
 }
 
 export default TempList;
+
+
+{/* <TempList temps={temps} refreshTemps={refreshTemps} refreshAll={refresh}/> */}

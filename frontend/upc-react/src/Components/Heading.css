@@ -1,5 +1,6 @@
 .heading{
     position: sticky;
+    z-index: 100;
     top: 0;
     display: flex;
     align-items: center;
@@ -19,20 +20,8 @@
     height: 60px;
     margin: 5px;
     border-radius: 50%;
+    border: 0.5px solid #d6d6d6;
     transition: all 0.3s ease;
-}
-
-.logo-squared{
-    width: 60px;
-    height: 60px;
-    border-radius: 5px;
-    transition: all 0.3s ease;
-}
-
-.logo-squared:hover{
-    cursor: pointer;
-    filter: brightness(0.95);
-    transform: scale(1.1);
 }
 
 .logo:hover{
@@ -46,6 +35,7 @@
     align-items: center;
     justify-content: flex-start;
     column-gap: 30px;
+    margin-right: auto;
     padding-left: 10px;
     padding-right: 10px;
     border-radius: 5px;
@@ -59,7 +49,7 @@
     overflow-x: auto;
 }
 
-.server-with{
+.server-container{
     display: flex;
     flex-direction: column-reverse;
     align-items: center;
@@ -68,6 +58,10 @@
     padding-right: 10px;
     border-radius: 5px;
     background-color: #f5f5f5;
+}
+
+.server-container.logo5 {
+    right: 2px;
 }
 
 .server-title{

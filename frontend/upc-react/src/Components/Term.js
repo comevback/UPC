@@ -18,7 +18,16 @@ const Term = () => {
         requestAnimationFrame(() => {
             console.log("Terminal is being rendered")
             socket.current = io(API_URL);
-            terminal.current = new Terminal();
+            terminal.current = new Terminal({
+                FontWeight: '900', // font weight
+                cursorBlink: true,     // cursor blinking
+                cursorStyle: 'block',    // style（'block', 'underline', 'bar'）
+                cursorInactiveStyle: 'block', // inactive cursor style
+                fontSize: 15,          // font size
+                fontFamily: 'monospace', // font family
+                cols: 200,
+                rows: 40,
+                });
             terminal.current.loadAddon(fitAddon.current);
             terminal.current.open(terminalRef.current);
             setTimeout(() => {fitAddon.current.fit()}, 100);
@@ -39,10 +48,7 @@ const Term = () => {
     }, []);
 
     return (
-        <div>
-            <h1>Terminal</h1>
-            <div id='terminal' ref={terminalRef}/>
-        </div>     
+            <div id='terminal' ref={terminalRef}/>    
     );
 };
 

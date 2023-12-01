@@ -8,7 +8,7 @@ import pty from 'node-pty';
 import { dirname } from 'path';
 import { fileURLToPath } from 'url';
 import { exec, spawn } from "child_process"; 
-import http from "http";
+import http, { get } from "http";
 import { Server } from "socket.io";    
 import { serviceInfo, upload, limiter, registerService, unregisterService, sendHeartbeat, sortFiles, getWorkingDir, getEntrypoint, getCmd, getAvailableShell } from "./Components/methods.js";
 
@@ -361,13 +361,15 @@ app.post('/api/process', async(req, res) => {
     docker_process.stdout.on('data', (data) => {
         console.log(`stdout: ${data}`);
         // Send the output to all connected WebSocket clients
-        io.emit('runMessage', data.toString());
+        //io.emit('runMessage', data.toString());
+        io.emit('output', data.toString());
     });
     //use websocket to send the error to the client
     docker_process.stderr.on('data', (data) => {
         console.error(`stderr: ${data}`);
         // Send the Error to all connected WebSocket clients
-        io.emit('runError', data.toString());
+        //io.emit('runError', data.toString());
+        io.emit('output', data.toString());
     });
     //use websocket to send the result to the client
     docker_process.on('close', async(code) => {
@@ -379,7 +381,8 @@ app.post('/api/process', async(req, res) => {
             console.log(`docker run completed successfully.`);
             // Delete all the files in the temp directory
             await fs.promises.rm(tempPath, { recursive: true });
-            io.emit('runMessage', `[${timeTaken}s] Docker run completed successfully.`);
+            //io.emit('runMessage', `[${timeTaken}s] Docker run completed successfully.`);
+            io.emit('output', `[${timeTaken}s] Docker run completed successfully.`);
             console.log('temp folder deleted');
             res.status(200).send({ message: 'Docker run completed successfully' });
         } else {
@@ -559,7 +562,7 @@ io.on('connection', (socket) => {
 });
 
 // Listen for new connections
-io.on('connection', (socket) => {
+io.on('connection', async(socket) => {
     console.log('New WebSocket connection');
     // Send the service info to the client
     socket.emit('message', serviceInfo);
@@ -567,10 +570,10 @@ io.on('connection', (socket) => {
     const available_shell = getAvailableShell();
 
     const shellTTY = pty.spawn(available_shell, [], {
-        name: 'xterm-color',
-        cols: 80,
-        rows: 30,
-        cwd: process.env.HOME,
+        name: 'xterm-256color',
+        cols: 200,
+        rows: 40,
+        cwd: process.env.WorkingDir,
         env: process.env
     });
 

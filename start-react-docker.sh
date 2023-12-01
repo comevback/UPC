@@ -93,4 +93,4 @@ $SUDO docker run -e INITIAL_API_URL=$INITIAL_API_URL \
            -e INITIAL_CENTRAL_SERVER_URL=$INITIAL_CENTRAL_SERVER_URL \
            -e PORT=$PORT \
            -p $PORT:$PORT -it --rm \
-           afterlifexx/upc-react:1.0
+           afterlifexx/upc-react

@@ -8,6 +8,7 @@ import UploadForm from './UploadForm.js';
 import TempList from './TempList.js';
 import ImagesList from './ImagesList.js';
 import Heading from './Heading.js';
+import Logo from './Logo.js';
 import Console from './Console.js';
 import Term from './Term.js';
 
@@ -19,6 +20,7 @@ const ApplicationForm = () => {
     const [images, setImages] = useState([]);
     const [selectedImages, setSelectedImages] = useState(""); // Store the selected files
     const [selectedFiles, setSelectedFiles] = useState([]); // Store the selected files
+    const [termShown, setTermShown] = useState(false); // Store the selected files
     const { API_URL } = useContext(ParaContext);
 
     // Check if the backend is connected
@@ -32,6 +34,10 @@ const ApplicationForm = () => {
         setSelectedFiles([]);
         setSelectedImages([]);
         refreshTemps();
+    };
+
+    const toggleTerm = () => {
+        setTermShown(!termShown);
     };
 
     const refreshFiles = () => {
@@ -95,27 +101,24 @@ const ApplicationForm = () => {
 
     return (
         <div>
-            <Heading/>
-            <div className='sources'>
-                <a href='./' rel="noopener noreferrer"><img src='UPC-logo-rm.png' alt='UPC logo' width='300px' height='300px'/></a>
-                <div>
-                    <h1 className='title'>UPC - Generate and Process</h1>
-                    <h2>Current Server: <a className={`Serverlink ${connected ? '' : 'notConnected'}`} href={connected? API_URL : "./"} target="_blank" rel="noopener noreferrer">{connected? API_URL : "Not connected"}</a></h2>
+            <Heading toggleTerm={toggleTerm} />
+            <div className='term-and-logo'>
+                <Logo termShown={termShown} connected={connected}/>     
+                <div className={`term ${termShown? 'active' : ''}`}>
+                    {termShown? <Term/> : null}
                 </div>
             </div>
             <button className='command-button' onClick={handleProcessClick} disabled={selectedImages.length === 0}>Process</button>
             <div className="area">
                 <UploadForm refreshFiles={refreshFiles} refreshResults={refreshResults} refreshAll={refresh}/>
-                <FileList files={files} selectedFiles={selectedFiles} setSelectedFiles={setSelectedFiles} refreshFiles={refreshFiles} refreshResults={refreshResults} refreshAll={refresh}/>
+                
                 <ImagesList images={images} selectedImages={selectedImages} setSelectedImages={setSelectedImages} refreshImages={refreshImages} refreshAll={refresh}/>
             </div>
-            
             <div className='area'>
-                <Term/>
-                <TempList temps={temps} refreshTemps={refreshTemps} refreshAll={refresh}/>
+                <FileList files={files} selectedFiles={selectedFiles} setSelectedFiles={setSelectedFiles} refreshFiles={refreshFiles} refreshResults={refreshResults} refreshAll={refresh}/>
+                
                 <ResultList results={results} refreshFiles={refreshFiles} refreshResults={refreshResults} refreshAll={refresh}/>
             </div>
-            
         </div>
     );
 }
