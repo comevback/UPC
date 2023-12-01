@@ -15,9 +15,9 @@ const ResultList = (props) => {
         return (
             <div>
                 <h1>Results</h1>
-                <div className="result-list">
+                <ul className="result-list">
                     <p>No Result file yet</p>
-                </div>
+                </ul>
             </div>
         );
     };

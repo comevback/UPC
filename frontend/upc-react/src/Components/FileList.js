@@ -82,9 +82,9 @@ const FileList = (props) => {
         return (
             <div>
                 <h1>Uploaded</h1>
-                <div className="file-list">
+                <ul className="file-list">
                     <p>No file uploaded yet</p>
-                </div>
+                </ul>
             </div>
         );
     };
