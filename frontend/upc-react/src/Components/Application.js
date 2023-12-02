@@ -5,21 +5,19 @@ import { ParaContext } from '../Global.js';
 import FileList from './FileList.js';
 import ResultList from './ResultList.js';
 import UploadForm from './UploadForm.js';
-import TempList from './TempList.js';
 import ImagesList from './ImagesList.js';
 import Heading from './Heading.js';
 import Logo from './Logo.js';
-import Console from './Console.js';
 import Term from './Term.js';
 
 const ApplicationForm = () => {
     const [connected, setConnected] = useState(false);
     const [files, setFiles] = useState([]);
     const [results, setResults] = useState([]);
-    const [temps, setTemps] = useState([]);
     const [images, setImages] = useState([]);
     const [selectedImages, setSelectedImages] = useState(""); // Store the selected files
     const [selectedFiles, setSelectedFiles] = useState([]); // Store the selected files
+    const [selectedResults, setSelectedResults] = useState([]); // Store the selected files
     const [termShown, setTermShown] = useState(false); // Store the selected files
     const { API_URL } = useContext(ParaContext);
 
@@ -33,7 +31,6 @@ const ApplicationForm = () => {
         process(API_URL, selectedImages, selectedFiles);
         setSelectedFiles([]);
         setSelectedImages([]);
-        refreshTemps();
     };
 
     const toggleTerm = () => {
@@ -60,16 +57,6 @@ const ApplicationForm = () => {
         });
     };
 
-    const refreshTemps = () => {
-        getTemps(API_URL)
-        .then(temps => {
-            setTemps(temps);
-        })
-        .catch(error => {
-            console.error('Error fetching temps:', error);
-        });
-    };
-
     const refreshImages = () => {
         getImages(API_URL)
         .then(images => {
@@ -84,7 +71,6 @@ const ApplicationForm = () => {
         refreshFiles();
         refreshResults();
         refreshImages();
-        refreshTemps();
         console.log("Resfreshed files, images and results");
     };
 
@@ -94,7 +80,6 @@ const ApplicationForm = () => {
         if (connected) {
             refreshFiles();
             refreshResults();
-            refreshTemps();
             refreshImages();
         }
     }, [API_URL]);
@@ -117,7 +102,7 @@ const ApplicationForm = () => {
             <div className='area'>
                 <FileList files={files} selectedFiles={selectedFiles} setSelectedFiles={setSelectedFiles} refreshFiles={refreshFiles} refreshResults={refreshResults} refreshAll={refresh}/>
                 
-                <ResultList results={results} refreshFiles={refreshFiles} refreshResults={refreshResults} refreshAll={refresh}/>
+                <ResultList results={results} selectedResults={selectedResults} setSelectedResults={setSelectedResults} refreshFiles={refreshFiles} refreshResults={refreshResults} refreshAll={refresh}/>
             </div>
         </div>
     );

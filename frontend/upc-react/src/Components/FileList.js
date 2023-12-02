@@ -1,5 +1,5 @@
 import { useState, useEffect, useContext } from 'react';
-import { downloadFile, generateImage, deleteFile } from '../Tools/api';
+import { downloadFile, generateImage, deleteFile, downloadAllFiles, downloadAllFilesZip } from '../Tools/api';
 import { ParaContext } from '../Global.js';
 import io from 'socket.io-client';     
 import './FileList.css';
@@ -21,6 +21,24 @@ const FileList = (props) => {
         props.setSelectedFiles(updatedSelectedFiles);
     };
     
+    // select all files
+    const handleSelectAllClick = () => {
+        if (props.selectedFiles.length === props.files.length) {
+            props.setSelectedFiles([]);
+        } else {
+            props.setSelectedFiles(props.files);
+        }
+    };
+
+    // Download all files separately
+    const handleDownloadAllClick = () => {
+        downloadAllFiles(API_URL, props.selectedFiles);
+    };
+
+    // Download all files together
+    const handleDownloadTogetherClick = () => {
+        downloadAllFilesZip(API_URL, props.selectedFiles);
+    };
 
     // ============================== WebSocket ==================================
     useEffect(() => {
@@ -93,6 +111,17 @@ const FileList = (props) => {
         <div>
             <h1>Uploaded</h1>
             <ul className="file-list">
+                <li className='file-item'>
+                    <div className='name-and-buttons'>
+                        <input type='checkbox' className='checkbox' checked={props.selectedFiles.length === props.files.length}
+                            onChange={handleSelectAllClick} />
+                        <span>Select All</span>
+                        <div className='buttons'>
+                            <button onClick={() => {handleDownloadAllClick()}}>Download Separately</button>
+                            <button onClick={() => {handleDownloadTogetherClick()}}>Download Together</button>
+                        </div>
+                    </div>
+                </li>
                 {props.files.map(file => (
                     <li className={`file-item ${props.selectedFiles.includes(file) ? 'selected' : ''}`} key={file}>
                         <div className='name-and-buttons'>

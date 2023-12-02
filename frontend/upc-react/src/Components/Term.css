@@ -5,8 +5,8 @@
     border: 1px solid #ddd;
     border-radius: 8px;
     width: 95vw;
-    height: 34.5vh;
-    max-height: 35vh;
+    height: 40vh;
+    max-height: 40vh;
     box-sizing: border-box;
     overflow: auto;
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);

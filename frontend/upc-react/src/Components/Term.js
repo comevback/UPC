@@ -12,6 +12,29 @@ const Term = () => {
     const fitAddon = useRef(new FitAddon());
     const socket = useRef(null);
     const { API_URL } = useContext(ParaContext);
+    const atomOneLightTheme = {
+        background: '#f9f9f9',
+        foreground: '#383a42',
+        cursor: '#d0d0d0',
+        cursorAccent: '#000000', // The color of the cursor's accent. Allows for a contrasting cursor even in a block cursor.
+        selection: 'rgba(80, 161, 79, 0.3)', // The color of the selection's background.
+        black: '#000000',
+        red: '#E45649',
+        green: '#50A14F',
+        yellow: '#986801',
+        blue: '#4078F2',
+        magenta: '#A626A4',
+        cyan: '#0184BC',
+        white: '#A0A1A7',
+        brightBlack: '#5c6370',
+        brightRed: '#e06c75',
+        brightGreen: '#50A14F',
+        brightYellow: '#986801',
+        brightBlue: '#4078F2',
+        brightMagenta: '#A626A4',
+        brightCyan: '#0184BC',
+        brightWhite: '#ffffff'
+    };
     
 
     useEffect(() => {
@@ -27,6 +50,7 @@ const Term = () => {
                 fontFamily: 'monospace', // font family
                 cols: 200,
                 rows: 40,
+                theme: atomOneLightTheme,
                 });
             terminal.current.loadAddon(fitAddon.current);
             terminal.current.open(terminalRef.current);
@@ -45,7 +69,7 @@ const Term = () => {
                 socket.current.disconnect();
             };
         });
-    }, []);
+    }, [API_URL]);
 
     return (
             <div id='terminal' ref={terminalRef}/>    

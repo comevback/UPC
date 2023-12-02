@@ -10,9 +10,9 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    height: 35vh;
-    min-height: 35vh;
-    max-height: 35vh;
+    height: 40vh;
+    min-height: 40vh;
+    max-height: 40vh;
     height: 100%;
     width: 100%;
 }
@@ -22,15 +22,15 @@
     justify-content: center;
     align-items: center;
     overflow-x: auto;
-    height: 35vh;
+    height: 40vh;
     transition:ease-in-out 0.5s;
     transform: translateX(100%);
 }
 
 .term.active {
     transform: translateX(0%);
-    height: 35vh;
-    max-height: 35vh;
+    height: 40vh;
+    max-height: 40vh;
     height: 100%;
     overflow: auto;
     transition: transform 0.5s ease-in-out;

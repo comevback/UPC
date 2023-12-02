@@ -164,6 +164,49 @@ export const downloadFile = async (API_URL, fileName) => {
     }
 };
 
+// Download all files one by one
+export const downloadAllFiles = async (API_URL, fileNames) => {
+    try {
+        // use Promise.all to download all files
+        await Promise.all(fileNames.map(async (fileName) => {
+            const response = await axios({
+                url: `${API_URL}/api/files/${fileName}`,
+                method: 'GET',
+                responseType: 'blob',
+            });
+            const url = window.URL.createObjectURL(new Blob([response.data]));
+            const link = document.createElement('a');
+            link.href = url;
+            link.setAttribute('download', fileName);
+            document.body.appendChild(link);
+            link.click();
+        }));
+    } catch (error) {
+        console.error('Error downloading files:', error);
+    }
+}
+
+// Download all files in a zip file
+export const downloadAllFilesZip = async (API_URL, fileNames) => {
+    try {
+        const response = await axios({
+            url: `${API_URL}/api/files/download`,
+            method: 'POST',
+            responseType: 'blob',
+            data: { fileNames },
+        });
+        const url = window.URL.createObjectURL(new Blob([response.data]));
+        const link = document.createElement('a');
+        link.href = url;
+        const FileName = 'Files-' + Date.now()+ '.zip';
+        link.setAttribute('download', FileName);
+        document.body.appendChild(link);
+        link.click();
+    } catch (error) {
+        console.error('Error downloading files:', error);
+    }
+}
+
 // Download a result
 export const downloadResult = async (API_URL, fileName) => {
     try {
@@ -182,6 +225,49 @@ export const downloadResult = async (API_URL, fileName) => {
         console.error('Error downloading result:', error);
     }
 };
+
+// Download all results one by one
+export const downloadAllResult = async (API_URL, fileNames) => {
+    try {
+        // use Promise.all to download all results
+        await Promise.all(fileNames.map(async (fileName) => {
+            const response = await axios({
+                url: `${API_URL}/api/results/${fileName}`,
+                method: 'GET',
+                responseType: 'blob',
+            });
+            const url = window.URL.createObjectURL(new Blob([response.data]));
+            const link = document.createElement('a');
+            link.href = url;
+            link.setAttribute('download', fileName);
+            document.body.appendChild(link);
+            link.click();
+        }));
+    } catch (error) {
+        console.error('Error downloading results:', error);
+    }
+}
+
+// Download all results in a zip file
+export const downloadAllResultZip = async (API_URL, fileNames) => {
+    try {
+        const response = await axios({
+            url: `${API_URL}/api/results/download`,
+            method: 'POST',
+            responseType: 'blob',
+            data: { fileNames },
+        });
+        const url = window.URL.createObjectURL(new Blob([response.data]));
+        const link = document.createElement('a');
+        link.href = url;
+        const resultFileName = 'Result-' + Date.now()+ '.zip';
+        link.setAttribute('download', resultFileName);
+        document.body.appendChild(link);
+        link.click();
+    } catch (error) {
+        console.error('Error downloading results:', error);
+    }
+}
 
 // Download a temp
 export const downloadTemp = async (API_URL, fileName) => {

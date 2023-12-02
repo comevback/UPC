@@ -57,7 +57,7 @@ const Heartbeat = async () => {
 
 Register();
 
-
+// Send a heartbeat or register the service every 60 seconds
 setInterval(() => {
     if (!isRegistered) {
         Register();
@@ -67,9 +67,6 @@ setInterval(() => {
 }, 60000);
 
 
-// Send a heartbeat every minute
-
-
 // Gracefully unregister the service when the process is terminated ============================================
 const gracefulShutdown = async () => {
     try {
@@ -77,7 +74,7 @@ const gracefulShutdown = async () => {
       console.log('Service unregistered and server is closing.');
       setTimeout(() => {
         process.exit(0);
-      }, 3000);
+      }, 1000); // Wait 3 seconds before shutting down
     } catch (error) {
       console.log('Failed to unregister service: ', error.message);
     } 
@@ -85,6 +82,7 @@ const gracefulShutdown = async () => {
 
 // Handle process termination
 process.on('SIGTERM', gracefulShutdown);
+process.on('SIGINT', gracefulShutdown);
 
 // Routers ======================================================================================
 
@@ -218,16 +216,183 @@ app.get('/api/files/:filename', (req, res) => {
     res.download(filePath);
 });
 
+// Route to download all selected files
+app.post('/api/files/download', async(req, res) => {
+    const { fileNames } = req.body;
+    const filePath = path.join(__dirname, 'uploads');
+    const files = fs.readdirSync(filePath);
+    const matchedFiles = files.filter(file => fileNames.includes(file));
+
+    if (matchedFiles.length === 0) {
+        return res.status(404).send('No files found');
+    }
+
+    console.log('Files to download:', matchedFiles);
+
+    const zipFileName = 'Result-' + Date.now()+ '.zip'; // Name of the ZIP file to download
+    const zipFilePath = path.join(filePath, zipFileName);
+
+    const zip = spawn('zip', ['-r', zipFileName, ...matchedFiles], { cwd: filePath });
+
+    zip.stdout.on('data', (data) => {
+        console.log(`stdout: ${data}`);
+        io.emit('output', data.toString());
+    });
+
+    zip.stderr.on('data', (data) => {
+        console.error(`stderr: ${data}`);
+        io.emit('output', data.toString());
+    });
+
+    zip.on('close', (code) => {
+        if (code !== 0) {
+            console.error(`zip process exited with code ${code}`);
+            return res.status(500).send({ message: 'Error zipping files' });
+        }
+        console.log('Files zipped successfully');
+        io.emit('output', 'Files zipped successfully');
+
+        // Now that ZIP process has completed, send the file
+        res.download(zipFilePath, (err) => {
+            if (err) {
+                // Handle error, but don't re-throw if headers are already sent
+                console.error('Error sending file:', err);
+            }
+
+            // Attempt to delete the file after sending it to the client
+            fs.unlink(zipFilePath, (unlinkErr) => {
+                if (unlinkErr) {
+                    console.error(`Error deleting file ${zipFilePath}:`, unlinkErr);
+                } else {
+                    console.log(`Successfully deleted ${zipFilePath}`);
+                }
+            });
+        });
+    });
+});
+
 // Route to download a result
 app.get('/api/results/:filename', (req, res) => {
     const filePath = path.join(__dirname, 'results', req.params.filename);
     res.download(filePath);
 });
 
+// Route to download all selected results
+app.post('/api/results/download', async(req, res) => {
+    const { fileNames } = req.body;
+    const filePath = path.join(__dirname, 'results');
+    const files = fs.readdirSync(filePath);
+    const matchedFiles = files.filter(file => fileNames.includes(file));
+
+    if (matchedFiles.length === 0) {
+        return res.status(404).send('No files found');
+    }
+
+    console.log('Files to download:', matchedFiles);
+
+    const zipFileName = 'Result-' + Date.now()+ '.zip'; // Name of the ZIP file to download
+    const zipFilePath = path.join(filePath, zipFileName);
+
+    const zip = spawn('zip', ['-r', zipFileName, ...matchedFiles], { cwd: filePath });
+
+    zip.stdout.on('data', (data) => {
+        console.log(`stdout: ${data}`);
+        io.emit('output', data.toString());
+    });
+
+    zip.stderr.on('data', (data) => {
+        console.error(`stderr: ${data}`);
+        io.emit('output', data.toString());
+    });
+
+    zip.on('close', (code) => {
+        if (code !== 0) {
+            console.error(`zip process exited with code ${code}`);
+            return res.status(500).send({ message: 'Error zipping files' });
+        }
+        console.log('Files zipped successfully');
+        io.emit('output', 'Files zipped successfully');
+
+        // Now that ZIP process has completed, send the file
+        res.download(zipFilePath, (err) => {
+            if (err) {
+                // Handle error, but don't re-throw if headers are already sent
+                console.error('Error sending file:', err);
+            }
+
+            // Attempt to delete the file after sending it to the client
+            fs.unlink(zipFilePath, (unlinkErr) => {
+                if (unlinkErr) {
+                    console.error(`Error deleting file ${zipFilePath}:`, unlinkErr);
+                } else {
+                    console.log(`Successfully deleted ${zipFilePath}`);
+                }
+            });
+        });
+    });
+});
+
+
+
 // Route to download a temp
 app.get('/api/temps/:filename', (req, res) => {
     const filePath = path.join(__dirname, 'temps', req.params.filename);
     res.download(filePath);
+});
+
+// Route to download all selected temps
+app.post('/api/temps/download', async(req, res) => {
+    const { fileNames } = req.body;
+    const filePath = path.join(__dirname, 'temps');
+    const files = fs.readdirSync(filePath);
+    const matchedFiles = files.filter(file => fileNames.includes(file));
+
+    if (matchedFiles.length === 0) {
+        return res.status(404).send('No files found');
+    }
+
+    console.log('Files to download:', matchedFiles);
+
+    const zipFileName = 'Result-' + Date.now()+ '.zip'; // Name of the ZIP file to download
+    const zipFilePath = path.join(filePath, zipFileName);
+
+    const zip = spawn('zip', ['-r', zipFileName, ...matchedFiles], { cwd: filePath });
+
+    zip.stdout.on('data', (data) => {
+        console.log(`stdout: ${data}`);
+        io.emit('output', data.toString());
+    });
+
+    zip.stderr.on('data', (data) => {
+        console.error(`stderr: ${data}`);
+        io.emit('output', data.toString());
+    });
+
+    zip.on('close', (code) => {
+        if (code !== 0) {
+            console.error(`zip process exited with code ${code}`);
+            return res.status(500).send({ message: 'Error zipping files' });
+        }
+        console.log('Files zipped successfully');
+        io.emit('output', 'Files zipped successfully');
+
+        // Now that ZIP process has completed, send the file
+        res.download(zipFilePath, (err) => {
+            if (err) {
+                // Handle error, but don't re-throw if headers are already sent
+                console.error('Error sending file:', err);
+            }
+
+            // Attempt to delete the file after sending it to the client
+            fs.unlink(zipFilePath, (unlinkErr) => {
+                if (unlinkErr) {
+                    console.error(`Error deleting file ${zipFilePath}:`, unlinkErr);
+                } else {
+                    console.log(`Successfully deleted ${zipFilePath}`);
+                }
+            });
+        });
+    });
 });
 
 // Generate Image after upload and unzip file

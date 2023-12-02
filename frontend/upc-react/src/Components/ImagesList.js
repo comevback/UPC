@@ -19,8 +19,13 @@ const ImagesList = (props) => {
         
         // console.log('Updated selected files:', updatedSelectedImages);
         // props.setSelectedImages(updatedSelectedImages);    // This is the original code, set selectedImages as a Array.
-
-        props.setSelectedImages(imageName);
+        
+        // if the file is already in the selectedImages, remove it from the selectedImages, otherwise add it to the selectedImages
+        if (props.selectedImages === imageName) {
+            props.setSelectedImages('');
+        } else {
+            props.setSelectedImages(imageName);
+        }
         console.log('Updated selected files:', imageName);  // This is the new code, set selectedImages as a String.
     };
 

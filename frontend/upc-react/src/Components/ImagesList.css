@@ -33,7 +33,9 @@
 }
 
 .image-item.selected {
-    background-color: #d5f4d5;
+    background-color: #7f7f7f;
+    color: #ffffff;
+    font-weight: bold;
 }
 
 .name-and-buttons{
