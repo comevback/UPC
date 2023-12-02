@@ -8,7 +8,7 @@ import pty from 'node-pty';
 import { dirname } from 'path';
 import { fileURLToPath } from 'url';
 import { exec, spawn } from "child_process"; 
-import http, { get } from "http";
+import http from "http";
 import { Server } from "socket.io";    
 import { serviceInfo, upload, limiter, registerService, unregisterService, sendHeartbeat, sortFiles, getWorkingDir, getEntrypoint, getCmd, getAvailableShell } from "./Components/methods.js";
 

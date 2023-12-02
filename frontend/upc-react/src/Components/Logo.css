@@ -10,7 +10,7 @@
 
 .logo-and-title.hidden {
     transform: translateX(-5%);
-    opacity: 0.4;
+    opacity: 0.25;
     flex-shrink: 1;
 }
 

@@ -2,7 +2,7 @@
     display: flex;
     flex-direction: column;
     align-items: center;
-    border: 1px solid #ddd;
+    border: 1.5px solid #cecece;
     border-radius: 8px;
     width: 95vw;
     height: 40vh;
