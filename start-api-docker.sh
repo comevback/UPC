@@ -82,6 +82,7 @@ echo -e "${green}---------------------------------------------------------------
 
 # replace the ip address in files, and start the docker container
 if [ "${os_name}" = "Windows" ]; then
+    $SUDO docker pull afterlifexx/upc-api && \
     $SUDO docker run -e API_URL=$API_URL \
            -e CENTRAL_SERVER=$CENTRAL_SERVER \
            -e API_PORT=$API_PORT \
@@ -89,6 +90,7 @@ if [ "${os_name}" = "Windows" ]; then
            -p $API_PORT:$API_PORT -it --rm \
            afterlifexx/upc-api
 else
+    $SUDO docker pull afterlifexx/upc-api && \
     $SUDO docker run -e API_URL=$API_URL \
             -e CENTRAL_SERVER=$CENTRAL_SERVER \
             -e API_PORT=$API_PORT \
