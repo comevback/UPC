@@ -55,14 +55,14 @@ const ResultList = (props) => {
         <div>
             <h1>Results</h1>
             <ul className="result-list">
-                <li className='result-item'>
+                <li className='result-item example'>
                     <div className='name-and-buttons'>
                         <input type='checkbox' className='checkbox' checked={props.selectedResults.length === props.results.length}
                             onChange={handleSelectAllClick} />
-                        <span>Select All</span>
+                        <span>File Name</span>
                         <div className='buttons'>
-                            <button onClick={() => {handleDownloadAllClick()}}>Download Separately</button>
-                            <button onClick={() => {handleDownloadTogetherClick()}}>Download Together</button>
+                            <button onClick={() => {handleDownloadAllClick()}}>&#x21E9; Separately</button>
+                            <button onClick={() => {handleDownloadTogetherClick()}}>&#x21E9;</button>
                         </div>
                     </div>
                 </li>
@@ -76,11 +76,11 @@ const ResultList = (props) => {
                             />
                             <span>{result}</span>
                             <div className='buttons'>
-                                <button onClick={() => downloadResult(API_URL, result)}>Download</button>
+                                <button onClick={() => downloadResult(API_URL, result)}>&#x21E9;</button>
                                 <button onClick={async() => {
                                     await deleteResult(API_URL, result);
                                     props.refreshResults();
-                                }}>Delete</button>
+                                }}>&#10007;</button>
                             </div>
                         </div>
                     </li>

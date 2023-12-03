@@ -77,7 +77,7 @@ const ImagesList = (props) => {
                             <span>{image}</span>
                             <div className="buttons">
                                 <button onClick={() => handleViewClick(image)}>View</button>
-                                <button onClick={() => handleDeleteClick(image)}>delete</button>
+                                <button onClick={() => handleDeleteClick(image)}>&#10007;</button>
                             </div>
                         </div>
                         {activeImageInfo && activeImageInfo.RepositoryTags.includes(image) && (

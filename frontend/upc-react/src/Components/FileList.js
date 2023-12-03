@@ -111,14 +111,14 @@ const FileList = (props) => {
         <div>
             <h1>Uploaded</h1>
             <ul className="file-list">
-                <li className='file-item'>
+                <li className='file-item example'>
                     <div className='name-and-buttons'>
                         <input type='checkbox' className='checkbox' checked={props.selectedFiles.length === props.files.length}
                             onChange={handleSelectAllClick} />
-                        <span>Select All</span>
+                        <span>File Name</span>
                         <div className='buttons'>
-                            <button onClick={() => {handleDownloadAllClick()}}>Download Separately</button>
-                            <button onClick={() => {handleDownloadTogetherClick()}}>Download Together</button>
+                            <button onClick={() => {handleDownloadAllClick()}}>&#x21E9; Separately</button>
+                            <button onClick={() => {handleDownloadTogetherClick()}}>&#x21E9;</button>
                         </div>
                     </div>
                 </li>
@@ -130,11 +130,11 @@ const FileList = (props) => {
                             <span>{file}</span>
                             <div className='buttons'>
                                 <button onClick={() => handleFileClick(file)} >Generate Image</button>
-                                <button onClick={() => downloadFile(API_URL, file)}>Download</button>
+                                <button onClick={() => downloadFile(API_URL, file)}>&#x21E9;</button>
                                 <button onClick={async() => {
                                     await deleteFile(API_URL, file);
                                     props.refreshFiles();
-                                }}>Delete</button>
+                                }}>&#10007;</button>
                             </div>
                         </div>
                         {activeInfoFile === file && (

@@ -13,6 +13,7 @@
     background-color: #f5f5f5;
     overflow-x: auto;
     opacity: 0.9;
+    box-shadow: 10px 10px 10px rgba(0, 0, 0, 0.12); /* subtle shadow for depth */
 }
 
 .logo{
