@@ -68,9 +68,9 @@ setInterval(() => {
 
 
 // Gracefully unregister the service when the process is terminated ============================================
-const gracefulShutdown = async () => {
+const gracefulShutdown = () => {
     try {
-      await unregisterService();
+      unregisterService();
       console.log('Service unregistered and server is closing.');
       setTimeout(() => {
         process.exit(0);
