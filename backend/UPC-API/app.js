@@ -736,7 +736,7 @@ io.on('connection', async(socket) => {
 
     const shellTTY = pty.spawn(available_shell, [], {
         name: 'xterm-256color',
-        cols: 200,
+        cols: 130,
         rows: 40,
         cwd: process.env.WorkingDir,
         env: process.env

@@ -23,7 +23,6 @@
     align-items: center;
     overflow-x: auto;
     height: 40vh;
-    transition:ease-in-out 0.5s;
     transform: translateX(100%);
 }
 
@@ -33,9 +32,8 @@
     max-height: 40vh;
     height: 100%;
     border-radius: 8px;
-    overflow: auto;
-    transition: transform 0.5s ease-in-out;
-    /* flex-shrink: 0.5; */
+    overflow: hidden;
+    transition: transform 0.3s ease-in-out;
     flex-shrink: 0.5;
     box-shadow: -12px 12px 10px rgba(0, 0, 0, 0.409);
 }
@@ -76,9 +74,6 @@ p{
 }
 
 span{
-    display: flex;
-    justify-content: center;
-    align-items: center;
     font-family: 'Courier New', Courier, monospace;
     overflow-x: auto;
 }
@@ -122,10 +117,6 @@ li.example{
     border-bottom: 1px solid #ddd;
     box-shadow: none;
     font-weight: bold;
-}
-
-li.example span{
-    font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
 }
 
 button{

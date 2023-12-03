@@ -31,7 +31,6 @@ const Term = () => {
             console.log("Terminal is being rendered")
             socket.current = io(API_URL);
             terminal.current = new Terminal({
-                FontWeight: '900', // font weight
                 cursorBlink: true,     // cursor blinking
                 cursorStyle: 'block',    // style（'block', 'underline', 'bar'）
                 cursorInactiveStyle: 'block', // inactive cursor style

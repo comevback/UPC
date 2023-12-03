@@ -118,7 +118,7 @@ const FileList = (props) => {
                         <span>File Name</span>
                         <div className='buttons'>
                             <button onClick={() => {handleDownloadAllClick()}}>&#x21E9; Separately</button>
-                            <button onClick={() => {handleDownloadTogetherClick()}}>&#x21E9;</button>
+                            <button onClick={() => {handleDownloadTogetherClick()}}>&#x21E9; Bundle</button>
                         </div>
                     </div>
                 </li>

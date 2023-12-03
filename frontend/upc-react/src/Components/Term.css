@@ -20,6 +20,14 @@
     width: 100%;
 }
 
+.xterm span{
+    font-weight: bolder !important;
+}
+
+.xterm .xterm-bg-257{
+    display: none !important;
+}
+
 .xterm-viewport{
     box-sizing: border-box;
     height: 100%;

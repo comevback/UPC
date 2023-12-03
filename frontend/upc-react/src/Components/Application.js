@@ -91,6 +91,7 @@ const ApplicationForm = () => {
                 <Logo termShown={termShown} connected={connected}/>     
                 <div className={`term ${termShown? 'active' : ''}`}>
                     {termShown? <Term/> : null}
+                    {/* <Term/> */}
                 </div>
             </div>
             <button className='command-button' onClick={handleProcessClick} disabled={selectedImages.length === 0}>Process</button>
