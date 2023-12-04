@@ -88,7 +88,7 @@ if [ "${os_name}" = "Windows" ]; then
            -e API_PORT=$API_PORT \
            -v "//var/run/docker.sock:/var/run/docker.sock" \
            -p $API_PORT:$API_PORT -it --rm \
-           afterlifexx/upc-api
+           afterlifexx/upc-api:latest
 else
     $SUDO docker pull afterlifexx/upc-api && \
     $SUDO docker run -e API_URL=$API_URL \
@@ -96,5 +96,5 @@ else
             -e API_PORT=$API_PORT \
             -v /var/run/docker.sock:/var/run/docker.sock \
             -p $API_PORT:$API_PORT -it --rm \
-            afterlifexx/upc-api
+            afterlifexx/upc-api:latest
 fi
