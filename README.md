@@ -39,7 +39,7 @@ chmod +x start-api-docker.sh &&
 ```
 for x86 arch host:
 ```bash
-curl -sSL https://raw.githubusercontent.com/comevback/UPC-node/main/start-api-docker.sh -o start-x86-api-docker.sh &&
+curl -sSL https://raw.githubusercontent.com/comevback/UPC-node/main/start-x86-api-docker.sh -o start-x86-api-docker.sh &&
 chmod +x start-x86-api-docker.sh &&
 ./start-x86-api-docker.sh
 ```
