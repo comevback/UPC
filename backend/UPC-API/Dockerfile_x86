@@ -15,11 +15,16 @@ RUN apk update && apk add --no-cache nodejs npm docker-cli curl git zsh python3 
 
 RUN sh -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)"
 
+# Manually download and install pack
+RUN curl -sSL "https://github.com/buildpacks/pack/releases/download/v0.32.1/pack-v0.32.1-linux.tgz" -o pack.tgz \
+    && tar -xzf pack.tgz -C /usr/local/bin pack \
+    && rm pack.tgz
+
+# Add /usr/local/bin to the PATH
+ENV PATH="/usr/local/bin:${PATH}"
+
 # Install project dependencies
 RUN npm install
-
-# Install pack
-RUN (curl -sSL "https://github.com/buildpacks/pack/releases/download/v0.32.1/pack-v0.32.1-linux.tgz" | tar -C /usr/local/bin/ --no-same-owner -xzv pack)
 
 # Copy project files into the docker image
 COPY . .
