@@ -91,7 +91,7 @@ echo -e "${green}---------------------------------------------------------------
 
 # replace the ip address in files, and start the docker container
 if [ "${os_name}" = "Windows" ]; then
-    $SUDO docker pull afterlifexx/upc-system && \
+    $SUDO docker pull afterlifexx/upc-system:latest && \
     $SUDO docker run -e API_URL=$API_URL \
             -e API_PORT=$API_PORT \
             -e CENTRAL_SERVER=$CENTRAL_SERVER \
@@ -104,7 +104,7 @@ if [ "${os_name}" = "Windows" ]; then
             -it --rm \
             afterlifexx/upc-system:latest
 else
-    $SUDO docker pull afterlifexx/upc-system && \
+    $SUDO docker pull afterlifexx/upc-system:latest && \
     $SUDO docker run -e API_URL=$API_URL \
             -e API_PORT=$API_PORT \
             -e CENTRAL_SERVER=$CENTRAL_SERVER \
