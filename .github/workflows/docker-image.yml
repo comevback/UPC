@@ -61,7 +61,7 @@ jobs:
         uses: docker/build-push-action@v3
         with:
           context: ./backend/UPC-API
-          file: ./backend/UPC-API/Dockerfile
+          file: ./backend/UPC-API/Dockerfile_x86
           tags: afterlifexx/upc-api:x86
           push: true
           platforms: linux/386
