@@ -44,9 +44,15 @@ echo ""
 echo -e "\033[37mYour Host's Local IP Address: \033[1;33m$ip_address${end_style}"
 echo ""
 
+default_api_url="http://$ip_address:4000"
+default_central_server_url="http://$ip_address:8000"
+
 # Ask user to input API host URL
 echo -e "\033[1;37m1. Please enter your API host URL${end_style} ${white}(press Enter for default:${end_style} \033[32mhttp://$ip_address:4000${end_style}${white}):${end_style}"
-read URL
+if ! read -e -p '(default): ' -i "$default_api_url" URL 2>/dev/null; then
+    # if failed, use 'read' command without '-i' option
+    read -e -p "(default: $default_api_url): " URL
+fi
 API_URL=${URL:-http://$ip_address:4000}
 API_PORT=$(echo $API_URL | cut -d':' -f3)
 API_PORT=${API_PORT:-4000}
@@ -56,7 +62,10 @@ echo ""
 
 # Ask user to input central register server URL
 echo -e "\033[1;37m2. Please enter your central register server URL${end_style} ${white}(press Enter for default:${end_style} \033[32mhttp://$ip_address:8000${end_style}${white}):${end_style} "
-read CENTRAL_SERVER
+if ! read -e -p '(default): ' -i "$default_central_server_url" URL 2>/dev/null; then
+    # if failed, use 'read' command without '-i' option
+    read -e -p "(default: $default_central_server_url): " URL
+fi
 CENTRAL_SERVER=${CENTRAL_SERVER:-http://$ip_address:8000}
 echo -e "\033[97mCentral Register Server URL: ${green}\033[4m$CENTRAL_SERVER${end_style}"
 echo ""

@@ -103,8 +103,7 @@ const FileList = (props) => {
                 <ul className="file-list">
                 <li className='file-item example'>
                     <div className='name-and-buttons'>
-                        <input type='checkbox' className='checkbox' checked={props.selectedFiles.length === props.files.length}
-                            onChange={handleSelectAllClick} />
+                        <input type='checkbox' className='checkbox' />
                         <span>File Name</span>
                         <div className='buttons'>
                             <button onClick={() => {handleDownloadAllClick()}}>&#x21E9; Separately</button>
