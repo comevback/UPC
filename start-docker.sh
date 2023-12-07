@@ -113,10 +113,13 @@ echo -e "${green}|                                     UPC System               
 echo -e "${green}---------------------------------------------------------------------------------------${end_style}"
 
 
-# define the environment variables
-
+# check if there are dangling images
+dangling_images=$(docker images -f "dangling=true" -q)
+if [ -n "$dangling_images" ]; then
+    # if there are dangling images, remove them
+    $SUDO docker rmi $dangling_images
+fi
 # replace the ip address in files, and start the docker container
-$SUDO docker rmi $(docker images -f "dangling=true" -q) && \
 if [ "${os_name}" = "Windows" ]; then
     $SUDO docker pull afterlifexx/upc-system:latest && \
     $SUDO docker run -e API_URL=$API_URL \

@@ -67,7 +67,14 @@ echo -e "${green}|--------------------------------------------------------------
 echo -e "${green}|                                   Register Server                                   |${end_style}"
 echo -e "${green}---------------------------------------------------------------------------------------${end_style}"
 
+
+# check if there are dangling images
+dangling_images=$(docker images -f "dangling=true" -q)
+if [ -n "$dangling_images" ]; then
+    # if there are dangling images, remove them
+    $SUDO docker rmi $dangling_images
+fi
+
 # Run the docker container
-$SUDO docker rmi $(docker images -f "dangling=true" -q) 
 $SUDO docker pull afterlifexx/upc-register:latest && $SUDO docker run -e REGI_PORT=$REGI_PORT -it --rm -p $REGI_PORT:$REGI_PORT afterlifexx/upc-register:latest
 

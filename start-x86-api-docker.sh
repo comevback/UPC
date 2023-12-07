@@ -69,10 +69,10 @@ echo -e "\033[1;37m2. Please enter your central register server URL${end_style} 
 if ! read -e -p '(default): ' -i "$default_central_server_url" URL 2>/dev/null; 
 then
     # if failed, use 'read' command without '-i' option
-    read -e -p "(default: $default_central_server_url): " URL
+    read -e -p "(default: $default_central_server_url): " CENTRAL_SERVER
 else
     # if succeed, use 'read' command with '-i' option
-    read -e -p '(default): ' -i "$default_central_server_url" URL
+    read -e -p '(default): ' -i "$default_central_server_url" CENTRAL_SERVER
 fi
 CENTRAL_SERVER=${CENTRAL_SERVER:-http://$ip_address:8000}
 echo -e "\033[97mCentral Register Server URL: ${green}\033[4m$CENTRAL_SERVER${end_style}"
@@ -97,8 +97,14 @@ echo -e "${green}|                                       Backend                
 echo -e "${green}---------------------------------------------------------------------------------------${end_style}"
 
 
+# check if there are dangling images
+dangling_images=$(docker images -f "dangling=true" -q)
+if [ -n "$dangling_images" ]; then
+    # if there are dangling images, remove them
+    $SUDO docker rmi $dangling_images
+fi
+
 # replace the ip address in files, and start the docker container
-$SUDO docker rmi $(docker images -f "dangling=true" -q) && \
 if [ "${os_name}" = "Windows" ]; then
     $SUDO docker pull afterlifexx/upc-api:x86 && \
     $SUDO docker run -e API_URL=$API_URL \
