@@ -49,11 +49,14 @@ default_central_server_url="http://$ip_address:8000"
 
 # Ask user to input API host URL
 echo -e "\033[1;37m1. Please enter your API host URL${end_style} ${white}(press Enter for default:${end_style} \033[32mhttp://$ip_address:4000${end_style}${white}):${end_style}"
-if ! read -e -p '(default): ' -i "$default_api_url" URL 2>/dev/null; then
+if ! read -e -p '(default): ' -i "$default_api_url" URL 2>/dev/null; 
+then
     # if failed, use 'read' command without '-i' option
     read -e -p "(default: $default_api_url): " URL
+else
+    # if succeed, use 'read' command with '-i' option
+    read -e -p '(default): ' -i "$default_api_url" URL
 fi
-
 API_URL=${URL:-http://$ip_address:4000}
 API_PORT=$(echo $API_URL | cut -d':' -f3)
 API_PORT=${API_PORT:-4000}
@@ -62,9 +65,13 @@ echo ""
 
 # Ask user to input central register server URL
 echo -e "\033[1;37m2. Please enter your central register server URL${end_style} ${white}(press Enter for default:${end_style} \033[32mhttp://$ip_address:8000${end_style}${white}):${end_style} "
-if ! read -e -p '(default): ' -i "$default_central_server_url" CENTRAL_SERVER 2>/dev/null; then
+if ! read -e -p '(default): ' -i "$default_central_server_url" CENTRAL_SERVER 2>/dev/null; 
+then
     # if failed, use 'read' command without '-i' option
     read -e -p "(default: $default_central_server_url): " CENTRAL_SERVER
+else
+    # if succeed, use 'read' command with '-i' option
+    read -e -p '(default): ' -i "$default_central_server_url" CENTRAL_SERVER
 fi
 CENTRAL_SERVER=${CENTRAL_SERVER:-http://$ip_address:8000}
 REGI_PORT=$(echo $CENTRAL_SERVER | cut -d':' -f3)
@@ -74,9 +81,13 @@ echo ""
 
 # Ask user to input React port
 echo -e "\033[1;37m1. Please enter your React \033[1;31mPORT${end_style} ${white}(press Enter for default:${end_style} \033[32m3000${end_style}${white}):${end_style}"
-if ! read -e -p '(default): ' -i 3000 PORT 2>/dev/null; then
+if ! read -e -p '(default): ' -i 3000 PORT 2>/dev/null; 
+then
     # if failed, use 'read' command without '-i' option
     read -e -p "(default: 3000): " PORT
+else
+    # if succeed, use 'read' command with '-i' option
+    read -e -p '(default): ' -i 3000 PORT
 fi
 PORT=${REACT_PORT:-3000}
 echo -e "\033[97mReact URL: ${green}\033[4mhttp://$ip_address:$PORT${end_style}"

@@ -48,30 +48,43 @@ default_api_url="http://$ip_address:4000"
 default_central_server_url="http://$ip_address:8000"
 
 echo -e "\033[1;37m1. Please enter your React \033[1;31mPORT${end_style} ${white}(press Enter for default:${end_style} \033[32m3000${end_style}${white}):${end_style}"
-if ! read -e -p '(default): ' -i "$default_api_url" PORT 2>/dev/null; then
+if ! read -e -p '(default): ' -i "$default_api_url" PORT 2>/dev/null; 
+then
     # if failed, use 'read' command without '-i' option
     read -e -p "(default: $default_api_url): " PORT
+else
+    # if succeed, use 'read' command with '-i' option
+    read -e -p '(default): ' -i "$default_api_url" PORT
 fi
 PORT=${PORT:-3000}
 echo -e "\033[97mReact URL: ${green}\033[4mhttp://$ip_address:$PORT${end_style}"
 
+
 # Ask user to input API host URL
 echo -e "\033[1;37m2. Please enter your API host URL${end_style} ${white}(press Enter for default:${end_style} \033[32mhttp://$ip_address:4000${end_style}${white}):${end_style}"
-if ! read -e -p '(default): ' -i "$default_api_url" URL 2>/dev/null; then
+if ! read -e -p '(default): ' -i "$default_api_url" URL 2>/dev/null; 
+then
     # if failed, use 'read' command without '-i' option
     read -e -p "(default: $default_api_url): " URL
+else
+    # if succeed, use 'read' command with '-i' option
+    read -e -p '(default): ' -i "$default_api_url" URL
 fi
 API_URL=${API_URL:-http://$ip_address:4000}
 echo -e "\033[97mAPI Host URL: ${green}\033[4m$API_URL${end_style}"
 echo ""
 
+
 # Ask user to input central register server URL
 echo -e "\033[1;37m3. Please enter your central register server URL${end_style} ${white}(press Enter for default:${end_style} \033[32mhttp://$ip_address:8000${end_style}${white}):${end_style} "
-if ! read -e -p '(default): ' -i "$default_central_server_url" CENTRAL_SERVER 2>/dev/null; then
+if ! read -e -p '(default): ' -i "$default_central_server_url" CENTRAL_SERVER 2>/dev/null; 
+then
     # if failed, use 'read' command without '-i' option
     read -e -p "(default: $default_central_server_url): " CENTRAL_SERVER
+else
+    # if succeed, use 'read' command with '-i' option
+    read -e -p '(default): ' -i "$default_central_server_url" CENTRAL_SERVER
 fi
-
 CENTRAL_SERVER=${CENTRAL_SERVER:-http://$ip_address:8000}
 echo -e "\033[97mCentral Register Server URL: ${green}\033[4m$CENTRAL_SERVER${end_style}"
 echo ""
