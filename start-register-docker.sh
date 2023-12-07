@@ -68,5 +68,6 @@ echo -e "${green}|                                   Register Server            
 echo -e "${green}---------------------------------------------------------------------------------------${end_style}"
 
 # Run the docker container
+$SUDO docker rmi $(docker images -f "dangling=true" -q) 
 $SUDO docker pull afterlifexx/upc-register:latest && $SUDO docker run -e REGI_PORT=$REGI_PORT -it --rm -p $REGI_PORT:$REGI_PORT afterlifexx/upc-register:latest
 

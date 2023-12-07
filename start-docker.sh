@@ -63,6 +63,7 @@ API_PORT=${API_PORT:-4000}
 echo -e "\033[97mAPI Host URL: ${green}\033[4m$API_URL${end_style}"
 echo ""
 
+
 # Ask user to input central register server URL
 echo -e "\033[1;37m2. Please enter your central register server URL${end_style} ${white}(press Enter for default:${end_style} \033[32mhttp://$ip_address:8000${end_style}${white}):${end_style} "
 if ! read -e -p '(default): ' -i "$default_central_server_url" CENTRAL_SERVER 2>/dev/null; 
@@ -78,6 +79,7 @@ REGI_PORT=$(echo $CENTRAL_SERVER | cut -d':' -f3)
 REGI_PORT=${REGI_PORT:-8000}
 echo -e "\033[97mCentral Register Server URL: ${green}\033[4m$CENTRAL_SERVER${end_style}"
 echo ""
+
 
 # Ask user to input React port
 echo -e "\033[1;37m1. Please enter your React \033[1;31mPORT${end_style} ${white}(press Enter for default:${end_style} \033[32m3000${end_style}${white}):${end_style}"
@@ -114,6 +116,7 @@ echo -e "${green}---------------------------------------------------------------
 # define the environment variables
 
 # replace the ip address in files, and start the docker container
+$SUDO docker rmi $(docker images -f "dangling=true" -q) && \
 if [ "${os_name}" = "Windows" ]; then
     $SUDO docker pull afterlifexx/upc-system:latest && \
     $SUDO docker run -e API_URL=$API_URL \

@@ -98,6 +98,7 @@ echo -e "${green}---------------------------------------------------------------
 
 
 # replace the ip address in files, and start the docker container
+$SUDO docker rmi $(docker images -f "dangling=true" -q) && \
 if [ "${os_name}" = "Windows" ]; then
     $SUDO docker pull afterlifexx/upc-api:latest && \
     $SUDO docker run -e API_URL=$API_URL \

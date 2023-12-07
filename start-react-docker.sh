@@ -115,6 +115,7 @@ INITIAL_API_URL=$API_URL
 INITIAL_CENTRAL_SERVER_URL=$CENTRAL_SERVER
 
 # replace the ip address in files, and start the docker container
+$SUDO docker rmi $(docker images -f "dangling=true" -q) && \
 $SUDO docker pull afterlifexx/upc-react:latest && \
 $SUDO docker run -e INITIAL_API_URL=$INITIAL_API_URL \
            -e INITIAL_CENTRAL_SERVER_URL=$INITIAL_CENTRAL_SERVER_URL \
