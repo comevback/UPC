@@ -28,7 +28,7 @@ const Term = () => {
     
     useEffect(() => {
         requestAnimationFrame(() => {
-            console.log("Terminal is being rendered")
+            console.log(`Terminal is being rendered`)
             socket.current = io(API_URL);
             terminal.current = new Terminal({
                 cursorBlink: true,     // cursor blinking
@@ -43,6 +43,29 @@ const Term = () => {
             terminal.current.loadAddon(fitAddon.current);
             terminal.current.open(terminalRef.current);
             setTimeout(() => {fitAddon.current.fit()}, 100);
+
+            const end_style = '\x1b[0m';
+            const demoColor = '\x1b[1;30m';
+            //const lightblue_style = '\x1b[0;34m';
+            const darkgreen_style = '\x1b[0;32m';
+
+            terminal.current.writeln('\x1b[2J\x1b[0;0H');
+            terminal.current.writeln(`${demoColor}---------------------------------------------------------------------------------------${end_style}`)
+            terminal.current.writeln(`${demoColor}|                                      Terminal                                       |${end_style}`)
+            terminal.current.writeln(`${demoColor}|-------------------------------------------------------------------------------------|${end_style}`)
+
+            terminal.current.writeln(`${demoColor}|                              ██╗   ██╗██████╗  ██████╗                              |${end_style}`)
+            terminal.current.writeln(`${demoColor}|                              ██║   ██║██╔══██╗██╔════╝                              |${end_style}`)
+            terminal.current.writeln(`${demoColor}|                              ██║   ██║██████╔╝██║                                   |${end_style}`)
+            terminal.current.writeln(`${demoColor}|                              ██║   ██║██╔═══╝ ██║                                   |${end_style}`)
+            terminal.current.writeln(`${demoColor}|                              ╚██████╔╝██║     ╚██████╗                              |${end_style}`)
+            terminal.current.writeln(`${demoColor}|                               ╚═════╝ ╚═╝      ╚═════╝                              |${end_style}`)
+
+            terminal.current.writeln(`${demoColor}|-------------------------------------------------------------------------------------|${end_style}`)
+            terminal.current.writeln(`${darkgreen_style}                                 ${API_URL}                                            ${end_style}`)
+            terminal.current.writeln(`${demoColor}---------------------------------------------------------------------------------------${end_style}`)
+
+
 
             socket.current.on('output', (data) => {
                 terminal.current.write(data);

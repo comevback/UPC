@@ -395,7 +395,8 @@ app.post('/api/temps/download', async(req, res) => {
     });
 });
 
-// Generate Image after upload and unzip file
+
+// Generate Image after upload and unzip file =========================================================================================
 app.post('/api/files/:filename', async(req, res) => {
     const startTime = Date.now();
 
@@ -485,7 +486,7 @@ app.post('/api/files/:filename', async(req, res) => {
     });  
 });
 
-// Route to Run a image with or without input files
+// Route to Process a Task by image with or without input files
 app.post('/api/process', async(req, res) => {
     const startTime = Date.now();
 

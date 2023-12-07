@@ -101,7 +101,17 @@ const FileList = (props) => {
             <div>
                 <h1>Uploaded</h1>
                 <ul className="file-list">
-                    <p>No file uploaded yet</p>
+                <li className='file-item example'>
+                    <div className='name-and-buttons'>
+                        <input type='checkbox' className='checkbox' checked={props.selectedFiles.length === props.files.length}
+                            onChange={handleSelectAllClick} />
+                        <span>File Name</span>
+                        <div className='buttons'>
+                            <button onClick={() => {handleDownloadAllClick()}}>&#x21E9; Separately</button>
+                            <button onClick={() => {handleDownloadTogetherClick()}}>&#x21E9; Bundle</button>
+                        </div>
+                    </div>
+                </li>
                 </ul>
             </div>
         );

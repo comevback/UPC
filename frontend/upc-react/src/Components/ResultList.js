@@ -45,7 +45,17 @@ const ResultList = (props) => {
             <div>
                 <h1>Results</h1>
                 <ul className="result-list">
-                    <p>No Result result yet</p>
+                <li className='result-item example'>
+                    <div className='name-and-buttons'>
+                        <input type='checkbox' className='checkbox' checked={props.selectedResults.length === props.results.length}
+                            onChange={handleSelectAllClick} />
+                        <span>File Name</span>
+                        <div className='buttons'>
+                            <button onClick={() => {handleDownloadAllClick()}}>&#x21E9; Separately</button>
+                            <button onClick={() => {handleDownloadTogetherClick()}}>&#x21E9; Bundle</button>
+                        </div>
+                    </div>
+                </li>
                 </ul>
             </div>
         );
