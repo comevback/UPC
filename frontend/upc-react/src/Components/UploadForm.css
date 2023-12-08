@@ -19,7 +19,12 @@
 }
 
 .upload-form.dragging{
-    background-color: lightblue;
+    background-color: #ADD8E6; /* Lighter blue for better visibility */
+    border: 1px dashed #000; /* Dashed border for emphasis */
+    cursor: copy; /* Cursor indicates copying action */
+    transition: 0.3s; /* Smooth transitions */
+    box-shadow: 0 8px 16px rgba(0,0,0,0.2); /* Enhanced shadow for depth */
+    opacity: 0.9; /* Slightly lower opacity */
 }
 
 .upload-input{

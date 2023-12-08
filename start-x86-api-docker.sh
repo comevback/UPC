@@ -55,7 +55,7 @@ then
     read -e -p "(default: $default_api_url): " URL
 else
     # if succeed, use 'read' command with '-i' option
-    read -e -p '(default): ' -i "$default_api_url" URL
+    read -e -p $'\033[0;33m(default)\033[0m: ' -i "$default_api_url" URL
 fi
 API_URL=${URL:-http://$ip_address:4000}
 API_PORT=$(echo $API_URL | cut -d':' -f3)
@@ -72,7 +72,7 @@ then
     read -e -p "(default: $default_central_server_url): " CENTRAL_SERVER
 else
     # if succeed, use 'read' command with '-i' option
-    read -e -p '(default): ' -i "$default_central_server_url" CENTRAL_SERVER
+    read -e -p $'\033[0;33m(default)\033[0m: ' -i "$default_central_server_url" CENTRAL_SERVER
 fi
 CENTRAL_SERVER=${CENTRAL_SERVER:-http://$ip_address:8000}
 echo -e "\033[97mCentral Register Server URL: ${green}\033[4m$CENTRAL_SERVER${end_style}"
