@@ -9,6 +9,7 @@ import ImagesList from './ImagesList.js';
 import Heading from './Heading.js';
 import Logo from './Logo.js';
 import Term from './Term.js';
+import particlesJS from 'particles.js';
 
 const ApplicationForm = () => {
     const [connected, setConnected] = useState(false);
@@ -82,10 +83,23 @@ const ApplicationForm = () => {
             refreshResults();
             refreshImages();
         }
+        if (window.particlesJS) {
+            window.particlesJS.load('particles-js', 'particlesjs.json', function() {
+              console.log('particles.js loaded - callback');
+            });
+          }
+        
+        // 清除函数
+        return () => {
+            if (window.particlesJS) {
+                window.particlesJS.destroy();
+            }
+        };
     }, [API_URL]);
 
     return (
         <div>
+            <div id="particles-js" className="particles-container"></div>
             <Heading toggleTerm={toggleTerm} />
             <div className='term-and-logo'>
                 <Logo termShown={termShown} connected={connected}/>     

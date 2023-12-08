@@ -7,13 +7,12 @@
     flex-direction: column;
     margin: 20px auto;
     padding: 20px;
-    border: 1px solid #ddd;
+    border: 1px dashed #000; /* Dashed border for emphasis */
     border-radius: 5px;
     width: 45vw;
     max-width: 45vw;
     height: 30vh; /* 80% of the viewport height */
     max-height: 30vh; /* max out at 80% of the viewport height */
-    background-color: #fff;
     overflow-y: auto;
     box-shadow: 0 4px 8px rgba(0,0,0,0.1);
 }
@@ -33,7 +32,7 @@
 }
 
 .upload-form h1 {
-    font-size: 1.5rem;
+    font-size: 1.5rem; 
     text-align: center;
     color: #333;
     margin-bottom: 1rem;

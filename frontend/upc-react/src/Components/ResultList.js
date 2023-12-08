@@ -3,6 +3,7 @@ import { ParaContext } from '../Global.js';
 import { downloadResult, deleteResult, downloadAllResult, downloadAllResultZip } from '../Tools/api';
 import './ResultList.css';
 
+
 // resultList.js
 const ResultList = (props) => {
     const { API_URL } = useContext(ParaContext);
