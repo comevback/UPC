@@ -89,10 +89,14 @@ const ApplicationForm = () => {
             });
           }
         
-        // 清除函数
+        // Remove the canvas element when the component unmounts
         return () => {
-            if (window.particlesJS) {
-                window.particlesJS.destroy();
+            let particlesJSContainer = document.getElementById('particles-js');
+            if (particlesJSContainer) {
+                // Remove the canvas element
+                while (particlesJSContainer.firstChild) {
+                    particlesJSContainer.removeChild(particlesJSContainer.firstChild);
+                }
             }
         };
     }, [API_URL]);
