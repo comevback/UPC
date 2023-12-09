@@ -109,6 +109,7 @@ li{
     justify-content: space-between;
     overflow-x: auto;
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.1); /* subtle shadow for depth */
+    opacity: 0.9;
 }
 
 li.example{

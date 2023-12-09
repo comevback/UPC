@@ -30,6 +30,7 @@
     text-align: center; /* center text */
     min-height: 40px;
     overflow-x: auto; /* allow vertical scrolling */
+    opacity: 0.8;
 }
 
 .image-item.selected {

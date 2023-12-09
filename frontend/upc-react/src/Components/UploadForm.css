@@ -1,5 +1,7 @@
 /* UploadForm.css */
 
+.upload-form-container{}
+
 .upload-form {
     display: flex;
     justify-content: center;
@@ -7,15 +9,33 @@
     flex-direction: column;
     margin: 20px auto;
     padding: 20px;
-    border: 1px dashed #000; /* Dashed border for emphasis */
-    border-radius: 5px;
     width: 45vw;
     max-width: 45vw;
     height: 30vh; /* 80% of the viewport height */
     max-height: 30vh; /* max out at 80% of the viewport height */
     overflow-y: auto;
+    border: 1px dashed #000; /* Dashed border for emphasis */
+    outline: 1px solid transparent;
+    border-radius: 5px; /* Rounded corners */
     box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+    animation: flowingBorder 1.8s infinite;
 }
+
+@keyframes flowingBorder {
+    0%  {
+      border-color: #a3a3a3;
+      box-shadow: 0 0 10px #000;
+    }
+    50% {
+      border-color: rgb(197, 197, 197);
+      box-shadow: 0 0 10px rgb(255, 255, 255);
+    }
+    100% {
+      border-color: #a3a3a3;
+      box-shadow: 0 0 10px #000;
+    }
+}
+  
 
 .upload-form.dragging{
     background-color: #c9e1e9; /* Lighter blue for better visibility */

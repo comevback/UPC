@@ -29,6 +29,7 @@
     background-color: #f5f5f5;
     justify-content: space-between;
     overflow-x: auto;
+    opacity: 0.8;
 }
 
 .file-item.selected {

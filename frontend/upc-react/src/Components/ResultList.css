@@ -29,6 +29,7 @@
     text-align: center;
     min-height: 40px;
     overflow-x: auto;
+    opacity: 0.8;
 }
 
 .result-item.selected {
