@@ -92,7 +92,8 @@ const UploadForm = (props) => {
             <form className={`upload-form ${dragging ? "dragging" : "" }`} onSubmit={handleSubmit}>
                 <div className="upload-input">
                     <div className="upload-panel">
-                        <input type="file" id="file-input" onChange={handleFileChange} webkitdirectory="true" multiple />
+                        {/* <input type="file" id="file-input" onChange={handleFileChange} webkitdirectory="true" multiple /> */}
+                        <input type="file" id="file-input" onChange={handleFileChange} multiple />
                         <button type="submit">Upload</button>
                     </div>
                     <div className={`upload-status ${uploadStatus === '✓' ? 'success' : uploadStatus === '✗' ? 'failure' : ''}`}>{uploadStatus}</div>

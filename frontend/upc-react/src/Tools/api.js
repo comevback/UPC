@@ -207,6 +207,16 @@ export const downloadAllFilesZip = async (API_URL, fileNames) => {
     }
 }
 
+// Delete all selected files
+export const deleteAllFiles = async (API_URL, fileNames) => {
+    try {
+        const response = await axios.delete(`${API_URL}/api/files`, { data: { files: { fileNames } }});
+        console.log(response.data);
+    } catch (error) {
+        console.error('Error deleting files:', error);
+    }
+}
+
 // Download a result
 export const downloadResult = async (API_URL, fileName) => {
     try {
@@ -266,6 +276,16 @@ export const downloadAllResultZip = async (API_URL, fileNames) => {
         link.click();
     } catch (error) {
         console.error('Error downloading results:', error);
+    }
+}
+
+// Delete all selected results
+export const deleteAllResult = async (API_URL, fileNames) => {
+    try {
+        const response = await axios.delete(`${API_URL}/api/results`, { data: { files: { fileNames } }});
+        console.log(response.data);
+    } catch (error) {
+        console.error('Error deleting results:', error);
     }
 }
 

@@ -1,6 +1,6 @@
 import { useContext, useEffect } from 'react';
 import { ParaContext } from '../Global.js';
-import { downloadResult, deleteResult, downloadAllResult, downloadAllResultZip } from '../Tools/api';
+import { downloadResult, deleteResult, downloadAllResult, downloadAllResultZip, deleteAllResult } from '../Tools/api';
 import './ResultList.css';
 
 
@@ -41,6 +41,14 @@ const ResultList = (props) => {
         downloadAllResultZip(API_URL, props.selectedResults);
     };
 
+    // Delete all selected results
+    const handleDeleteAllClick = async () => {
+        await deleteAllResult(API_URL, props.selectedResults);
+        props.refreshResults();
+    };
+
+    // ============================================================================================
+
     if (!props.results.length){
         return (
             <div>
@@ -53,6 +61,7 @@ const ResultList = (props) => {
                         <div className='buttons'>
                             <button onClick={() => {handleDownloadAllClick()}}>&#x21E9; Separately</button>
                             <button onClick={() => {handleDownloadTogetherClick()}}>&#x21E9; Bundle</button>
+                            <button onClick={() => {handleDeleteAllClick()}} >&#10007;</button>
                         </div>
                     </div>
                 </li>
@@ -73,6 +82,7 @@ const ResultList = (props) => {
                         <div className='buttons'>
                             <button onClick={() => {handleDownloadAllClick()}}>&#x21E9; Separately</button>
                             <button onClick={() => {handleDownloadTogetherClick()}}>&#x21E9; Bundle</button>
+                            <button onClick={() => {handleDeleteAllClick()}} >&#10007;</button>
                         </div>
                     </div>
                 </li>

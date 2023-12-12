@@ -87,7 +87,7 @@ const ApplicationForm = () => {
             window.particlesJS.load('particles-js', 'particlesjs.json', function() {
               console.log('particles.js loaded - callback');
             });
-          }
+        }
         
         // Remove the canvas element when the component unmounts
         return () => {

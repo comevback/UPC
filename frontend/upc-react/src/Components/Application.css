@@ -48,16 +48,18 @@
     padding: 0.5rem;
     border: none;
     border-radius: 5px;
-    background-color: gray;
-    color: white;
+    background-color: #efefef;
+    color: black;
     font-size: rem;
     cursor: pointer;
     transition: 0.3s;
 }
 
 .command-button:hover {
-    background-color: lightgray;
+    background-color: #efefef;
     color: black;
+    box-shadow: 0 0 5px #000000;
+    transition: 0.2s;
 }
 
 
@@ -91,7 +93,28 @@ ul{
     height: 30vh; /* 80% of the viewport height */
     max-height: 80vh; /* max out at 80% of the viewport height */
     overflow-y: auto; /* allow vertical scrolling */
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1); /* subtle shadow for depth */
+}
+
+ul:hover{
+    /* --rotation-angle: 0deg;
+    --border-width: 3px; 
+    background-image: conic-gradient(from var(--rotation-angle),#fff, #fff), conic-gradient(from var(--rotation-angle) , #fff, #000, #fff, #000);
+    background-size: calc(100% - var(--border-width) * 2) calc(100% - var(--border-width) * 2), cover;
+    background-position: center center;
+    background-repeat: no-repeat; */
+    animation: bnwBorder 1s linear infinite;
+}
+
+@property --rotation-angle {
+    syntax: '<angle>';
+    initial-value: 0deg;
+    inherits: true;
+}
+
+@keyframes animate {
+	100% {
+		--rotation-angle: 360deg;
+	}
 }
 
 li{
@@ -105,7 +128,7 @@ li{
     border-radius: 5px;
     text-align: center;
     min-height: 20px;
-    background-color: #f5f5f5;
+    /* background-color: #f5f5f5; */
     justify-content: space-between;
     overflow-x: auto;
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.1); /* subtle shadow for depth */
@@ -118,6 +141,89 @@ li.example{
     border-bottom: 1px solid #ddd;
     box-shadow: none;
     font-weight: bold;
+}
+
+li.example:hover{
+    background-color: none;
+    border: none;
+    border-bottom: 1px solid #ddd;
+    box-shadow: none;
+    background-image: none;
+}
+
+li:hover{
+    /* --rotation-angle: 0deg;
+    --border-width: 1px; 
+    background-image: conic-gradient(from var(--rotation-angle),#fff, #fff), conic-gradient(from var(--rotation-angle) , #eeeeee, #3d3d3d, #eeeeee, #3d3d3d, #eeeeee);
+    background-size: calc(100% - var(--border-width) * 2) calc(100% - var(--border-width) * 2), cover;
+    background-position: center center;
+    background-repeat: no-repeat;
+    animation: animate 3s linear infinite; */
+    box-shadow: 0 0 5px #000000;
+}
+
+li.selected{
+    font-weight: bold;
+    --rotation-angle: 0deg;
+    --border-width: 2px; 
+    background-image: conic-gradient(from var(--rotation-angle),#fff, #fff), conic-gradient(from var(--rotation-angle) , #FFADAD, #FFD6A5, #FDFFB6, #CAFFBF, #9BF6FF, #A0C4FF, #BDB2FF, #FFC6FF );
+    background-size: calc(100% - var(--border-width) * 2) calc(100% - var(--border-width) * 2), cover; /* "cover" is for the second background-image */
+    background-position: center center;
+    background-repeat: no-repeat; /* Do not repeat the image */
+    animation: animate 2s linear infinite;
+}
+
+li.selected:hover{
+    box-shadow: none;
+}
+
+@keyframes bnwBorder{
+    0% {
+        box-shadow: 0 0 15px #ffffff;
+    }
+    50% {
+        box-shadow: 0 0 15px #000000;
+    }
+    100% {
+        box-shadow: 0 0 15px #ffffff;
+    }
+}
+
+@keyframes flowingBorder {
+    0% {
+        box-shadow: 0 0 10px #FFADAD;
+    }
+    12.5% {
+        box-shadow: 0 0 10px #FFD6A5;
+    }
+    25% {
+        box-shadow: 0 0 10px #FDFFB6;
+    }
+    37.5% {
+        box-shadow: 0 0 10px #CAFFBF;
+    }
+    50% {
+        box-shadow: 0 0 10px #9BF6FF;
+    }
+    62.5% {
+        box-shadow: 0 0 10px #A0C4FF;
+    }
+    75% {
+        box-shadow: 0 0 10px #BDB2FF;
+    }
+    87.5% {
+        box-shadow: 0 0 10px #FFC6FF;
+    }
+    100% {
+        box-shadow: 0 0 10px #FFADAD;
+    }
+}
+
+
+li span{
+    display: flex;
+    justify-content: center;
+    align-items: center;
 }
 
 button{

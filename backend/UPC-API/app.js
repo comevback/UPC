@@ -332,8 +332,6 @@ app.post('/api/results/download', async(req, res) => {
     });
 });
 
-
-
 // Route to download a temp
 app.get('/api/temps/:filename', (req, res) => {
     const filePath = path.join(__dirname, 'temps', req.params.filename);
@@ -620,6 +618,48 @@ app.delete('/api/results/:filename', (req, res) => {
         }
     });
 });
+
+// Delete all selected files
+app.delete('/api/files', async(req, res) => {
+    const { fileNames } = req.body.files;
+    const filePath = path.join(__dirname, 'uploads');
+    const files = fs.readdirSync(filePath);
+    const matchedFiles = files.filter(file => fileNames.includes(file));
+
+    if (matchedFiles.length === 0) {
+        return res.status(404).send('No files found');
+    }
+
+    console.log('Files to delete:', matchedFiles);
+
+    matchedFiles.forEach(file => {
+        fs.unlinkSync(path.join(filePath, file));
+    });
+
+    res.status(200).send({ message: 'Files deleted successfully' });
+});
+
+
+// Delete all selected results
+app.delete('/api/results', async(req, res) => {
+    const { fileNames } = req.body.files;
+    const filePath = path.join(__dirname, 'results');
+    const files = fs.readdirSync(filePath);
+    const matchedFiles = files.filter(file => fileNames.includes(file));
+
+    if (matchedFiles.length === 0) {
+        return res.status(404).send('No files found');
+    }
+
+    console.log('Files to delete:', matchedFiles);
+
+    matchedFiles.forEach(file => {
+        fs.unlinkSync(path.join(filePath, file));
+    });
+
+    res.status(200).send({ message: 'Files deleted successfully' });
+});
+
 
 // Route to delete a temp
 app.delete('/api/temps/:filename', (req, res) => {

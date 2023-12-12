@@ -1,5 +1,5 @@
 import { useState, useEffect, useContext } from 'react';
-import { downloadFile, generateImage, deleteFile, downloadAllFiles, downloadAllFilesZip } from '../Tools/api';
+import { downloadFile, generateImage, deleteFile, downloadAllFiles, downloadAllFilesZip, deleteAllFiles } from '../Tools/api';
 import { ParaContext } from '../Global.js';
 import io from 'socket.io-client';     
 import './FileList.css';
@@ -38,6 +38,12 @@ const FileList = (props) => {
     // Download all files together
     const handleDownloadTogetherClick = () => {
         downloadAllFilesZip(API_URL, props.selectedFiles);
+    };
+
+    // Delete all selected files
+    const handleDeleteAllClick = async () => {
+        await deleteAllFiles(API_URL, props.selectedFiles);
+        props.refreshFiles();
     };
 
     // ============================== WebSocket ==================================
@@ -108,6 +114,7 @@ const FileList = (props) => {
                         <div className='buttons'>
                             <button onClick={() => {handleDownloadAllClick()}}>&#x21E9; Separately</button>
                             <button onClick={() => {handleDownloadTogetherClick()}}>&#x21E9; Bundle</button>
+                            <button onClick={() => {handleDeleteAllClick()}} >&#10007;</button>
                         </div>
                     </div>
                 </li>
@@ -128,6 +135,7 @@ const FileList = (props) => {
                         <div className='buttons'>
                             <button onClick={() => {handleDownloadAllClick()}}>&#x21E9; Separately</button>
                             <button onClick={() => {handleDownloadTogetherClick()}}>&#x21E9; Bundle</button>
+                            <button onClick={() => {handleDeleteAllClick()}} >&#10007;</button>
                         </div>
                     </div>
                 </li>

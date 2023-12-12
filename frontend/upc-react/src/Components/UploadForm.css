@@ -1,8 +1,35 @@
 /* UploadForm.css */
 
-.upload-form-container{}
+/* .upload-form::before{
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 200%;
+    height: 250%;
+    background: repeating-linear-gradient(
+        white 0%,
+        white 7.5px,
+        rgb(101, 101, 101) 7.5px,
+        rgb(182, 182, 182) 15px);
+    transform: translateX(-30%) translateY(-20%) rotate(-45deg);
+    animation: animate 4s linear infinite;
+}*/
+
+@property --rotation-angle {
+    syntax: '<angle>';
+    initial-value: 0deg;
+    inherits: true;
+}
+
+@keyframes animate {
+	100% {
+		--rotation-angle: 360deg;
+	}
+}
 
 .upload-form {
+    position: relative;
     display: flex;
     justify-content: center;
     align-items: center;
@@ -11,44 +38,84 @@
     padding: 20px;
     width: 45vw;
     max-width: 45vw;
+    border: 1px solid #ddd;
     height: 30vh; /* 80% of the viewport height */
     max-height: 30vh; /* max out at 80% of the viewport height */
-    overflow-y: auto;
-    border: 1px dashed #000; /* Dashed border for emphasis */
-    outline: 1px solid transparent;
+    overflow-y: auto; /* Dashed border for emphasis */
     border-radius: 5px; /* Rounded corners */
-    box-shadow: 0 4px 8px rgba(0,0,0,0.1);
-    animation: flowingBorder 1.8s infinite;
+    box-shadow: 0 0 10px rgba(0,0,0,0.1);
+}
+
+.upload-form:hover{
+    /* --rotation-angle: 0deg;
+    --border-width: 3px; 
+    background-image: conic-gradient(from var(--rotation-angle),#fff, #fff), conic-gradient(from var(--rotation-angle) , #fff, #000, #fff, #000);
+    background-size: calc(100% - var(--border-width) * 2) calc(100% - var(--border-width) * 2), cover;
+    background-position: center center;
+    background-repeat: no-repeat; */
+    animation: bnwBorder 1s linear infinite;
+}
+
+@keyframes bnwBorder{
+    0% {
+        box-shadow: 0 0 5px #ffffff;
+    }
+    50% {
+        box-shadow: 0 0 5px #000000;
+    }
+    100% {
+        box-shadow: 0 0 5px #ffffff;
+    }
 }
 
 @keyframes flowingBorder {
-    0%  {
-      border-color: #a3a3a3;
-      box-shadow: 0 0 10px #000;
+    0% {
+        box-shadow: 0 0 10px #FFADAD;
+    }
+    12.5% {
+        box-shadow: 0 0 10px #FFD6A5;
+    }
+    25% {
+        box-shadow: 0 0 10px #FDFFB6;
+    }
+    37.5% {
+        box-shadow: 0 0 10px #CAFFBF;
     }
     50% {
-      border-color: rgb(197, 197, 197);
-      box-shadow: 0 0 10px rgb(255, 255, 255);
+        box-shadow: 0 0 10px #9BF6FF;
+    }
+    62.5% {
+        box-shadow: 0 0 10px #A0C4FF;
+    }
+    75% {
+        box-shadow: 0 0 10px #BDB2FF;
+    }
+    87.5% {
+        box-shadow: 0 0 10px #FFC6FF;
     }
     100% {
-      border-color: #a3a3a3;
-      box-shadow: 0 0 10px #000;
+        box-shadow: 0 0 10px #FFADAD;
     }
 }
   
 
 .upload-form.dragging{
-    background-color: #c9e1e9; /* Lighter blue for better visibility */
-    border: 1px dashed #000; /* Dashed border for emphasis */
+    background-color: #deeaee; /* Lighter blue for better visibility */
     transition: 0.3s; /* Smooth transitions */
     box-shadow: 0 8px 16px rgba(0,0,0,0.2); /* Enhanced shadow for depth */
-    opacity: 0.8; /* Slightly lower opacity */
+    opacity: 0.7; /* Slightly lower opacity */
+    animation: flowingBorder 1s infinite;
+    animation-play-state: paused;
 }
 
 .upload-input{
     display: flex;
     justify-content: center;
     align-items: flex-start;
+    background-color: #ffffff;
+    border-radius: 10px;
+    padding: 20px;
+    z-index: 2;
 }
 
 .upload-form h1 {
@@ -78,16 +145,18 @@
     padding: 0.5rem;
     border: none;
     border-radius: 5px;
-    background-color: gray;
-    color: white;
+    background-color: #efefef;
+    color: black;
     font-size: 1rem;
     cursor: pointer;
     transition: 0.3s;
 }
 
 .upload-form button:hover {
-    background-color: lightgray;
+    background-color: #efefef;
     color: black;
+    box-shadow: 0 0 5px #000000;
+    transition: 0.2s;
 }
 
 /* UploadForm.css */
