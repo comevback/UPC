@@ -118,8 +118,8 @@ fi
 
 # replace the ip address in files, and start the docker container
 $SUDO docker pull afterlifexx/upc-react:latest && \
-$SUDO docker run -e INITIAL_API_URL=$API_URL \
-           -e INITIAL_CENTRAL_SERVER_URL=$CENTRAL_SERVER \
+$SUDO docker run -e REACT_APP_INITIAL_API_URL=$API_URL \
+           -e REACT_APP_INITIAL_CENTRAL_SERVER_URL=$CENTRAL_SERVER \
            -e PORT=$PORT \
            -p $PORT:$PORT -it --rm \
            afterlifexx/upc-react:latest
