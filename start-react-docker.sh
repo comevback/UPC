@@ -109,12 +109,6 @@ echo -e "${green}|                                      Frontend                
 echo -e "${green}---------------------------------------------------------------------------------------${end_style}"
 
 
-
-# define the environment variables
-HOST_URL=$API_URL
-INITIAL_API_URL=$API_URL
-INITIAL_CENTRAL_SERVER_URL=$CENTRAL_SERVER
-
 # check if there are dangling images
 dangling_images=$($SUDO docker images -f "dangling=true" -q)
 if [ -n "$dangling_images" ]; then
@@ -124,8 +118,8 @@ fi
 
 # replace the ip address in files, and start the docker container
 $SUDO docker pull afterlifexx/upc-react:latest && \
-$SUDO docker run -e INITIAL_API_URL=$INITIAL_API_URL \
-           -e INITIAL_CENTRAL_SERVER_URL=$INITIAL_CENTRAL_SERVER_URL \
+$SUDO docker run -e INITIAL_API_URL=$API_URL \
+           -e INITIAL_CENTRAL_SERVER_URL=$CENTRAL_SERVER \
            -e PORT=$PORT \
            -p $PORT:$PORT -it --rm \
            afterlifexx/upc-react:latest
