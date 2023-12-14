@@ -115,7 +115,7 @@ INITIAL_API_URL=$API_URL
 INITIAL_CENTRAL_SERVER_URL=$CENTRAL_SERVER
 
 # check if there are dangling images
-dangling_images=$(docker images -f "dangling=true" -q)
+dangling_images=$($SUDO docker images -f "dangling=true" -q)
 if [ -n "$dangling_images" ]; then
     # if there are dangling images, remove them
     $SUDO docker rmi $dangling_images
