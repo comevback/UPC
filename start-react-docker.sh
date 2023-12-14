@@ -66,10 +66,10 @@ echo -e "\033[1;37m2. Please enter your API host URL${end_style} ${white}(press 
 if ! read -e -p '(default): ' -i "$default_api_url" URL 2>/dev/null; 
 then
     # if failed, use 'read' command without '-i' option
-    read -e -p "(default: $default_api_url): " URL
+    read -e -p "(default: $default_api_url): " API_URL
 else
     # if succeed, use 'read' command with '-i' option
-    read -e -p $'\033[0;33m(default)\033[0m: ' -i "$default_api_url" URL
+    read -e -p $'\033[0;33m(default)\033[0m: ' -i "$default_api_url" API_URL
 fi
 API_URL=${API_URL:-http://$ip_address:4000}
 echo -e "\033[97mAPI Host URL: ${green}\033[4m$API_URL${end_style}"
