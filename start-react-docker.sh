@@ -46,15 +46,16 @@ echo ""
 
 default_api_url="http://$ip_address:4000"
 default_central_server_url="http://$ip_address:8000"
+default_port=3000
 
 echo -e "\033[1;37m1. Please enter your React \033[1;31mPORT${end_style} ${white}(press Enter for default:${end_style} \033[32m3000${end_style}${white}):${end_style}"
-if ! read -e -p '(default): ' -i "$default_api_url" PORT 2>/dev/null; 
+if ! read -e -p '(default): ' -i "$default_port" PORT 2>/dev/null; 
 then
     # if failed, use 'read' command without '-i' option
-    read -e -p "(default: $default_api_url): " PORT
+    read -e -p "(default: $default_port): " PORT
 else
     # if succeed, use 'read' command with '-i' option
-    read -e -p $'\033[0;33m(default)\033[0m: ' -i "$default_api_url" PORT
+    read -e -p $'\033[0;33m(default)\033[0m: ' -i "$default_port" PORT
 fi
 PORT=${PORT:-3000}
 echo -e "\033[97mReact URL: ${green}\033[4mhttp://$ip_address:$PORT${end_style}"
