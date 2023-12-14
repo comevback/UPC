@@ -1,0 +1,4 @@
+{
+  "ignore": ["uploads/*", "results/*", "temps/*"]
+}
+
