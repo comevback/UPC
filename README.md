@@ -90,7 +90,7 @@ docker run  -it --rm -p 8000:8000 afterlifexx/upc-register
 
 - Frontend-service:
 ```bash
-docker run  -e INITIAL_API_URL={http://your_API_host:4000} -e INITIAL_CENTRAL_SERVER_URL={http://your_central_server:8000} -p 3000:3000 afterlifexx/upc-react
+docker run  -e REACT_APP_INITIAL_API_URL={http://your_API_host:4000} -e REACT_APP_INITIAL_CENTRAL_SERVER_URL={http://your_central_server:8000} -p 3000:3000 afterlifexx/upc-react
 ```
 
 ---

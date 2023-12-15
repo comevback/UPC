@@ -23,6 +23,9 @@ else
     ip_address=localhost
 fi
 
+# get public ip address
+public_ip_address=$(curl -s https://api.ipify.org)
+
 echo -e "\033[2J\033[0;0H"
 echo -e "${white}---------------------------------------------------------------------------------------${end_style}"
 echo -e "${white}|                               UPC System Start Script                               |${end_style}"
@@ -41,6 +44,7 @@ echo -e "${white}---------------------------------------------------------------
 
 echo ""
 echo -e "\033[37mYour Host's Local IP Address: \033[1;33m$ip_address${end_style}"
+echo -e "\033[37mYour Public IP Address: \033[1;33m$public_ip_address${end_style}"
 echo ""
 
 echo -e "\033[1;37m1. Please enter your Register \033[1;31mPORT${end_style} ${white}(press Enter for default:${end_style} \033[32m8000${end_style}${white}):${end_style}"
