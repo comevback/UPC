@@ -46,7 +46,7 @@ echo -e "${white}---------------------------------------------------------------
 
 echo ""
 echo -e "\033[37mYour Host type: \033[1;33m$os_name${end_style}"
-echo -e "\033[37mYour Local IP Address: \033[1;33mhttp://$ip_address${end_style}"
+echo -e "\033[37mYour Local IP Address: \033[1;33m$ip_address${end_style}"
 echo -e "\033[37mYour Public IP Address: \033[1;33m$public_ip_address${end_style}"
 echo ""
 
@@ -132,8 +132,8 @@ if [ "${os_name}" = "Windows" ]; then
             -e API_PORT=$API_PORT \
             -e CENTRAL_SERVER=$CENTRAL_SERVER \
             -e REGI_PORT=$REGI_PORT \
-            -e INITIAL_API_URL=$API_URL \
-            -e INITIAL_CENTRAL_SERVER_URL=$CENTRAL_SERVER \
+            -e REACT_APP_INITIAL_API_URL=$API_URL \
+            -e REACT_APP_INITIAL_CENTRAL_SERVER_URL=$CENTRAL_SERVER \
             -e PORT=$PORT \
             -v "//var/run/docker.sock:/var/run/docker.sock" \
             -p $API_PORT:$API_PORT -p $PORT:$PORT -p $REGI_PORT:$REGI_PORT \
@@ -145,8 +145,8 @@ else
             -e API_PORT=$API_PORT \
             -e CENTRAL_SERVER=$CENTRAL_SERVER \
             -e REGI_PORT=$REGI_PORT \
-            -e INITIAL_API_URL=$API_URL \
-            -e INITIAL_CENTRAL_SERVER_URL=$CENTRAL_SERVER \
+            -e REACT_APP_INITIAL_API_URL=$API_URL \
+            -e REACT_APP_INITIAL_CENTRAL_SERVER_URL=$CENTRAL_SERVER \
             -e PORT=$PORT \
             -v /var/run/docker.sock:/var/run/docker.sock \
             -p $API_PORT:$API_PORT -p $PORT:$PORT -p $REGI_PORT:$REGI_PORT \
