@@ -1,11 +1,12 @@
 #!/bin/bash
 
-# get local ip address
+# get host name
 os_name=$(uname -s)
 white="\033[0;37m"
 green="\033[1;32m"
 end_style="\033[0m"
 
+# test if sudo command exists
 if command -v sudo &> /dev/null
 then
     SUDO="sudo"
@@ -44,7 +45,8 @@ echo -e "${white}|                                     UPC System               
 echo -e "${white}---------------------------------------------------------------------------------------${end_style}"
 
 echo ""
-echo -e "\033[37mYour Host's Local IP Address: \033[1;33mhttp://$ip_address${end_style}"
+echo -e "\033[37mYour Host type: \033[1;33m$os_name${end_style}"
+echo -e "\033[37mYour Local IP Address: \033[1;33mhttp://$ip_address${end_style}"
 echo -e "\033[37mYour Public IP Address: \033[1;33m$public_ip_address${end_style}"
 echo ""
 
