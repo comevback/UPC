@@ -61,6 +61,7 @@ const UploadForm = (props) => {
 
     const handleSubmit = async (event) => {
         event.preventDefault();// Prevent the default form submit event
+        console.log(files);
         const formData = new FormData();
         // Create an empty FormData object
         
@@ -94,7 +95,7 @@ const UploadForm = (props) => {
                     <div className="upload-panel">
                         {/* <input type="file" id="file-input" onChange={handleFileChange} webkitdirectory="true" multiple /> */}
                         <input type="file" id="file-input" onChange={handleFileChange} multiple />
-                        <button type="submit">Upload</button>
+                        <button type="submit" className={`${files.length ? 'actived' : ''} `}>Upload</button>
                     </div>
                     <div className={`upload-status ${uploadStatus === '✓' ? 'success' : uploadStatus === '✗' ? 'failure' : ''}`}>{uploadStatus}</div>
                 </div>

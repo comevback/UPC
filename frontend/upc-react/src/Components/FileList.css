@@ -30,6 +30,11 @@
     opacity: 0.8;
 }
 
+.file-item.actived {
+    overflow: visible;
+    height: auto;
+}
+
 .name-and-buttons{
     display: flex;
     justify-content: space-between;
@@ -53,6 +58,7 @@
     color: #5cb85c;
     word-break: break-all;
     font-family: 'Courier New', Courier, monospace;
+    background-color: #ffffff;
 }
 
 .info p{

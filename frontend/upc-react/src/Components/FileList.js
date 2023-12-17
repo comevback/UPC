@@ -140,7 +140,7 @@ const FileList = (props) => {
                     </div>
                 </li>
                 {props.files.map(file => (
-                    <li className={`file-item ${props.selectedFiles.includes(file) ? 'selected' : ''}`} key={file}>
+                    <li className={`file-item ${props.selectedFiles.includes(file) ? 'selected' : activeInfoFile.includes(file) ? 'actived' : ''}`} key={file}>
                         <div className='name-and-buttons'>
                             <input type='checkbox' className='checkbox' checked={props.selectedFiles.includes(file)}
                                 onChange={() => handleCheckboxChange(file)} />

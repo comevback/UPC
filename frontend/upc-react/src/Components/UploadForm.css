@@ -58,7 +58,7 @@
     transition: 0.3s;
 }
 
-@keyframes bnwBorder{
+/* @keyframes bnwBorder{
     0% {
         box-shadow: 0 0 5px #ffffff;
     }
@@ -68,7 +68,7 @@
     100% {
         box-shadow: 0 0 5px #ffffff;
     }
-}
+} */
 
 @keyframes flowingBorder {
     0% {
@@ -143,9 +143,9 @@
 .upload-form button {
     width: 100%;
     padding: 0.5rem;
-    border: none;
+    border: #ccc 1px solid;
     border-radius: 5px;
-    background-color: #efefef;
+    background-color: #ffffff;
     color: black;
     font-size: 1rem;
     cursor: pointer;
@@ -153,11 +153,41 @@
     transition: 0.3s;
 }
 
+.upload-form button.actived {
+    animation: buttonActive 1.5s linear infinite;
+}
+
+@keyframes buttonActive {
+    0% {
+        box-shadow: 0 0 10px #ffffff;
+        background-color: #ffffff;
+        color: #000000;
+    }
+    50% {
+        box-shadow: 0 0 10px #000000;
+        background-color: #ffffff;
+        color: #000000;
+    }
+    100% {
+        box-shadow: 0 0 10px #ffffff;
+        background-color: #ffffff;
+        color: #000000;
+    }
+}
+
 .upload-form button:hover {
     background-color: #ffffff;
     color: black;
     box-shadow: 0 0 5px #000000;
     transition: 0.2s;
+}
+
+.upload-form button.actived:hover {
+    background-color: #ffffff;
+    color: black;
+    box-shadow: 0 0 5px #000000;
+    transition: 0.2s;
+    animation: none;
 }
 
 /* UploadForm.css */

@@ -46,14 +46,27 @@
 .command-button{
     width: 100%;
     padding: 0.5rem;
-    border: none;
+    border: #ccc 1px solid;
     border-radius: 5px;
-    background-color: #efefef;
+    background-color: #ffffff;
     color: black;
     font-size: rem;
     cursor: pointer;
     opacity: 0.8;
     transition: 0.3s;
+}
+
+.command-button.shining {
+    animation: bnwBorder 1s linear infinite;
+}
+
+.command-button.shining:hover {
+    background-color: #ffffff;
+    color: black;
+    box-shadow: 0 0 5px #000000;
+    transition: 0.2s;
+    animation: none;
+    animation: none;
 }
 
 .command-button:hover {
@@ -180,15 +193,22 @@ li.selected:hover{
     box-shadow: none;
 }
 
-@keyframes bnwBorder{
+@keyframes bnwBorder {
     0% {
-        box-shadow: 0 0 15px #ffffff;
+        box-shadow: 0 0 10px #ffffff;
+        background-color: #ffffff;
+        color: #000000;
     }
     50% {
-        box-shadow: 0 0 15px #000000;
+        box-shadow: 0 0 10px #000000;
+        background-color: #efefef;
+        color: #000000;
+        transform: scale(1.02);
     }
     100% {
-        box-shadow: 0 0 15px #ffffff;
+        box-shadow: 0 0 10px #ffffff;
+        background-color: #ffffff;
+        color: #000000;
     }
 }
 

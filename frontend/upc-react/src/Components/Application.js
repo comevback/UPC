@@ -10,6 +10,7 @@ import Heading from './Heading.js';
 import Logo from './Logo.js';
 import Term from './Term.js';
 import particlesJS from 'particles.js';
+import Processing from './processing.js';
 
 const ApplicationForm = () => {
     const [connected, setConnected] = useState(false);
@@ -20,6 +21,7 @@ const ApplicationForm = () => {
     const [selectedFiles, setSelectedFiles] = useState([]); // Store the selected files
     const [selectedResults, setSelectedResults] = useState([]); // Store the selected files
     const [termShown, setTermShown] = useState(false); // Store the selected files
+    const [processing, setProcessing] = useState(false); // Store the selected files
     const { API_URL } = useContext(ParaContext);
 
     // Check if the backend is connected
@@ -29,9 +31,8 @@ const ApplicationForm = () => {
     };
 
     const handleProcessClick = () => {
-        process(API_URL, selectedImages, selectedFiles);
-        setSelectedFiles([]);
-        setSelectedImages([]);
+        setProcessing(!processing);
+        // process(API_URL, selectedImages, selectedFiles);
     };
 
     const toggleTerm = () => {
@@ -117,7 +118,8 @@ const ApplicationForm = () => {
                     {/* <Term/> */}
                 </div>
             </div>
-            <button className='command-button' onClick={handleProcessClick} disabled={selectedImages.length === 0}>Process</button>
+            <button className={`command-button ${selectedImages  ? 'shining' : '' }` } onClick={handleProcessClick} >Process</button>
+            {processing ? <Processing /> : null}
             <div className="area">
                 <UploadForm refreshFiles={refreshFiles} refreshResults={refreshResults} refreshAll={refresh}/>
                 
