@@ -16,6 +16,9 @@ RUN sh -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master
 # Install zsh-autosuggestions
 RUN git clone https://github.com/zsh-users/zsh-autosuggestions ~/.zsh/zsh-autosuggestions
 
+# Add source ~/.zsh/zsh-autosuggestions/zsh-autosuggestions.zsh to .zshrc
+RUN echo "source ~/.zsh/zsh-autosuggestions/zsh-autosuggestions.zsh" >> ~/.zshrc
+
 # Install project dependencies
 RUN npm install
 
@@ -30,4 +33,3 @@ EXPOSE 4000
 
 # Define the command to run when the container starts
 CMD ["npm", "start"]
-

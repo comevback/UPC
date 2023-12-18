@@ -16,8 +16,8 @@ RUN sh -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master
 # Install zsh-autosuggestions
 RUN git clone https://github.com/zsh-users/zsh-autosuggestions ~/.zsh/zsh-autosuggestions
 
-# Install project dependencies
-RUN npm install
+# Add source ~/.zsh/zsh-autosuggestions/zsh-autosuggestions.zsh to .zshrc
+RUN echo "source ~/.zsh/zsh-autosuggestions/zsh-autosuggestions.zsh" >> ~/.zshrc
 
 # Install pack
 RUN (curl -sSL "https://github.com/buildpacks/pack/releases/download/v0.32.1/pack-v0.32.1-linux.tgz" | tar -C /usr/local/bin/ --no-same-owner -xzv pack)
@@ -25,6 +25,7 @@ RUN (curl -sSL "https://github.com/buildpacks/pack/releases/download/v0.32.1/pac
 # Copy project files into the docker image
 COPY . .
 
+# Install all dependencies
 RUN npm run install-all
 
 # Expose port 3000 4000 8000
@@ -32,4 +33,3 @@ EXPOSE 3000 4000 8000
 
 # Define the command to run when the container starts
 CMD ["npm", "start"]
-
