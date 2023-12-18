@@ -13,12 +13,8 @@ RUN apk update && apk add --no-cache docker-cli curl git zsh python3 make g++ zi
 # Install oh-my-zsh
 RUN sh -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)"
 
-
 # Install zsh-autosuggestions
-RUN git clone https://github.com/zsh-users/zsh-autosuggestions ${ZSH_CUSTOM:-~/.oh-my-zsh/custom}/plugins/zsh-autosuggestions
-
-# Append zsh-autosuggestions to the list of plugins in .zshrc
-RUN sed -i 's/plugins=(/plugins=(zsh-autosuggestions /' ~/.zshrc
+RUN git clone https://github.com/zsh-users/zsh-autosuggestions ~/.zsh/zsh-autosuggestions
 
 # Install project dependencies
 RUN npm install

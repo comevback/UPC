@@ -89,6 +89,8 @@ const ApplicationForm = () => {
             refreshResults();
             refreshImages();
         }
+
+        // Load the particles.js library
         if (window.particlesJS) {
             window.particlesJS.load('particles-js', 'particlesjs.json', function() {
               console.log('particles.js loaded - callback');
@@ -122,12 +124,10 @@ const ApplicationForm = () => {
             {processing ? <Processing /> : null}
             <div className="area">
                 <UploadForm refreshFiles={refreshFiles} refreshResults={refreshResults} refreshAll={refresh}/>
-                
                 <ImagesList images={images} selectedImages={selectedImages} setSelectedImages={setSelectedImages} refreshImages={refreshImages} refreshAll={refresh}/>
             </div>
             <div className='area'>
                 <FileList files={files} selectedFiles={selectedFiles} setSelectedFiles={setSelectedFiles} refreshFiles={refreshFiles} refreshResults={refreshResults} refreshAll={refresh}/>
-                
                 <ResultList results={results} selectedResults={selectedResults} setSelectedResults={setSelectedResults} refreshFiles={refreshFiles} refreshResults={refreshResults} refreshAll={refresh}/>
             </div>
         </div>
