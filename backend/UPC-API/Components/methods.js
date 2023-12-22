@@ -2,21 +2,24 @@
 import multer from 'multer';
 import fs from 'fs';
 import os from 'os';
+import dotenv from 'dotenv';
 import axios from "axios";
 import rateLimit from "express-rate-limit";
 import { exec, execSync } from 'child_process';
 import OpenAI from 'openai';
+
+dotenv.config();
 
 // URL of this service
 const hostURL = process.env.API_URL || 'http://localhost:4000'; // TODO: Change this to the URL of your service
 // URL of the central server
 const CENTRAL_SERVER = process.env.CENTRAL_SERVER || 'http://localhost:8000'; // TODO: Change this to the URL of your central server
 // ChatGPT API
-const CHATGPT_API = process.env.CHATGPT_API || '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'; // replace with your chatGPT API URL
+const CHATGPT_API = process.env.OpenAI_API_Key; // replace with your chatGPT API URL
 
 // OpenAI
 const openai = new OpenAI({
-  apiKey: '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',
+  apiKey: CHATGPT_API,
 });
 
 export const AI_input = async (file_input) => {
