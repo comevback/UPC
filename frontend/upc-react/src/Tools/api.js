@@ -379,4 +379,22 @@ export const process = async (API_URL, imageName, fileNames) => {
     }
 };
 
+// process this file with OpenAI, backend is :
+// app.post('/api/openai/:fileName', async(req, res) => {
+//     const { fileName } = req.params;
+//     const filePath = path.join(__dirname, 'uploads', fileName);
+//     const result = await AI_input(filePath);
+//     console.log(result);
+//     res.status(200).send(result);
+// });
+export const processFile = async (API_URL, fileName) => {
+    try {
+        const response = await axios.post(`${API_URL}/api/openai/${fileName}`);
+        console.log(response.data);
+        return response.data;
+    } catch (error) {
+        console.error('Error processing file:', error);
+    }
+};
+
 

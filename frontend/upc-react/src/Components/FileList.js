@@ -1,5 +1,5 @@
 import { useState, useEffect, useContext } from 'react';
-import { downloadFile, generateImage, deleteFile, downloadAllFiles, downloadAllFilesZip, deleteAllFiles } from '../Tools/api';
+import { downloadFile, generateImage, deleteFile, downloadAllFiles, downloadAllFilesZip, deleteAllFiles, processFile } from '../Tools/api';
 import { ParaContext } from '../Global.js';
 import io from 'socket.io-client';     
 import './FileList.css';
@@ -44,6 +44,20 @@ const FileList = (props) => {
     const handleDeleteAllClick = async () => {
         await deleteAllFiles(API_URL, props.selectedFiles);
         props.refreshFiles();
+    };
+
+    // process the file with OpenAI
+    const handleProcessClick = async (file) => {
+        await processFile(API_URL, file);
+        props.refreshFiles();
+    };
+
+    // If click the file, Show the info, and generate the image, refresh the file list
+    const handleFileClick = async(file) => {
+        setInfo('Loading...');
+        setActiveInfoFile(file);
+        await generateImage(API_URL, file);
+        props.refreshAll();
     };
 
     // ============================== WebSocket ==================================
@@ -94,14 +108,6 @@ const FileList = (props) => {
 
     // =============================== WebSocket ==================================
 
-    // If click the file, Show the info, and generate the image, refresh the file list
-    const handleFileClick = async(file) => {
-        setInfo('Loading...');
-        setActiveInfoFile(file);
-        await generateImage(API_URL, file);
-        props.refreshAll();
-    };
-
     if (!props.files.length){
         return (
             <div>
@@ -146,6 +152,7 @@ const FileList = (props) => {
                                 onChange={() => handleCheckboxChange(file)} />
                             <span>{file}</span>
                             <div className='buttons'>
+                                <button onClick={() => handleProcessClick(file)} >AI generate</button>
                                 <button onClick={() => handleFileClick(file)} >Generate Image</button>
                                 <button onClick={() => downloadFile(API_URL, file)}>&#x21E9;</button>
                                 <button onClick={async() => {

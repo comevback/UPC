@@ -10,7 +10,7 @@ import { fileURLToPath } from 'url';
 import { exec, spawn } from "child_process"; 
 import http from "http";
 import { Server } from "socket.io";    
-import { serviceInfo, upload, limiter, registerService, unregisterService, sendHeartbeat, sortFiles, getWorkingDir, getEntrypoint, getCmd, getAvailableShell } from "./Components/methods.js";
+import { AI_input, checkRunResult, serviceInfo, upload, limiter, registerService, unregisterService, sendHeartbeat, sortFiles, getWorkingDir, getEntrypoint, getCmd, getAvailableShell } from "./Components/methods.js";
 
 const app = express();
 const server = http.createServer(app);
@@ -518,7 +518,7 @@ app.post('/api/process', async(req, res) => {
         '-v', `${tempPath}:${WorkingDir}/input`, 
         '-v', `${resultPath}:${WorkingDir}/output`, 
         imageName, 
-        ...sortFiles(matchedFiles) //
+        // other parameters
     ]);
 
     //use websocket to send the output to the client
@@ -749,6 +749,19 @@ app.post('/api/command', (req, res) => {
         io.emit('commandMessage', `child process exited with code ${code}`);
     });
 });
+
+// upload this file to openai and get the result
+app.post('/api/openai/:fileName', async(req, res) => {
+    const { fileName } = req.params;
+    console.log("process this file with OpenAI: " + fileName);
+    const filePath = path.join(__dirname, 'uploads', fileName);
+    const result = await AI_input(filePath);
+    const { thread_id, run_id } = result;
+    console.log(result);
+    res.send(result);
+});
+
+
 
 
 //Listen on port
