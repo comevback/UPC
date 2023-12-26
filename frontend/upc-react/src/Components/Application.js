@@ -10,7 +10,7 @@ import Heading from './Heading.js';
 import Logo from './Logo.js';
 import Term from './Term.js';
 import particlesJS from 'particles.js';
-import Processing from './processing.js';
+import ProcessForm from './ProcessForm.js';
 
 const ApplicationForm = () => {
     const [connected, setConnected] = useState(false);
@@ -30,18 +30,18 @@ const ApplicationForm = () => {
         setConnected(connectSitu);
     };
 
-    const handleProcessClick = () => {
+    const toggleProcess = () => {
         setProcessing(!processing);
-        // process(API_URL, selectedImages, selectedFiles);
+        // process(API_URL, selectedImages, {fileNames: selectedFiles, Port:[4000,4000]});
     };
 
     const toggleTerm = () => {
-        setTermShown(!termShown);
         window.scrollTo({
             top: 0,
             right: 0,
             behavior: 'smooth'
         });
+        setTermShown(!termShown);
     };
 
     const refreshFiles = () => {
@@ -117,11 +117,12 @@ const ApplicationForm = () => {
                 <Logo termShown={termShown} connected={connected}/>     
                 <div className={`term ${termShown? 'active' : ''}`}>
                     {termShown? <Term/> : null}
-                    {/* <Term/> */}
                 </div>
             </div>
-            <button className={`command-button ${selectedImages  ? 'shining' : '' }` } onClick={handleProcessClick} >Process</button>
-            {processing ? <Processing /> : null}
+            <button className={`command-button ${!processing && selectedImages  ? 'shining' : processing ? 'active' : '' }` } onClick={toggleProcess} >Process</button>
+            <div className={`process ${processing ? 'active' : ''}`}>
+                <ProcessForm selectedImages={selectedImages} selectedFiles={selectedFiles} images={images} files={files} /> 
+            </div>
             <div className="area">
                 <UploadForm refreshFiles={refreshFiles} refreshResults={refreshResults} refreshAll={refresh}/>
                 <ImagesList images={images} selectedImages={selectedImages} setSelectedImages={setSelectedImages} refreshImages={refreshImages} refreshAll={refresh}/>

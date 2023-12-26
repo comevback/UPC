@@ -21,10 +21,6 @@ const Term = () => {
         selectionBackground: '#E4EFE7', // The color of the selection's background.
         selectionForeground: '#000000', // The color of the selection's text.
     };
-
-    const basicTheme = {
-    };
-
     
     useEffect(() => {
         requestAnimationFrame(() => {
@@ -38,14 +34,14 @@ const Term = () => {
                 fontFamily: 'monospace', // font family
                 cols: 200,
                 rows: 40,
-                theme: atomOneLightTheme,
+                // theme: atomOneLightTheme,
                 });
             terminal.current.loadAddon(fitAddon.current);
             terminal.current.open(terminalRef.current);
             setTimeout(() => {fitAddon.current.fit()}, 100);
 
             const end_style = '\x1b[0m';
-            const demoColor = '\x1b[1;30m';
+            const demoColor = '\x1b[1;37m';
             //const lightblue_style = '\x1b[0;34m';
             const darkgreen_style = '\x1b[0;32m';
 
@@ -64,8 +60,6 @@ const Term = () => {
             terminal.current.writeln(`${demoColor}|-------------------------------------------------------------------------------------|${end_style}`)
             terminal.current.writeln(`${darkgreen_style}                                 ${API_URL}                                            ${end_style}`)
             terminal.current.writeln(`${demoColor}---------------------------------------------------------------------------------------${end_style}`)
-
-
 
             socket.current.on('output', (data) => {
                 terminal.current.write(data);

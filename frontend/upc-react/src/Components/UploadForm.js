@@ -78,6 +78,13 @@ const UploadForm = (props) => {
         } // Display the result from the server
         props.refreshFiles(); // Refresh the list of files
         setFiles([]); // Clear the file input
+
+        // window scrollTo bottom
+        window.scrollTo({
+            top: 10000,
+            right: 0,
+            behavior: 'smooth'
+        });
     };
 
     let uploadStatusClass = 'upload-status';
@@ -94,7 +101,7 @@ const UploadForm = (props) => {
                 <div className="upload-input">
                     <div className="upload-panel">
                         {/* <input type="file" id="file-input" onChange={handleFileChange} webkitdirectory="true" multiple /> */}
-                        <input type="file" id="file-input" onChange={handleFileChange} multiple />
+                        <input type="file" id="file-input" onChange={handleFileChange} multiple placeholder="well"/>
                         <button type="submit" className={`${files.length ? 'actived' : ''} `}>Upload</button>
                     </div>
                     <div className={`upload-status ${uploadStatus === '✓' ? 'success' : uploadStatus === '✗' ? 'failure' : ''}`}>{uploadStatus}</div>

@@ -362,22 +362,34 @@ export const deleteImage = async (API_URL, fileName) => {
 // send a command to the backend
 export const sendCommand = async (API_URL, command) => {
     try {
-      const response = await axios.post(`${API_URL}/api/command`, { command });
-      console.log(response.data);
+        const response = await axios.post(`${API_URL}/api/command`, { command });
+        console.log(response.data);
     } catch (error) {
-      console.error('Error sending command:', error);
+        console.error('Error sending command:', error);
     }
 };
 
-// Process the images
-export const process = async (API_URL, imageName, fileNames) => {
-    try {
-      const response = await axios.post(`${API_URL}/api/process`, { imageName, fileNames });
-      console.log(response.data);
-    } catch (error) {
-      console.error('Error running docker:', error);
-    }
-};
+// // Process the images
+// export const process = async (API_URL, imageName, additionalParams = {} ) => {
+//     try {
+//         const requestBody = { imageName, additionalParams:{...additionalParams} };
+//         console.log(requestBody);
+//         const response = await axios.post(`${API_URL}/api/process`, requestBody);
+//         console.log(response.data);
+//     } catch (error) {
+//         console.error('Error running docker:', error);
+//     }
+// };
+
+// // Process the images directly by command
+// export const processByCommand = async (API_URL, command) => {
+//     try {
+//         const response = await axios.post(`${API_URL}/api/process-by-command`, { command });
+//         console.log(response.data);
+//     } catch (error) {
+//         console.error('Error running docker:', error);
+//     }
+// };
 
 // process this file with OpenAI, backend is :
 // app.post('/api/openai/:fileName', async(req, res) => {

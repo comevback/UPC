@@ -38,6 +38,27 @@
     box-shadow: -12px 12px 10px rgba(0, 0, 0, 0.409);
 }
 
+/* .term {
+    opacity: 0;
+    visibility: hidden;
+    transform: translateX(100%);
+    transition: opacity 0.3s ease-in-out, transform 0.3s ease-in-out, max-height 0.3s ease-in-out, max-width 0.3s ease-in-out;
+    max-height: 0;
+    max-width: 0;
+    overflow: hidden;
+}
+
+.term.active {
+    opacity: 1;
+    visibility: visible;
+    transform: translateX(0%);
+    transition: opacity 0.3s ease-in-out, transform 0.3s ease-in-out, max-height 0.3s ease-in-out, max-width 0.3s ease-in-out, visibility 0s linear 0s;
+    max-height: 500px; 
+    max-width: 1000px; 
+} */
+
+
+
 .title{
     font-size: 2.7rem;
 }
@@ -60,12 +81,19 @@
     animation: bnwBorder 1s linear infinite;
 }
 
+.command-button.active{
+    box-shadow: 0 0 5px #000000;
+}
+
+.command-button.active:hover{
+    animation: bnwBorder 1s linear infinite;
+}
+
 .command-button.shining:hover {
     background-color: #ffffff;
     color: black;
     box-shadow: 0 0 5px #000000;
     transition: 0.2s;
-    animation: none;
     animation: none;
 }
 
@@ -74,6 +102,23 @@
     color: black;
     box-shadow: 0 0 5px #000000;
     transition: 0.2s;
+}
+
+.process {
+    opacity: 0;
+    visibility: hidden;
+    transform: translateX(100%);
+    transition: visibility 0.3s linear 0.3s, opacity 0.3s ease-in-out, transform 0.3s ease-in-out, max-height 0.3s ease-in-out;
+    max-height: 0;
+    overflow: hidden;
+}
+
+.process.active {
+    opacity: 1;
+    visibility: visible;
+    transform: translateX(0%);
+    transition: opacity 0.3s ease-in-out, transform 0.3s ease-in-out, max-height 0.3s ease-in-out;
+    max-height: 50rem; /* 或更大，视内容而定 */
 }
 
 
@@ -253,6 +298,19 @@ button{
     display: flex;
     justify-content: center;
     align-items: center;
+    cursor: pointer;
+}
+
+input:hover{
+    box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
+}
+
+textarea:hover{
+    box-shadow: 0 0 5px rgba(0, 0, 0, 1);
+}
+
+input[type="checkbox"]{
+    cursor: pointer;
 }
 
 .particles-container {

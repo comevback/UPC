@@ -10,7 +10,7 @@ import { fileURLToPath } from 'url';
 import { exec, spawn } from "child_process"; 
 import http from "http";
 import { Server } from "socket.io";    
-import { AI_input, checkRunResult, serviceInfo, upload, limiter, registerService, unregisterService, sendHeartbeat, sortFiles, getWorkingDir, getEntrypoint, getCmd, getAvailableShell } from "./Components/methods.js";
+import { AI_input, checkRunResult, serviceInfo, upload, limiter, registerService, unregisterService, sendHeartbeat, sortFiles, getWorkingDir, getEntrypoint, getCmd, getAvailableShell, processFiles } from "./Components/methods.js";
 
 const app = express();
 const server = http.createServer(app);
@@ -23,6 +23,9 @@ const io = new Server(server, {
 const port = process.env.API_PORT || 4000;
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
+const uploadPath = path.join(__dirname, 'uploads');
+const resultPath = path.join(__dirname, 'results');
+const tempPath = path.join(__dirname, 'temps');
 
 app.use(bodyParser.urlencoded({extended:true}));
 app.use(express.static("public"));
@@ -484,78 +487,170 @@ app.post('/api/files/:filename', async(req, res) => {
     });  
 });
 
-// Route to Process a Task by image with or without input files
-app.post('/api/process', async(req, res) => {
-    const startTime = Date.now();
+// //test process
+// app.post('/api/process', async(req, res) => {
+//     const startTime = Date.now();
+//     const { imageName, additionalParams } = req.body;
+//     let dockerParams = [];
+//     let filesToProcess = [];
+//     console.log("imageName: ", imageName);
+//     console.log("additionalParams: ", additionalParams);
 
-    const { imageName, fileNames } = req.body;
-    // put the files matching the fileNames in the uploads folder into the anonymous directory
-    const filePath = path.join(__dirname, 'uploads');
-    const tempPath = path.join(__dirname, 'temps'); // Create a temporary directory to store the files
-    if (!fs.existsSync(tempPath)) {
-        fs.mkdirSync(tempPath);
-    }
-    const resultPath = path.join(__dirname, 'results');
-    const files = fs.readdirSync(filePath); // Get the list of files in the uploads folder
-    const matchedFiles = files.filter(file => fileNames.includes(file)); // Filter the files to only include the ones in the fileNames array
-    console.log('Files to copy:', matchedFiles);
-    // Copy the files to the temp directory
-    matchedFiles.forEach(file => {
-        fs.copyFileSync(path.join(filePath, file), path.join(tempPath, file));
-    });
+//     //if additionalParams.fileNames.exist, add the files parameters to docker_process command
+//     if (additionalParams.fileNames) {
+//         filesToProcess = dockerParams.concat(additionalParams.fileNames); // Add the fileNames to the dockerParams array
+//     }
 
-    const WorkingDir = await getWorkingDir(imageName);
-    const Entrypoint = await getEntrypoint(imageName);
-    const Cmd = await getCmd(imageName);
-    console.log(`WorkingDir: ${WorkingDir}`);
-    console.log(`Entrypoint: ${Entrypoint}`);
-    console.log(`Cmd: ${Cmd}`);
+//     if (additionalParams.Port) {
+//         dockerParams = dockerParams.concat(['-p', additionalParams.Port]);
+//     }
+        
 
-    //use spawn to run the command, use --mount to mount the temp directory
-    const docker_process = spawn('docker', [
-        'run', 
-        '--rm', 
-        '-v', `${tempPath}:${WorkingDir}/input`, 
-        '-v', `${resultPath}:${WorkingDir}/output`, 
-        imageName, 
-        // other parameters
-    ]);
+//     const fileNames = additionalParams.fileNames;
+//     const files = fs.readdirSync(uploadPath); // Get the list of files in the uploads folder
+//     const matchedFiles = files.filter(file => fileNames.includes(file)); // Filter the files to only include the ones in the fileNames array
+//     console.log('Files to copy:', matchedFiles);
+//     // Copy the files to the temp directory
+//     matchedFiles.forEach(file => {
+//         fs.copyFileSync(path.join(uploadPath, file), path.join(tempPath, file));
+//     });
 
-    //use websocket to send the output to the client
-    docker_process.stdout.on('data', (data) => {
-        console.log(`stdout: ${data}`);
-        // Send the output to all connected WebSocket clients
-        //io.emit('runMessage', data.toString());
-        io.emit('output', data.toString());
-    });
-    //use websocket to send the error to the client
-    docker_process.stderr.on('data', (data) => {
-        console.error(`stderr: ${data}`);
-        // Send the Error to all connected WebSocket clients
-        //io.emit('runError', data.toString());
-        io.emit('output', data.toString());
-    });
-    //use websocket to send the result to the client
-    docker_process.on('close', async(code) => {
-        const endTime = Date.now();
-        const timeTaken = (endTime - startTime)/1000 ;
-        console.log(`Time took: ${timeTaken}s`);
+//     const WorkingDir = await getWorkingDir(imageName);
+//     const Entrypoint = await getEntrypoint(imageName);
+//     const Cmd = await getCmd(imageName);
 
-        if (code === 0) {
-            console.log(`docker run completed successfully.`);
-            // Delete all the files in the temp directory
-            await fs.promises.rm(tempPath, { recursive: true });
-            //io.emit('runMessage', `[${timeTaken}s] Docker run completed successfully.`);
-            io.emit('output', `[${timeTaken}s] Docker run completed successfully.`);
-            console.log('temp folder deleted');
-            res.status(200).send({ message: 'Docker run completed successfully' });
-        } else {
-            console.error(`docker run failed with code ${code}`);
-            io.emit('runError', `[${timeTaken}s] Error running docker.`);
-            res.status(500).send({ message: 'Error running docker' });
-        }
-    });
-});
+//     let docker_cmd = `docker run --rm -v ${tempPath}:${WorkingDir}/input -v ${resultPath}:${WorkingDir}/output ${imageName} ${Entrypoint} ${Cmd} ${filesToProcess}`;
+
+//     //use spawn to run the command, use --mount to mount the temp directory
+//     const docker_process = spawn('docker', [
+//         'run', 
+//         '--rm', 
+//         '-v', `${tempPath}:${WorkingDir}/input`, 
+//         '-v', `${resultPath}:${WorkingDir}/output`, 
+//         imageName, 
+//         // other parameters
+//         ...dockerParams,
+//     ]);
+
+//     // delete all the files in the temp directory
+//     await fs.promises.rm(tempPath, { recursive: true });
+//     console.log('temp folder deleted');
+// });
+
+// // process the command directly
+// app.post('/api/process-by-command', async(req, res) => {
+//     const startTime = Date.now();
+//     const dockerCommand = req.body.command;
+//     console.log("dockerCommand: ", dockerCommand);
+
+//     const args = dockerCommand.split(" ");
+//     const docker_process = spawn(args[0], args.slice(1)); // docker
+
+//     //use websocket to send the output to the client
+//     docker_process.stdout.on('data', (data) => {
+//         console.log(`stdout: ${data}`);
+//         // Send the output to all connected WebSocket clients
+//         io.emit('cmd_Msg', data.toString());
+//     });
+//     //use websocket to send the error to the client
+//     docker_process.stderr.on('data', (data) => {
+//         console.error(`stderr: ${data}`);
+//         // Send the Error to all connected WebSocket clients
+//         io.emit('cmd_Msg', data.toString());
+//     });
+//     //use websocket to send the result to the client
+//     docker_process.on('close', async(code) => {
+//         const endTime = Date.now();
+//         const timeTaken = (endTime - startTime)/1000 ;
+//         console.log(`Time took: ${timeTaken}s`);
+
+//         if (code === 0) {
+//             console.log(`docker run completed successfully.`);
+//             //io.emit('runMessage', `[${timeTaken}s] Docker run completed successfully.`);
+//             io.emit('cmd_Msg', `[${timeTaken}s] Docker run completed successfully.`);
+//             res.status(200).send({ message: 'Docker run completed successfully' });
+//         } else {
+//             console.error(`docker run failed with code ${code}`);
+//             io.emit('cmd_Msg', `[${timeTaken}s] Error running docker.`);
+//             res.status(500).send({ message: 'Error running docker' });
+//         }
+//     });
+// });
+
+// // Route to Process a Task by image with or without input files
+// app.post('/api/process1', async(req, res) => {
+//     const startTime = Date.now();
+//     const { imageName, additionalParams } = req.body;
+//     console.log("imageName: " + imageName);
+//     console.log("additionalParams: " + additionalParams);
+//     // put the files matching the fileNames in the uploads folder into the anonymous directory
+//     const filePath = path.join(__dirname, 'uploads');
+//     const tempPath = path.join(__dirname, 'temps'); // Create a temporary directory to store the files
+//     if (!fs.existsSync(tempPath)) {
+//         fs.mkdirSync(tempPath);
+//     }
+//     const resultPath = path.join(__dirname, 'results');
+//     const files = fs.readdirSync(filePath); // Get the list of files in the uploads folder
+//     const matchedFiles = files.filter(file => fileNames.includes(file)); // Filter the files to only include the ones in the fileNames array
+//     console.log('Files to copy:', matchedFiles);
+//     // Copy the files to the temp directory
+//     matchedFiles.forEach(file => {
+//         fs.copyFileSync(path.join(filePath, file), path.join(tempPath, file));
+//     });
+
+//     const WorkingDir = await getWorkingDir(imageName);
+//     const Entrypoint = await getEntrypoint(imageName);
+//     const Cmd = await getCmd(imageName);
+//     console.log(`WorkingDir: ${WorkingDir}`);
+//     console.log(`Entrypoint: ${Entrypoint}`);
+//     console.log(`Cmd: ${Cmd}`);
+
+//     //use spawn to run the command, use --mount to mount the temp directory
+//     const docker_process = spawn('docker', [
+//         'run', 
+//         '--rm', 
+//         '-v', `${tempPath}:${WorkingDir}/input`, 
+//         '-v', `${resultPath}:${WorkingDir}/output`, 
+//         imageName, 
+//         // other parameters
+//         ...additionalParams,
+//     ]);
+
+//     //use websocket to send the output to the client
+//     docker_process.stdout.on('data', (data) => {
+//         console.log(`stdout: ${data}`);
+//         // Send the output to all connected WebSocket clients
+//         //io.emit('runMessage', data.toString());
+//         io.emit('output', data.toString());
+//     });
+//     //use websocket to send the error to the client
+//     docker_process.stderr.on('data', (data) => {
+//         console.error(`stderr: ${data}`);
+//         // Send the Error to all connected WebSocket clients
+//         //io.emit('runError', data.toString());
+//         io.emit('output', data.toString());
+//     });
+//     //use websocket to send the result to the client
+//     docker_process.on('close', async(code) => {
+//         const endTime = Date.now();
+//         const timeTaken = (endTime - startTime)/1000 ;
+//         console.log(`Time took: ${timeTaken}s`);
+
+//         if (code === 0) {
+//             console.log(`docker run completed successfully.`);
+//             // Delete all the files in the temp directory
+//             await fs.promises.rm(tempPath, { recursive: true });
+//             //io.emit('runMessage', `[${timeTaken}s] Docker run completed successfully.`);
+//             io.emit('output', `[${timeTaken}s] Docker run completed successfully.`);
+//             console.log('temp folder deleted');
+//             res.status(200).send({ message: 'Docker run completed successfully' });
+//         } else {
+//             console.error(`docker run failed with code ${code}`);
+//             io.emit('runError', `[${timeTaken}s] Error running docker.`);
+//             res.status(500).send({ message: 'Error running docker' });
+//         }
+//     });
+// });
 
 // Route to delete a file
 app.delete('/api/files/:filename', (req, res) => {
@@ -707,23 +802,6 @@ app.delete('/api/images/:imageName', (req, res) => {
         }
     });
 });
-
-// Route to run a docker image
-app.post('/api/images/docker-run', (req, res) => {
-    const { imageName, fileName } = req.body; // Get the image name and file name from the request body
-  
-    const command = `docker run --rm -v ${__dirname}/uploads:/app/uploads -v ${__dirname}/results:/app/results ${imageName} ${fileName}`;
-  
-    exec(command, (error, stdout, stderr) => {
-      if (error) {
-        console.error(`exec error: ${error}`);
-        return res.status(500).send(stderr);
-      }
-      // Send the output to all connected WebSocket clients
-      res.status(200).send(`Result saved to: /results/output-${fileName}.txt`);
-    });
-});
-
 
 // Route to execute a command and use ws to send the output to the client
 app.post('/api/command', (req, res) => {
