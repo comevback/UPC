@@ -10,7 +10,7 @@ import { fileURLToPath } from 'url';
 import { exec, spawn } from "child_process"; 
 import http from "http";
 import { Server } from "socket.io";    
-import { AI_input, checkRunResult, serviceInfo, upload, limiter, registerService, unregisterService, sendHeartbeat, sortFiles, getWorkingDir, getEntrypoint, getCmd, getAvailableShell, processFiles } from "./Components/methods.js";
+import { serviceInfo, upload, limiter, registerService, unregisterService, sendHeartbeat, getWorkingDir, getEntrypoint, getCmd, getAvailableShell } from "./Components/methods.js";
 
 const app = express();
 const server = http.createServer(app);
