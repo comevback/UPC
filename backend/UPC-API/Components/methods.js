@@ -5,7 +5,7 @@ import dotenv from 'dotenv';
 import axios from "axios";
 import rateLimit from "express-rate-limit";
 import { exec, execSync } from 'child_process';
-import OpenAI from 'openai';
+// import OpenAI from 'openai';
 
 dotenv.config();
 
@@ -14,62 +14,62 @@ const hostURL = process.env.API_URL || 'http://localhost:4000'; // TODO: Change 
 // URL of the central server
 const CENTRAL_SERVER = process.env.CENTRAL_SERVER || 'http://localhost:8000'; // TODO: Change this to the URL of your central server
 // ChatGPT API
-const CHATGPT_API = process.env.OpenAI_API_Key; // replace with your chatGPT API URL
+// const CHATGPT_API = process.env.OpenAI_API_Key; // replace with your chatGPT API URL
 
-// OpenAI
-const openai = new OpenAI({
-  apiKey: CHATGPT_API,
-});
+// // OpenAI
+// const openai = new OpenAI({
+//   apiKey: CHATGPT_API,
+// });
 
-export const AI_input = async (file_input) => {
-  try {
-    const file = await openai.files.create({
-      file: fs.createReadStream(file_input),
-      purpose: 'assistants',
-    });
+// export const AI_input = async (file_input) => {
+//   try {
+//     const file = await openai.files.create({
+//       file: fs.createReadStream(file_input),
+//       purpose: 'assistants',
+//     });
   
-    const assistant = await openai.beta.assistants.create({
-      name: "Dockerfile Generator",
-      description: "You are a developer who wants to create a Dockerfile for your project.",
-      model: "gpt-3.5-turbo-1106",
-      tools: [{"type": "code_interpreter"}, {"type": "retrieval"}],
-      file_ids: [file.id]
-    });
+//     const assistant = await openai.beta.assistants.create({
+//       name: "Dockerfile Generator",
+//       description: "You are a developer who wants to create a Dockerfile for your project.",
+//       model: "gpt-3.5-turbo-1106",
+//       tools: [{"type": "code_interpreter"}, {"type": "retrieval"}],
+//       file_ids: [file.id]
+//     });
   
-    const thread = await openai.beta.threads.create({
-      messages: [
-        {
-          "role": "user",
-          "content": "Create a Dockerfile for my project.",
-          "file_ids": [file.id]
-        }
-      ]
-    });
+//     const thread = await openai.beta.threads.create({
+//       messages: [
+//         {
+//           "role": "user",
+//           "content": "Create a Dockerfile for my project.",
+//           "file_ids": [file.id]
+//         }
+//       ]
+//     });
   
-    const run = await openai.beta.threads.runs.create(
-      thread.id,
-      { assistant_id: assistant.id }
-    );
+//     const run = await openai.beta.threads.runs.create(
+//       thread.id,
+//       { assistant_id: assistant.id }
+//     );
 
-    return (thread.id, run.id);
-  } catch (error) {
-    console.error(error);
-    return error;
-  }
-}
+//     return (thread.id, run.id);
+//   } catch (error) {
+//     console.error(error);
+//     return error;
+//   }
+// }
 
-export const checkRunResult = async (thread_id, run_id) => {
-  try {
-    const run_result = await openai.beta.threads.runs.retrieve(
-      thread_id,
-      run_id
-    );
-    return run_result;
-  } catch (error) {
-    console.error(error);
-    return error;
-  }
-}
+// export const checkRunResult = async (thread_id, run_id) => {
+//   try {
+//     const run_result = await openai.beta.threads.runs.retrieve(
+//       thread_id,
+//       run_id
+//     );
+//     return run_result;
+//   } catch (error) {
+//     console.error(error);
+//     return error;
+//   }
+// }
 
 
 // Get host information. ============================================
