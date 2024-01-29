@@ -177,6 +177,8 @@ npm start
 
 ## Workflow
 
+<img src='./docker-run-command.gif' alt='docker run command' width='1000px'/>
+
 1. Start the React(frontend) API(backend) servers and Register-Server.
 2. Compress the directory of the task in to .zip file,
 3. Upload the compressed file on React website,

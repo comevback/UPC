@@ -17,7 +17,8 @@ const ProcessForm = (props) => {
     const [formWidth, setFormWidth] = useState('45%'); 
     const [terminalWidth, setTerminalWidth] = useState('55%'); 
 
-
+    const [Language, setLanguage] = useState(["bash", "python", "c", "c++", "java", "javascript", "go", "ruby", "rust", "php", "perl", "r", "swift", "kotlin", "scala", "haskell", "clojure", "elixir", "typescript", "julia", "ocaml", "racket", "commonlisp", "fortran", "erlang", "lua", "groovy", "dart"]);
+    const [reliancesFiles, setReliancesFiles] = useState([]);
     const [portMappings, setPortMappings] = useState([{Port_Host: null, Port_Container: null}]);
     const [envVariables, setEnvVariables] = useState([{EnvKey: "", EnvValue: ""}]);
     const [volumeMappings, setVolumeMappings] = useState([{Volume_Host: null, Volume_Container: null}]);
@@ -30,6 +31,7 @@ const ProcessForm = (props) => {
             Background: false,
             // FileInput: false,
             files: props.selectedFiles,
+            reliancesFiles: [],
             portMappings: [],
             envVariables: [],
             volumeMappings: [],
@@ -184,6 +186,13 @@ const ProcessForm = (props) => {
                 ...formDatas,
                 volumeMappings: volumeMappings
             };
+        } else if (name.startsWith("reliancesFiles")) {
+            const newReliancesFiles = Array.from(event.target.selectedOptions, option => option.value);
+            setReliancesFiles(newReliancesFiles);
+            updatedFormDatas = {
+                ...formDatas,
+                reliancesFiles: reliancesFiles
+            };
         } else {
                 updatedFormDatas = {
                 ...formDatas,
@@ -249,7 +258,7 @@ const ProcessForm = (props) => {
         }
     }
 
-    const handleSubmit = async (event) => {
+    const handleDockerRun = async (event) => {
         event.preventDefault();
         const dockerCommand = event.target.Docker_command.value;
         terminal.current.focus();
@@ -258,7 +267,7 @@ const ProcessForm = (props) => {
 
     return(
         <div className="processing">
-            <form className="processing-form" style={{ width: formWidth }} onSubmit={handleSubmit} onChange={handleInputChange}>
+            <form className="processing-form" style={{ width: formWidth }} onSubmit={handleDockerRun} onChange={handleInputChange}>
                 <label htmlFor="DockerImages" className="processing-info">Docker image:</label>
                 <select className="processing-select" name="DockerImages" id="DockerImages" defaultValue={props.selectedImages} >
                     {props.images.map((image) => (
@@ -269,28 +278,45 @@ const ProcessForm = (props) => {
 
                 <label htmlFor="Interactive" className="processing-checkbox-label">
                     <input className="processing-checkbox" type="checkbox" name="Interactive" id="Interactive" />
-                    Interactive
+                    Interactive (-it)
                 </label>
                 
                 <label htmlFor="Remove" className="processing-checkbox-label">
                     <input className="processing-checkbox" type="checkbox" name="Remove" id="Remove"/>
-                    Remove after execution
+                    Remove after execution (--rm)
                 </label>
 
                 <label htmlFor="Background" className="processing-checkbox-label">
                     <input className="processing-checkbox" type="checkbox" name="Background" id="Background"/>
-                    Run on background
+                    Run on background (-d)
                 </label>
 
                 <label htmlFor="Execute" className="processing-checkbox-label">
                     <input className="processing-checkbox" type="checkbox" name="Execute" id="Execute"/>
-                    Execute directly
+                    Execute directly (Enter)
                 </label>
+
+                <label htmlFor="Language" className="processing-Language">Language:</label>
+                <select className="processing-select" name="Language" id="Language" defaultValue="bash">
+                    {Language.map((language) => (
+                            <option key={language} value={language}>{language}</option>
+                        ))
+                    }
+                </select>
+
                 
                 <label htmlFor="files" className="processing-info">Files:</label>
                 <select className="processing-select" name="files" id="files" defaultValue={props.selectedFiles} multiple>
                     {props.files.map((file) => (
                             <option key={file} value={file} selected={props.selectedFiles.includes(file)} >{file}</option>
+                        ))
+                    }
+                </select>
+
+                <label htmlFor="reliancesFiles" className="processing-info">Reliances Files:</label>
+                <select className="processing-select" name="reliancesFiles" id="reliancesFiles" multiple>
+                    {props.files.map((file) => (
+                            <option key={file} value={file}>{file}</option>
                         ))
                     }
                 </select>
@@ -340,8 +366,11 @@ const ProcessForm = (props) => {
 
                 <label htmlFor="Docker_command" className="processing-label">Docker Command:</label>
                 <textarea key={dockerCommand} className="processing-command" name="Docker_command" id="Docker_command" defaultValue={dockerCommand}/>
-               
-                <button className="processing-button">Submit</button>
+                
+                <div className="processing-buttons">
+                    <button className="processing-button">Generate Image</button>
+                    <button className="processing-button">Docker Run</button>
+                </div>
             </form>
 
             <div className="resizer"></div>

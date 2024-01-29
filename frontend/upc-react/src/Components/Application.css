@@ -223,19 +223,24 @@ li:hover{
     box-shadow: 0 0 5px #000000;
 }
 
-li.selected{
+/* li.selected{
     font-weight: bold;
     --rotation-angle: 0deg;
     --border-width: 2px; 
     background-image: conic-gradient(from var(--rotation-angle),#fff, #fff), conic-gradient(from var(--rotation-angle) , #FFADAD, #FFD6A5, #FDFFB6, #CAFFBF, #9BF6FF, #A0C4FF, #BDB2FF, #FFC6FF );
-    background-size: calc(100% - var(--border-width) * 2) calc(100% - var(--border-width) * 2), cover; /* "cover" is for the second background-image */
+    background-size: calc(100% - var(--border-width) * 2) calc(100% - var(--border-width) * 2), cover; 
     background-position: center center;
-    background-repeat: no-repeat; /* Do not repeat the image */
+    background-repeat: no-repeat; 
     animation: animate 2s linear infinite;
+} */
+
+li.selected{
+    background-color: #f1fbff;
 }
 
 li.selected:hover{
     box-shadow: none;
+    box-shadow: 0 0 5px #000000;
 }
 
 @keyframes bnwBorder {
