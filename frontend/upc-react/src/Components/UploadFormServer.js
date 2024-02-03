@@ -1,18 +1,18 @@
 // UploadForm.js
 import { useContext, useState, useEffect } from "react";
-import { uploadData } from '../Tools/api';
+import { uploadData_server } from '../Tools/api';
 import { ParaContext } from "../Global.js";
 import './UploadForm.css';
 
-const UploadForm = (props) => {
+const UploadFormServer = (props) => {
     const [files, setFiles] = useState([]);
     const [uploadStatus, setUploadStatus] = useState('○');
-    const { API_URL } = useContext(ParaContext);
+    const { CENTRAL_SERVER_URL } = useContext(ParaContext);
     const [dragging, setDragging] = useState(false);
 
     useEffect(() => {
-        props.refreshFiles();
-    }, [API_URL]);
+        props.refreshFilesServer();
+    }, [CENTRAL_SERVER_URL]);
 
     const handleDragOver = (event) => {
         event.preventDefault(); // 阻止默认行为
@@ -42,13 +42,13 @@ const UploadForm = (props) => {
         });// Add the file to formData
 
         // Send formData to server using fetch or axios
-        const result = await uploadData(API_URL, formData);
+        const result = await uploadData_server(CENTRAL_SERVER_URL, formData);
         if (result.length > 0) {
             setUploadStatus('✓');
         } else {
             setUploadStatus('✗');
         } // Display the result from the server
-        props.refreshFiles(); // Refresh the list of files
+        props.refreshFilesServer(); // Refresh the list of files
         setFiles([]); // Clear the file input
 
         console.log(files);
@@ -70,13 +70,13 @@ const UploadForm = (props) => {
         });// Add the file to formData
 
         // Send formData to server using fetch or axios
-        const result = await uploadData(API_URL, formData);
+        const result = await uploadData_server(CENTRAL_SERVER_URL, formData);
         if (result.length > 0) {
             setUploadStatus('✓');
         } else {
             setUploadStatus('✗');
         } // Display the result from the server
-        props.refreshFiles(); // Refresh the list of files
+        props.refreshFilesServer(); // Refresh the list of files
         setFiles([]); // Clear the file input
 
         // window scrollTo bottom
@@ -111,4 +111,4 @@ const UploadForm = (props) => {
     );
 }
 
-export default UploadForm;
+export default UploadFormServer;

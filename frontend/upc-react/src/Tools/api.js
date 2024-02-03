@@ -77,40 +77,21 @@ export const checkConnection = async (API_URL) => {
     }
 };
 
-// export const uploadData = async (API_URL, data) => {
-//         try {
-//                 const response = await axios.post(`${API_URL}/api/upload`, data);
-//                 console.log(response.data)
-//                 return response.data;
-//         } catch (error) {
-//                 console.error(error);
-//         }
-// };
-
-export const uploadData = async (CENTRAL_SERVER_URL, data) => {
-    try {
-            const response = await axios.post(`${CENTRAL_SERVER_URL}/upload`, data);
-            console.log(response.data)
-            return response.data;
-    } catch (error) {
-            console.error(error);
-    }
+// upload files
+export const uploadData = async (API_URL, data) => {
+        try {
+                const response = await axios.post(`${API_URL}/api/upload`, data);
+                console.log(response.data)
+                return response.data;
+        } catch (error) {
+                console.error(error);
+        }
 };
 
 // Get the list of files
-// export const getFiles = async (API_URL) => {
-//     try {
-//         const response = await axios.get(`${API_URL}/api/files`);
-//         return response.data;
-//     } catch (error) {
-//         console.error('Error fetching files:', error);
-//         return [];
-//     }
-// };
-
-export const getFiles = async (CENTRAL_SERVER_URL) => {
+export const getFiles = async (API_URL) => {
     try {
-        const response = await axios.get(`${CENTRAL_SERVER_URL}/files`);
+        const response = await axios.get(`${API_URL}/api/files`);
         return response.data;
     } catch (error) {
         console.error('Error fetching files:', error);
@@ -141,19 +122,9 @@ export const getTemps = async (API_URL) => {
 };
 
 //delete a file
-// export const deleteFile = async (API_URL, fileName) => {
-//     try {
-//         const response = await axios.delete(`${API_URL}/api/files/${fileName}`);
-//         console.log(response.data);
-//         return response.data;
-//     } catch (error) {
-//         console.error('Error deleting file:', error);
-//     }
-// };
-
-export const deleteFile = async (CENTRAL_SERVER_URL, fileName) => {
+export const deleteFile = async (API_URL, fileName) => {
     try {
-        const response = await axios.delete(`${CENTRAL_SERVER_URL}/files/${fileName}`);
+        const response = await axios.delete(`${API_URL}/api/files/${fileName}`);
         console.log(response.data);
         return response.data;
     } catch (error) {
@@ -448,3 +419,204 @@ export const processFile = async (API_URL, fileName) => {
 };
 
 
+// With Register Server ----------------------------------------------------------------------------------------
+
+// upload files to Register Server
+export const uploadData_server = async (CENTRAL_SERVER_URL, data) => {
+    try {
+            const response = await axios.post(`${CENTRAL_SERVER_URL}/upload`, data);
+            console.log(response.data)
+            return response.data;
+    } catch (error) {
+            console.error(error);
+    }
+};
+
+// Get the list of files from Register Server
+export const getFiles_server = async (CENTRAL_SERVER_URL) => {
+    try {
+        console.log('tryin to get files');
+        const response = await axios.get(`${CENTRAL_SERVER_URL}/files`);
+        return response.data;
+    } catch (error) {
+        console.error('Error fetching files:', error);
+        return [];
+    }
+};
+
+// Get the list of results from Register Server
+export const getResults_server = async (CENTRAL_SERVER_URL) => {
+    try {
+        const response = await axios.get(`${CENTRAL_SERVER_URL}/results`);
+        return response.data;
+    } catch (error) {
+        console.error('Error fetching results:', error);
+        return [];
+    }
+};
+
+//delete a file from Register Server
+export const deleteFile_server = async (CENTRAL_SERVER_URL, fileName) => {
+    try {
+        const response = await axios.delete(`${CENTRAL_SERVER_URL}/files/${fileName}`);
+        console.log(response.data);
+        return response.data;
+    } catch (error) {
+        console.error('Error deleting file:', error);
+    }
+};
+
+// Delete all selected files from Register Server
+export const deleteAllFiles_server = async (CENTRAL_SERVER_URL, fileNames) => {
+    try {
+        const response = await axios.delete(`${CENTRAL_SERVER_URL}/files`, { data: { files: { fileNames } }});
+        console.log(response.data);
+    } catch (error) {
+        console.error('Error deleting files:', error);
+    }
+}
+
+//delete a result from Register Server
+export const deleteResult_server = async (CENTRAL_SERVER_URL, fileName) => {
+    try {
+        const response = await axios.delete(`${CENTRAL_SERVER_URL}/results/${fileName}`);
+        console.log(response.data);
+        return response.data;
+    } catch (error) {
+        console.error('Error deleting result:', error);
+    }
+}
+
+// Delete all selected results from Register Server
+export const deleteAllResult_server = async (CENTRAL_SERVER_URL, fileNames) => {
+    try {
+        const response = await axios.delete(`${CENTRAL_SERVER_URL}/results`, { data: { files: { fileNames } }});
+        console.log(response.data);
+    } catch (error) {
+        console.error('Error deleting results:', error);
+    }
+}
+
+// Download a file from Register Server
+export const downloadFile_server = async (CENTRAL_SERVER_URL, fileName) => {
+    try {
+        const response = await axios({
+            url: `${CENTRAL_SERVER_URL}/files/${fileName}`,
+            method: 'GET',
+            responseType: 'blob',
+        });
+        const url = window.URL.createObjectURL(new Blob([response.data]));
+        const link = document.createElement('a');
+        link.href = url;
+        link.setAttribute('download', fileName);
+        document.body.appendChild(link);
+        link.click();
+    } catch (error) {
+        console.error('Error downloading file:', error);
+    }
+};
+
+// Download all files one by one from Register Server
+export const downloadAllFiles_server = async (CENTRAL_SERVER_URL, fileNames) => {
+    try {
+        // use Promise.all to download all files
+        await Promise.all(fileNames.map(async (fileName) => {
+            const response = await axios({
+                url: `${CENTRAL_SERVER_URL}/files/${fileName}`,
+                method: 'GET',
+                responseType: 'blob',
+            });
+            const url = window.URL.createObjectURL(new Blob([response.data]));
+            const link = document.createElement('a');
+            link.href = url;
+            link.setAttribute('download', fileName);
+            document.body.appendChild(link);
+            link.click();
+        }));
+    } catch (error) {
+        console.error('Error downloading files:', error);
+    }
+}
+
+// Download all files in a zip file from Register Server
+export const downloadAllFilesZip_server = async (CENTRAL_SERVER_URL, fileNames) => {
+    try {
+        const response = await axios({
+            url: `${CENTRAL_SERVER_URL}/files/download`,
+            method: 'POST',
+            responseType: 'blob',
+            data: { fileNames },
+        });
+        const url = window.URL.createObjectURL(new Blob([response.data]));
+        const link = document.createElement('a');
+        link.href = url;
+        const FileName = 'Files-' + Date.now()+ '.zip';
+        link.setAttribute('download', FileName);
+        document.body.appendChild(link);
+        link.click();
+    } catch (error) {
+        console.error('Error downloading files:', error);
+    }
+}
+
+// Download a result from Register Server
+export const downloadResult_server = async (CENTRAL_SERVER_URL, fileName) => {
+    try {
+        const response = await axios({
+            url: `${CENTRAL_SERVER_URL}/results/${fileName}`,
+            method: 'GET',
+            responseType: 'blob',
+        });
+        const url = window.URL.createObjectURL(new Blob([response.data]));
+        const link = document.createElement('a');
+        link.href = url;
+        link.setAttribute('download', fileName);
+        document.body.appendChild(link);
+        link.click();
+    } catch (error) {
+        console.error('Error downloading result:', error);
+    }
+};
+
+// Download all results one by one from Register Server
+export const downloadAllResult_server = async (CENTRAL_SERVER_URL, fileNames) => {
+    try {
+        // use Promise.all to download all results
+        await Promise.all(fileNames.map(async (fileName) => {
+            const response = await axios({
+                url: `${CENTRAL_SERVER_URL}/results/${fileName}`,
+                method: 'GET',
+                responseType: 'blob',
+            });
+            const url = window.URL.createObjectURL(new Blob([response.data]));
+            const link = document.createElement('a');
+            link.href = url;
+            link.setAttribute('download', fileName);
+            document.body.appendChild(link);
+            link.click();
+        }));
+    } catch (error) {
+        console.error('Error downloading results:', error);
+    }
+}
+
+// Download all results in a zip file from Register Server
+export const downloadAllResultZip_server = async (CENTRAL_SERVER_URL, fileNames) => {
+    try {
+        const response = await axios({
+            url: `${CENTRAL_SERVER_URL}/results/download`,
+            method: 'POST',
+            responseType: 'blob',
+            data: { fileNames },
+        });
+        const url = window.URL.createObjectURL(new Blob([response.data]));
+        const link = document.createElement('a');
+        link.href = url;
+        const resultFileName = 'Result-' + Date.now()+ '.zip';
+        link.setAttribute('download', resultFileName);
+        document.body.appendChild(link);
+        link.click();
+    } catch (error) {
+        console.error('Error downloading results:', error);
+    }
+}

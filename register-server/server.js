@@ -2,11 +2,15 @@ import express from "express";
 import cors from 'cors';
 import fs from 'fs';
 import path from 'path';
+import { dirname } from 'path';
+import { fileURLToPath } from 'url';
 import { upload, checkDatabaseConnection, BackendService, FrontendService, backendServices, frontendServices, readServicesFromFile, writeServicesToFile, CleanUpDataBase, CleanUpLocal } from "./Components/method.js";
 
 const Server_URL = 'http://localhost:8000';
 const port = process.env.REGI_PORT || 8000; 
 const app = express();
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = dirname(__filename);
 app.use(express.json());
 app.use(express.static("public"));
 app.set('view engine', 'ejs');
