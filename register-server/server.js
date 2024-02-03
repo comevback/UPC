@@ -161,47 +161,15 @@ app.post('/service-heartbeat', async (req, res) => {
 
 // FRONTEND SERVERS --------------------------------------------------------------------------------------------
 
-
-// Register frontend server 
-// app.post('/frontend/register-service', async (req, res) => {
-//     const { _id, url } = req.body;
-//     console.log('register-service', req.body);
-    
-//     if (isDbConnected) {
-//       const newService = new FrontendService({
-//         _id,
-//         url,
-//         createdAt: new Date()
-//       });
-//       await FrontendService.findOneAndUpdate({ _id: _id }, newService, { upsert: true }) // upsert: true means if the service is not found, insert it
-//       .then((service) => {
-//         console.log(`Service ${service._id} registered successfully`);
-//         res.status(201).json(service);
-//       })
-//       .catch((error) => {
-//         console.log(error);
-//         res.status(500).json({ message: error.message });
-//       });
-//   } else {
-//       frontendServices[url] = {
-//         _id,
-//         url,
-//         createdAt: new Date()
-//       };
-//       writeServicesToFile();
-//       console.log(`Service ${_id} registered successfully`);
-//       res.status(201).send({ URL: Server_URL }); // 201 Created
-//     }
-// });
-
 // Register frontend server
 app.post('/frontend/register-service', async (req, res) => {
-  const { _id, url } = req.body;
+  const { _id, url, publicUrl } = req.body;
   try {
     if (isDbConnected) {
       const newService = new FrontendService({
         _id,
         url,
+        publicURL: publicUrl,
         createdAt: new Date()
       });
       await FrontendService.findOneAndUpdate({ _id: _id }, newService, { upsert: true }) // upsert: true means if the service is not found, insert it

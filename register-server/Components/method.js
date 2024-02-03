@@ -50,6 +50,10 @@ const checkDatabaseConnection = async () => {
         type: String,
         required: true
       },
+      publicURL: {
+        type: String,
+        required: false
+      },
       endpoints: [{
         type: String,
         required: true
@@ -82,6 +86,10 @@ const checkDatabaseConnection = async () => {
       url: {
         type: String,
         required: true
+      },
+      publicURL: {
+        type: String,
+        required: false
       },
       createdAt: {
         type: Date,
