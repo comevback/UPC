@@ -15,8 +15,7 @@ const backendIP = `http://${response.data.ip}:4000`;
 console.log('Backend IP:', backendIP);
 
 // URL of this service
-//const hostURL = process.env.API_URL || 'http://localhost:4000'; // TODO: Change this to the URL of your service
-const hostURL = process.env.API_URL || backendIP; // TODO: Change this to the URL of your service
+const hostURL = process.env.API_URL || 'http://localhost:4000'; // TODO: Change this to the URL of your service
 // URL of the central server
 const CENTRAL_SERVER = process.env.CENTRAL_SERVER || 'http://18.179.12.207:8000'; // TODO: Change this to the URL of your central server
 // ChatGPT API
@@ -33,7 +32,7 @@ const CENTRAL_SERVER = process.env.CENTRAL_SERVER || 'http://18.179.12.207:8000'
 //       file: fs.createReadStream(file_input),
 //       purpose: 'assistants',
 //     });
-  
+
 //     const assistant = await openai.beta.assistants.create({
 //       name: "Dockerfile Generator",
 //       description: "You are a developer who wants to create a Dockerfile for your project.",
@@ -109,6 +108,7 @@ const id = `API: ${hostURL}`; // TODO: Change this to a unique ID for your servi
 export const serviceInfo = {
   _id: id,
   url: hostURL, // TODO: Change this to the URL of your service
+  publicUrl: backendIP,
   endpoints: [
     '/',
     '/register',

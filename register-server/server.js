@@ -67,12 +67,13 @@ app.get('/list-services', async (req, res) => {
 
 // Register a service
 app.post('/register-service', async (req, res) => {
-    const { _id, url, endpoints, hostInfo } = req.body;
+    const { _id, url, publicUrl, endpoints, hostInfo } = req.body;
     try {
       if (isDbConnected) {
         const newService = new BackendService({
           _id,
           url,
+          publicURL: publicUrl,
           createdAt: new Date(),
           endpoints,
           hostInfo
@@ -90,6 +91,7 @@ app.post('/register-service', async (req, res) => {
         backendServices[_id] = {
           _id,
           url,
+          publicURL: publicUrl,
           endpoints,
           hostInfo,
           createdAt: new Date(),
@@ -185,6 +187,7 @@ app.post('/frontend/register-service', async (req, res) => {
       frontendServices[url] = {
         _id,
         url,
+        publicURL: publicUrl,
         createdAt: new Date(),
         lastHeartbeat: new Date()
       };

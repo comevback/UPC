@@ -41,6 +41,11 @@
                             <strong>Documentation:</strong> <br><a href="<%= service.url %>" target="_blank">
                                 <%= service.url %>
                             </a><br>
+                            <% if(service.publicURL) { %>
+                                <strong>Public URL:</strong> <a href="<%= service.publicURL %>" target="_blank">
+                                    <%= service.publicURL %>
+                                </a>
+                            <% } %>
                             <strong>HostInfo:</strong>
                             <ul>
                                 <% for (const key in service.hostInfo) { %>
