@@ -17,7 +17,7 @@
                 <strong>Name:</strong>
                 <%= service._id %><br>
                 <br>
-                    <strong>URL:</strong> <a href="<%= service.url %>" target="_blank">
+                    <strong>URL(LAN IP):</strong> <a href="<%= service.url %>" target="_blank">
                         <%= service.url %>
                     </a>
                     <% if (service.publicURL) { %>
@@ -39,7 +39,7 @@
                         <strong>ID:</strong>
                         <%= service._id %><br>
                         <br>
-                            <strong>Documentation:</strong> <br><a href="<%= service.url %>" target="_blank">
+                            <strong>Documentation(LAN IP):</strong> <br><a href="<%= service.url %>" target="_blank">
                                 <%= service.url %>
                             </a>
                             <% if(service.publicURL) { %>
