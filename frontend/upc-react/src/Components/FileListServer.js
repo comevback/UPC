@@ -83,7 +83,7 @@ const FileListServer = (props) => {
 
     return (
         <div>
-            <h1>Uploaded</h1>
+            <h1>Uploaded (Register Server)</h1>
             <ul className="file-list">
                 <li className='file-item example'>
                     <div className='name-and-buttons'>

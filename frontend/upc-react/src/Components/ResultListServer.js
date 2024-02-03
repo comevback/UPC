@@ -52,7 +52,7 @@ const ResultListServer = (props) => {
     if (!props.resultsServer.length){
         return (
             <div>
-                <h1>Results</h1>
+                <h1>Results (Register Server)</h1>
                 <ul className="result-list">
                 <li className='result-item example'>
                     <div className='name-and-buttons'>
