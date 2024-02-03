@@ -21,7 +21,6 @@
                         <%= service.url %>
                     </a>
                     <% if (service.publicURL) { %>
-                        <br>
                         <strong>Public URL:</strong> <a href="<%= service.publicURL %>" target="_blank">
                             <%= service.publicURL %>
                         </a>
@@ -42,7 +41,7 @@
                         <br>
                             <strong>Documentation:</strong> <br><a href="<%= service.url %>" target="_blank">
                                 <%= service.url %>
-                            </a><br>
+                            </a>
                             <% if(service.publicURL) { %>
                                 <strong>Public URL:</strong> <a href="<%= service.publicURL %>" target="_blank">
                                     <%= service.publicURL %>
