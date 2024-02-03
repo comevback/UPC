@@ -7,7 +7,7 @@ import './UploadForm.css';
 const UploadForm = (props) => {
     const [files, setFiles] = useState([]);
     const [uploadStatus, setUploadStatus] = useState('○');
-    const { API_URL } = useContext(ParaContext);
+    const { API_URL, CENTRAL_SERVER_URL } = useContext(ParaContext);
     const [dragging, setDragging] = useState(false);
 
     useEffect(() => {
@@ -70,7 +70,7 @@ const UploadForm = (props) => {
         });// Add the file to formData
 
         // Send formData to server using fetch or axios
-        const result = await uploadData(API_URL, formData);
+        const result = await uploadData(CENTRAL_SERVER_URL, formData);
         if (result.length > 0) {
             setUploadStatus('✓');
         } else {

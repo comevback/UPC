@@ -1,3 +1,4 @@
+import multer from 'multer';
 import fs from 'fs';
 import mongoose from 'mongoose';
 import dotenv from 'dotenv';
@@ -5,6 +6,25 @@ dotenv.config("../.env");
 
 let BackendService, FrontendService;
 
+
+
+// Upload Function ============================================
+const dir = './uploads';
+if (!fs.existsSync(dir)){
+    fs.mkdirSync(dir);
+}
+
+const storage = multer.diskStorage({
+    destination: (req, file, cb) => {
+        cb(null, dir) // Destination folder
+    },
+    filename: (req, file, cb) => {
+        //cb(null, file.originalname + '_' + Date.now() + path.extname(file.originalname)) // Filename + timestamp
+        cb(null, file.originalname) // Filename + timestamp originalname
+    }
+});
+
+export const upload = multer({ storage });
 
 // MongoDB Cloud--------------------------------------------------------------------------------------------
 

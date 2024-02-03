@@ -77,20 +77,40 @@ export const checkConnection = async (API_URL) => {
     }
 };
 
-export const uploadData = async (API_URL, data) => {
-        try {
-                const response = await axios.post(`${API_URL}/api/upload`, data);
-                console.log(response.data)
-                return response.data;
-        } catch (error) {
-                console.error(error);
-        }
+// export const uploadData = async (API_URL, data) => {
+//         try {
+//                 const response = await axios.post(`${API_URL}/api/upload`, data);
+//                 console.log(response.data)
+//                 return response.data;
+//         } catch (error) {
+//                 console.error(error);
+//         }
+// };
+
+export const uploadData = async (CENTRAL_SERVER_URL, data) => {
+    try {
+            const response = await axios.post(`${CENTRAL_SERVER_URL}/upload`, data);
+            console.log(response.data)
+            return response.data;
+    } catch (error) {
+            console.error(error);
+    }
 };
 
 // Get the list of files
-export const getFiles = async (API_URL) => {
+// export const getFiles = async (API_URL) => {
+//     try {
+//         const response = await axios.get(`${API_URL}/api/files`);
+//         return response.data;
+//     } catch (error) {
+//         console.error('Error fetching files:', error);
+//         return [];
+//     }
+// };
+
+export const getFiles = async (CENTRAL_SERVER_URL) => {
     try {
-        const response = await axios.get(`${API_URL}/api/files`);
+        const response = await axios.get(`${CENTRAL_SERVER_URL}/files`);
         return response.data;
     } catch (error) {
         console.error('Error fetching files:', error);
@@ -121,9 +141,19 @@ export const getTemps = async (API_URL) => {
 };
 
 //delete a file
-export const deleteFile = async (API_URL, fileName) => {
+// export const deleteFile = async (API_URL, fileName) => {
+//     try {
+//         const response = await axios.delete(`${API_URL}/api/files/${fileName}`);
+//         console.log(response.data);
+//         return response.data;
+//     } catch (error) {
+//         console.error('Error deleting file:', error);
+//     }
+// };
+
+export const deleteFile = async (CENTRAL_SERVER_URL, fileName) => {
     try {
-        const response = await axios.delete(`${API_URL}/api/files/${fileName}`);
+        const response = await axios.delete(`${CENTRAL_SERVER_URL}/files/${fileName}`);
         console.log(response.data);
         return response.data;
     } catch (error) {
