@@ -166,36 +166,44 @@ app.post('/service-heartbeat', async (req, res) => {
 app.post('/frontend/register-service', async (req, res) => {
     const { _id, url } = req.body;
     console.log('register-service', req.body);
-    
-    if (isDbConnected) {
-      const newService = new FrontendService({
-        _id,
-        url,
-        createdAt: new Date()
-      });
-      await FrontendService.findOneAndUpdate({ _id: _id }, newService, { upsert: true }) // upsert: true means if the service is not found, insert it
-      .then((service) => {
+    try{
+      if (isDbConnected) {
+        const newService = new FrontendService({
+          _id,
+          url,
+          createdAt: new Date()
+        });
+
+        const service = await FrontendService.findOneAndUpdate(
+          { _id: _id }, 
+          newService, 
+          { upsert: true }
+        ) // upsert: true means if the service is not found, insert it
+
+        if (!service) {
+          throw new Error('Service registration failed, no service returned');
+        }
         console.log(`Service ${service._id} registered successfully`);
         res.status(201).json(service);
-      })
-      .catch((error) => {
-        console.log(error);
-        res.status(500).json({ message: error.message });
-      });
-  } else {
-      frontendServices[url] = {
-        _id,
-        url,
-        createdAt: new Date()
-      };
-      writeServicesToFile();
-      console.log(`Service ${_id} registered successfully`);
-      res.status(201).send({ URL: Server_URL }); // 201 Created
+
+    } else {
+        frontendServices[url] = {
+          _id,
+          url,
+          createdAt: new Date()
+        };
+        writeServicesToFile();
+        console.log(`Service ${_id} registered successfully`);
+        res.status(201).send({ URL: Server_URL }); // 201 Created
+      }
+    } catch (error) {
+      console.error('Failed to register service:', error);
+      res.status(500).json({ message: error.message || 'Internal Server Error' });
     }
 });
 
 // Unregister frontend server 
-app.post('/frontend/unregister-service', async (req, res) => {
+app.delete('/frontend/unregister-service', async (req, res) => {
     const { _id } = req.body;
     if (isDbConnected) {
         const service = await FrontendService.findByIdAndDelete(_id);
