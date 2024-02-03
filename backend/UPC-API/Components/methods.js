@@ -9,10 +9,16 @@ import { exec, execSync } from 'child_process';
 
 dotenv.config();
 
+// Get the IP of the backend server
+const response = await axios.get('https://api.ipify.org?format=json');
+const backendIP = `http://${response.data.ip}:4000`;
+console.log('Backend IP:', backendIP);
+
 // URL of this service
-const hostURL = process.env.API_URL || 'http://localhost:4000'; // TODO: Change this to the URL of your service
+//const hostURL = process.env.API_URL || 'http://localhost:4000'; // TODO: Change this to the URL of your service
+const hostURL = process.env.API_URL || backendIP; // TODO: Change this to the URL of your service
 // URL of the central server
-const CENTRAL_SERVER = process.env.CENTRAL_SERVER || 'http://localhost:8000'; // TODO: Change this to the URL of your central server
+const CENTRAL_SERVER = process.env.CENTRAL_SERVER || 'http://18.179.12.207:8000'; // TODO: Change this to the URL of your central server
 // ChatGPT API
 // const CHATGPT_API = process.env.OpenAI_API_Key; // replace with your chatGPT API URL
 

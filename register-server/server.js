@@ -165,7 +165,8 @@ app.post('/service-heartbeat', async (req, res) => {
 // Register frontend server 
 app.post('/frontend/register-service', async (req, res) => {
     const { _id, url } = req.body;
-
+    console.log('register-service', req.body);
+    
     if (isDbConnected) {
       const newService = new FrontendService({
         _id,
@@ -194,7 +195,7 @@ app.post('/frontend/register-service', async (req, res) => {
 });
 
 // Unregister frontend server 
-app.delete('/frontend/unregister-service', async (req, res) => {
+app.post('/frontend/unregister-service', async (req, res) => {
     const { _id } = req.body;
     if (isDbConnected) {
         const service = await FrontendService.findByIdAndDelete(_id);
@@ -228,7 +229,7 @@ app.post('/frontend/service-heartbeat', async (req, res) => {
     res.status(200)
   }
 });
-  
+
 // Start the Server --------------------------------------------------------------------------------------------
 
 app.listen(port, () => {

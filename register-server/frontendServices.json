@@ -2,6 +2,7 @@
   "http://localhost:3000": {
     "_id": "React Frontend Service",
     "url": "http://localhost:3000",
-    "createdAt": "2023-11-21T02:31:20.459Z"
+    "createdAt": "2024-01-31T07:45:45.233Z",
+    "lastHeartbeat": 1706703962226
   }
 }
