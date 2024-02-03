@@ -1,4 +1,5 @@
 import axios from 'axios';
+import os from 'os';
 
 // Get the Public frontend IP
 const response = await axios.get('https://api.ipify.org?format=json');
