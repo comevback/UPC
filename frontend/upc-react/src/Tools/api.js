@@ -1,9 +1,29 @@
 import axios from 'axios';
 
-// Get the frontend IP
+// Get the Public frontend IP
 const response = await axios.get('https://api.ipify.org?format=json');
-const publicFrontIP = `http://${response.data.ip}:3000`;
-console.log('Frontend IP:', publicFrontIP);
+const publicFrontUrl = `http://${response.data.ip}:3000`;
+console.log('Frontend IP:', publicFrontUrl);
+
+// Get the Local frontend IP
+const getLocalIPAddress = () =>{
+    const interfaces = os.networkInterfaces();
+    for (const devName in interfaces) {
+      const iface = interfaces[devName];
+  
+      for (let i = 0; i < iface.length; i++) {
+        const alias = iface[i];
+        if (alias.family === 'IPv4' && alias.address !== '127.0.0.1' && !alias.internal) {
+          return alias.address;
+        }
+      }
+    }
+    return '0.0.0.0';
+  }
+  
+  const localIP = getLocalIPAddress();
+  const localFrontURL = `http://${localIP}:4000`;
+  console.log(`Frontend Local IP Address: ${localIP}`);
 
 // With Central Server ----------------------------------------------------------------------------------------
 
@@ -22,8 +42,8 @@ export const registerService = async (CENTRAL_SERVER_URL) => {
     try {
       const response = await axios.post(`${CENTRAL_SERVER_URL}/frontend/register-service`, {
         _id: 'React Frontend Service',
-        url: window.location.origin,
-        publicUrl: publicFrontIP,
+        url: localFrontURL,
+        publicUrl: publicFrontUrl,
       });
       console.log('Service registered, Server: ', response.data);
       return (response.data);
@@ -37,8 +57,8 @@ export const unregisterService = async (CENTRAL_SERVER_URL) => {
     try {
       const response = await axios.delete(`${CENTRAL_SERVER_URL}/frontend/unregister-service`, {
         _id: 'React Frontend Service',
-        url: window.location.origin,
-        publicUrl: publicFrontIP,
+        url: localFrontURL,
+        publicUrl: publicFrontUrl,
       });
       console.log('Service unregistered:', response.data);
       return (response.data);
@@ -52,8 +72,8 @@ export const sendHeartbeat = async (CENTRAL_SERVER_URL) => {
     try {
         await axios.post(`${CENTRAL_SERVER_URL}/frontend/service-heartbeat`, {
             _id: 'React Frontend Service',
-            url: window.location.origin,
-            publicUrl: publicFrontIP,
+            url: localFrontURL,
+            publicUrl: publicFrontUrl,
         });
         console.log('Heartbeat sent: ————' + new Date(Date.now()).toLocaleString());
     } catch (error) {
