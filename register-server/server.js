@@ -2,7 +2,7 @@ import express from "express";
 import cors from 'cors';
 import fs from 'fs';
 import path from 'path';
-import { checkDatabaseConnection, BackendService, FrontendService, backendServices, frontendServices, readServicesFromFile, writeServicesToFile, CleanUpDataBase, CleanUpLocal } from "./Components/method.js";
+import { upload, checkDatabaseConnection, BackendService, FrontendService, backendServices, frontendServices, readServicesFromFile, writeServicesToFile, CleanUpDataBase, CleanUpLocal } from "./Components/method.js";
 
 const Server_URL = 'http://localhost:8000';
 const port = process.env.REGI_PORT || 8000; 
