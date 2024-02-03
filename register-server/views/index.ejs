@@ -19,8 +19,12 @@
                     <strong>URL:</strong> <a href="<%= service.url %>" target="_blank">
                         <%= service.url %>
                     </a>
-                    <strong>PublicURL:</strong> <a href="<%= service.publicURL %>" target="_blank">
-                        <%= service.publicURL %>
+                    <% if (service.publicURL) { %>
+                        <br>
+                        <strong>Public URL:</strong> <a href="<%= service.publicURL %>" target="_blank">
+                            <%= service.publicURL %>
+                        </a>
+                    <% } %>
                     <div class="register-time">
                         <strong>CreatedAt At:</strong>
                         <%= new Date(service.createdAt).toLocaleString() %><br>
