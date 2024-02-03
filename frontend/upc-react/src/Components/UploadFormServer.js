@@ -78,13 +78,6 @@ const UploadFormServer = (props) => {
         } // Display the result from the server
         props.refreshFilesServer(); // Refresh the list of files
         setFiles([]); // Clear the file input
-
-        // window scrollTo bottom
-        window.scrollTo({
-            top: 10000,
-            right: 0,
-            behavior: 'smooth'
-        });
     };
 
     let uploadStatusClass = 'upload-status';
