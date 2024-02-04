@@ -331,23 +331,12 @@ app.post('/files/download', async(req, res) => {
 
   const zip = spawn('zip', ['-r', zipFileName, ...matchedFiles], { cwd: filePath });
 
-  zip.stdout.on('data', (data) => {
-      console.log(`stdout: ${data}`);
-      io.emit('output', data.toString());
-  });
-
-  zip.stderr.on('data', (data) => {
-      console.error(`stderr: ${data}`);
-      io.emit('output', data.toString());
-  });
-
   zip.on('close', (code) => {
       if (code !== 0) {
           console.error(`zip process exited with code ${code}`);
           return res.status(500).send({ message: 'Error zipping files' });
       }
       console.log('Files zipped successfully');
-      io.emit('output', 'Files zipped successfully');
 
       // Now that ZIP process has completed, send the file
       res.download(zipFilePath, (err) => {
@@ -392,23 +381,12 @@ app.post('/results/download', async(req, res) => {
 
   const zip = spawn('zip', ['-r', zipFileName, ...matchedFiles], { cwd: filePath });
 
-  zip.stdout.on('data', (data) => {
-      console.log(`stdout: ${data}`);
-      io.emit('output', data.toString());
-  });
-
-  zip.stderr.on('data', (data) => {
-      console.error(`stderr: ${data}`);
-      io.emit('output', data.toString());
-  });
-
   zip.on('close', (code) => {
       if (code !== 0) {
           console.error(`zip process exited with code ${code}`);
           return res.status(500).send({ message: 'Error zipping files' });
       }
       console.log('Files zipped successfully');
-      io.emit('output', 'Files zipped successfully');
 
       // Now that ZIP process has completed, send the file
       res.download(zipFilePath, (err) => {
