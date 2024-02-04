@@ -190,7 +190,9 @@ export const registerService = async () => {
 // Send a heartbeat to the central server ============================================
 export const sendHeartbeat = async () => {
     try {
-      const response = await axios.post(`${CENTRAL_SERVER}/service-heartbeat`, serviceInfo);
+      const hostInfo = getHostInfo();
+      const id = `API: ${hostURL}`;
+      const response = await axios.post(`${CENTRAL_SERVER}/service-heartbeat`, { _id: id, hostInfo: hostInfo});
       if (response.status == 200){
         return true;
       } else {

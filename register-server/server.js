@@ -141,12 +141,13 @@ app.delete('/unregister-service', async (req, res) => {
   
 // Heartbeat Endpoint
 app.post('/service-heartbeat', async (req, res) => {
-    const { _id } = req.body;
+  const { _id, hostInfo } = req.body;
     try {
       if (isDbConnected) {
         const service = await BackendService.findByIdAndUpdate(
             _id,
-            { lastHeartbeat: Date.now() },
+            // update the hostInfo and lastHeartbeat
+            { hostInfo, lastHeartbeat: Date.now() },
             { new: true }
         );
         console.log(`Heartbeat from backend service: (${service._id}): ————` + new Date(Date.now()).toLocaleString());
@@ -159,6 +160,8 @@ app.post('/service-heartbeat', async (req, res) => {
         if (!service) {
             return res.status(404).json({ message: "Service not found" });
         }
+        // update the hostInfo and lastHeartbeat
+        service.hostInfo = hostInfo;
         service.lastHeartbeat = Date.now();
         console.log(`Heartbeat from backend service: (${service._id}): ————` + new Date(Date.now()).toLocaleString());
         res.status(200).json(service);
