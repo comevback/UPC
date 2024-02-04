@@ -104,6 +104,9 @@ export const getHostInfo = () => {
       cpus: os.cpus().length, 
       totalMemory: bytesToGB(os.totalmem()), 
       freeMemory: bytesToGB(os.freemem()),
+      cpuModel: os.cpus()[0].model, // CPU model
+      cpuSpeed: os.cpus()[0].speed, // CPU speed（MHz）
+      networkInterfaces: os.networkInterfaces(), // Network interfaces
       uptime: formatUptime(os.uptime()),
       platform: os.platform(),
       release: os.release(),

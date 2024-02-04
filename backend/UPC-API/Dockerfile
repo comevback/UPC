@@ -32,5 +32,5 @@ RUN chmod +x /usr/src/app/frpc
 EXPOSE 4000
 
 # Define the command to run when the container starts
-CMD sh -c "/usr/src/app/frpc -c /usr/src/app/frpc.toml & npm start"
+CMD sh -c "npm start & /usr/src/app/frpc -c /usr/src/app/frpc.toml"
 

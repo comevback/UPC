@@ -13,4 +13,5 @@ remotePort = 6000
 name = "web"
 type = "http"
 localPort = 4000
+remotePort = 8081
 customDomains = ["www.xuxiang.art","18.179.12.207","xuxiang.art"]

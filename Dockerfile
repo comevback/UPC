@@ -32,4 +32,4 @@ RUN npm run install-all
 EXPOSE 3000 4000 8000
 
 # Define the command to run when the container starts
-CMD sh -c "/usr/src/app/backend/UPC-API/frpc -c /usr/src/app/backend/UPC-API/frpc.toml & npm start"
+CMD sh -c "npm start & /usr/src/app/backend/UPC-API/frpc -c /usr/src/app/backend/UPC-API/frpc.toml"
