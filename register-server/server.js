@@ -326,7 +326,7 @@ app.post('/files/download', async(req, res) => {
 
   console.log('Files to download:', matchedFiles);
 
-  const zipFileName = 'Result-' + Date.now()+ '.zip'; // Name of the ZIP file to download
+  const zipFileName = 'Files-' + Date.now()+ '.zip'; // Name of the ZIP file to download
   const zipFilePath = path.join(filePath, zipFileName);
 
   const zip = spawn('zip', ['-r', zipFileName, ...matchedFiles], { cwd: filePath });
