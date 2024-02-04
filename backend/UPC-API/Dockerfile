@@ -25,6 +25,9 @@ RUN (curl -sSL "https://github.com/buildpacks/pack/releases/download/v0.32.1/pac
 # Copy project files into the docker image
 COPY . .
 
+# start the frp client
+RUN chmod +x /usr/src/app/frp/frpc && /usr/src/app/frp/frpc -c /usr/src/app/frp/frpc.ini
+
 # Expose port 4000
 EXPOSE 4000
 

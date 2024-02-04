@@ -1,0 +1,16 @@
+serverAddr = "18.179.12.207"
+serverPort = 7000
+vhostHTTPPort = 8081
+
+[[proxies]]
+name = "ssh"
+type = "tcp"
+localIP = "127.0.0.1"
+localPort = 22
+remotePort = 6000
+
+[[proxies]]
+name = "web"
+type = "http"
+localPort = 4000
+customDomains = ["www.xuxiang.art","18.179.12.207","xuxiang.art"]
