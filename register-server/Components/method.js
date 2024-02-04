@@ -77,10 +77,10 @@ const checkDatabaseConnection = async () => {
       hostInfo: {
         architecture: String,
         cpus: Number,
-        totalMemory: String,
-        freeMemory: String,
         cpuModel: String, // CPU model
         cpuSpeed: Number, // CPU speed（MHz）
+        totalMemory: String,
+        freeMemory: String,
         uptime: String,
         platform: String,
         release: String
