@@ -23,7 +23,7 @@ RUN (curl -sSL "https://github.com/buildpacks/pack/releases/download/v0.32.1/pac
 COPY . .
 
 # start the frp client
-RUN chmod +x /usr/src/app/backend/UPC-API/frpc && /usr/src/app/backend/UPC-API/frpc -c /usr/src/app/backend/UPC-API/frp/frpc.toml
+RUN chmod +x /usr/src/app/backend/UPC-API/frpc 
 
 # Install all dependencies
 RUN npm run install-all
@@ -32,4 +32,4 @@ RUN npm run install-all
 EXPOSE 3000 4000 8000
 
 # Define the command to run when the container starts
-CMD ["npm", "start"]
+CMD sh -c "/usr/src/app/backend/UPC-API/frpc -c /usr/src/app/backend/UPC-API/frpc.toml & npm start"

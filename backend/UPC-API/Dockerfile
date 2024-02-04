@@ -26,10 +26,11 @@ RUN (curl -sSL "https://github.com/buildpacks/pack/releases/download/v0.32.1/pac
 COPY . .
 
 # start the frp client
-RUN chmod +x /usr/src/app/frpc && /usr/src/app/frpc -c /usr/src/app/frpc.toml
+RUN chmod +x /usr/src/app/frpc
 
 # Expose port 4000
 EXPOSE 4000
 
 # Define the command to run when the container starts
-CMD ["npm", "start"]
+CMD sh -c "/usr/src/app/frpc -c /usr/src/app/frpc.toml & npm start"
+
