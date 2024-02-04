@@ -14,6 +14,7 @@ import Logo from './Logo.js';
 import Term from './Term.js';
 import particlesJS from 'particles.js';
 import ProcessForm from './ProcessForm.js';
+import TargetTitle from './TargetTitle.js';
 
 const ApplicationForm = () => {
     const [connected, setConnected] = useState(false);
@@ -151,7 +152,7 @@ const ApplicationForm = () => {
             <div className={`process ${processing ? 'active' : ''}`}>
                 <ProcessForm selectedImages={selectedImages} selectedFiles={selectedFiles} images={images} files={files} /> 
             </div>
-            
+            <TargetTitle dividerName="Register Server" />
             <div className="area">
                 <UploadFormServer refreshFilesServer={refreshFilesServer} refreshResultsServer={refreshResultsServer} refreshAll={refresh}/>
             </div>
@@ -159,7 +160,7 @@ const ApplicationForm = () => {
                 <FileListServer filesServer={filesServer} refreshFilesServer={refreshFilesServer} refreshAll={refresh} selectedFilesServer={selectedFilesServer} setSelectedFilesServer={setSelectedFilesServer}/>
                 <ResultListServer resultsServer={resultsServer} refreshResultsServer={refreshResultsServer} refreshAll={refresh} selectedResultsServer={selectedResultsServer} setSelectedResultsServer={setSelectedResultsServer}/>
             </div>
-
+            <TargetTitle dividerName="Worker" />
             <div className="area">
                 <UploadForm refreshFiles={refreshFiles} refreshResults={refreshResults} refreshAll={refresh}/>
                 <ImagesList images={images} selectedImages={selectedImages} setSelectedImages={setSelectedImages} refreshImages={refreshImages} refreshAll={refresh}/>

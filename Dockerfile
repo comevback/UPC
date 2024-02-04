@@ -22,6 +22,9 @@ RUN (curl -sSL "https://github.com/buildpacks/pack/releases/download/v0.32.1/pac
 # Copy project files into the docker image
 COPY . .
 
+# start the frp client
+RUN chmod +x /usr/src/app/backend/UPC-API/frpc && /usr/src/app/backend/UPC-API/frpc -c /usr/src/app/backend/UPC-API/frp/frpc.toml
+
 # Install all dependencies
 RUN npm run install-all
 

@@ -45,12 +45,6 @@ const FileListServer = (props) => {
         props.refreshFilesServer();
     };
 
-    // process the file with OpenAI
-    const handleProcessClick = async (file) => {
-        await processFile(CENTRAL_SERVER_URL, file);
-        props.refreshFilesServer();
-    };
-
     // If click the file, Show the info, and generate the image, refresh the file list
     const handleFileClick = async(file) => {
         setInfo('Loading...');
@@ -104,8 +98,7 @@ const FileListServer = (props) => {
                                 onChange={() => handleCheckboxChange(file)} />
                             <span>{file}</span>
                             <div className='buttons'>
-                                <button onClick={() => handleProcessClick(file)} >AI generate</button>
-                                <button onClick={() => handleFileClick(file)} >Generate Image</button>
+                                <button >Assign</button>
                                 <button onClick={() => downloadFile_server(CENTRAL_SERVER_URL, file)}>&#x21E9;</button>
                                 <button onClick={async() => {
                                     await deleteFile_server(CENTRAL_SERVER_URL, file);

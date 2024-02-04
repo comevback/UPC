@@ -619,3 +619,13 @@ export const downloadAllResultZip_server = async (CENTRAL_SERVER_URL, fileNames)
         console.error('Error downloading results:', error);
     }
 }
+
+// assign file from Register Server to API Server
+export const assignFile = async (CENTRAL_SERVER_URL, API_URL, fileName) => {
+    try {
+        const response = await axios.post(`${CENTRAL_SERVER_URL}/assign`, { fileName, API_URL });
+        console.log(response.data);
+    } catch (error) {
+        console.error('Error assigning file:', error);
+    }
+};
