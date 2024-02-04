@@ -435,7 +435,6 @@ export const uploadData_server = async (CENTRAL_SERVER_URL, data) => {
 // Get the list of files from Register Server
 export const getFiles_server = async (CENTRAL_SERVER_URL) => {
     try {
-        console.log('tryin to get files');
         const response = await axios.get(`${CENTRAL_SERVER_URL}/files`);
         return response.data;
     } catch (error) {

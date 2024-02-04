@@ -4,9 +4,9 @@ import fs from 'fs';
 import path from 'path';
 import { dirname } from 'path';
 import { fileURLToPath } from 'url';
+import { spawn } from 'child_process';
 import { upload, checkDatabaseConnection, BackendService, FrontendService, backendServices, frontendServices, readServicesFromFile, writeServicesToFile, CleanUpDataBase, CleanUpLocal } from "./Components/method.js";
 
-const Server_URL = 'http://localhost:8000';
 const port = process.env.REGI_PORT || 8000; 
 const app = express();
 const __filename = fileURLToPath(import.meta.url);
@@ -75,7 +75,7 @@ app.get('/list-services', async (req, res) => {
 
 // Register a service
 app.post('/register-service', async (req, res) => {
-    const { _id, url, publicUrl, endpoints, hostInfo } = req.body;
+    const { _id, url, publicUrl, hostInfo } = req.body;
     try {
       if (isDbConnected) {
         const newService = new BackendService({
@@ -83,7 +83,6 @@ app.post('/register-service', async (req, res) => {
           url,
           publicURL: publicUrl,
           createdAt: new Date(),
-          endpoints,
           hostInfo
         });
         await BackendService.findOneAndUpdate({ _id: _id }, newService, { upsert: true }) // upsert: true means if the service is not found, insert it
@@ -100,7 +99,6 @@ app.post('/register-service', async (req, res) => {
           _id,
           url,
           publicURL: publicUrl,
-          endpoints,
           hostInfo,
           createdAt: new Date(),
           lastHeartbeat: new Date()

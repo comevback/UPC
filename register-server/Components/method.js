@@ -74,10 +74,6 @@ const checkDatabaseConnection = async () => {
         type: String,
         required: false
       },
-      endpoints: [{
-        type: String,
-        required: true
-      }],
       hostInfo: {
         architecture: String,
         cpus: Number,

@@ -129,19 +129,6 @@ export const serviceInfo = {
   _id: id,
   url: hostURL, // TODO: Change this to the URL of your service
   publicUrl: backendIP,
-  endpoints: [
-    '/',
-    '/register',
-    '/login',
-    '/tasks',
-    '/api/upload',
-    '/api/files',
-    '/api/files/:filename',
-    '/api/results',
-    '/api/results/:filename',
-    '/api/images',
-    '/api/images/:imageName'
-  ],
   hostInfo: hostInfo
 };
 
