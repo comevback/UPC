@@ -79,6 +79,9 @@ const checkDatabaseConnection = async () => {
         cpus: Number,
         totalMemory: String,
         freeMemory: String,
+        cpuModel: String, // CPU model
+        cpuSpeed: Number, // CPU speed（MHz）
+        networkInterfaces: Object, // Network interfaces
         uptime: String,
         platform: String,
         release: String

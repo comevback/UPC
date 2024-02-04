@@ -3,15 +3,15 @@ serverPort = 7000
 vhostHTTPPort = 8081
 
 [[proxies]]
-name = "ssh"
+name = "ssh2"
 type = "tcp"
 localIP = "127.0.0.1"
 localPort = 22
 remotePort = 6000
 
 [[proxies]]
-name = "web"
+name = "web2"
 type = "http"
-localPort = 4000
+localPort = 8000
 remotePort = 8081
-customDomains = ["www.xuxiang.art","18.179.12.207","xuxiang.art"]
+customDomains = ["18.179.12.207"]
