@@ -11,7 +11,7 @@ const Logo = (props) => {
             <a href='./' rel="noopener noreferrer"><img src='UPC-logo-rm.png' alt='UPC logo' width='300px' height='300px'/></a>
             <div>
                 <h1 className='title'>UPC - Generate and Process</h1>
-                <h2>Current Server: <a className={`Serverlink ${props.connected ? '' : 'notConnected'}`} href={props.connected? API_URL : "./"} target="_blank" rel="noopener noreferrer">{props.connected? API_URL : "Not connected"}</a></h2>
+                <h2>Current Worker: <a className={`Serverlink ${props.connected ? '' : 'notConnected'}`} href={props.connected? API_URL : "./"} target="_blank" rel="noopener noreferrer">{props.connected? API_URL : "Not connected"}</a></h2>
             </div>
         </div>
     )
