@@ -60,6 +60,7 @@ const UploadForm = (props) => {
         document.getElementById('progress-bar').style.setProperty('--progress-width', `0%`); // when new file(s) be selected, reset the progress bar
     };
 
+    // submit function using axios
     const handleSubmit = async (event) => {
         event.preventDefault();// Prevent the default form submit event
         console.log(files);
@@ -88,6 +89,7 @@ const UploadForm = (props) => {
         });
     };
 
+    // submit function with progress check using xhr
     const handleSubmit_xhr = async (event) => {
         event.preventDefault();// Prevent the default form submit event
         console.log(files);
