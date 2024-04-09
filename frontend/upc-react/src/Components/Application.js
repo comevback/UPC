@@ -3,18 +3,14 @@ import './Application.css';
 import { checkConnection, getFiles, getFiles_server, getResults, getResults_server, getImages, process } from '../Tools/api.js';
 import { ParaContext } from '../Global.js';
 import FileList from './FileList.js';
-import FileListServer from './FileListServer.js';
 import ResultList from './ResultList.js';
-import ResultListServer from './ResultListServer.js';
 import UploadForm from './UploadForm.js';
-import UploadFormServer from './UploadFormServer.js';
 import ImagesList from './ImagesList.js';
 import Heading from './Heading.js';
 import Logo from './Logo.js';
 import Term from './Term.js';
 import particlesJS from 'particles.js';
 import ProcessForm from './ProcessForm.js';
-import TargetTitle from './TargetTitle.js';
 
 const ApplicationForm = () => {
     const [connected, setConnected] = useState(false);
@@ -152,15 +148,6 @@ const ApplicationForm = () => {
             <div className={`process ${processing ? 'active' : ''}`}>
                 <ProcessForm selectedImages={selectedImages} selectedFiles={selectedFiles} images={images} files={files} /> 
             </div>
-            <TargetTitle dividerName="Register Server" />
-            <div className="area">
-                <UploadFormServer refreshFilesServer={refreshFilesServer} refreshResultsServer={refreshResultsServer} refreshAll={refresh}/>
-            </div>
-            <div className="area"> 
-                <FileListServer filesServer={filesServer} refreshFilesServer={refreshFilesServer} refreshAll={refresh} selectedFilesServer={selectedFilesServer} setSelectedFilesServer={setSelectedFilesServer}/>
-                <ResultListServer resultsServer={resultsServer} refreshResultsServer={refreshResultsServer} refreshAll={refresh} selectedResultsServer={selectedResultsServer} setSelectedResultsServer={setSelectedResultsServer}/>
-            </div>
-            <TargetTitle dividerName="Worker" />
             <div className="area">
                 <UploadForm refreshFiles={refreshFiles} refreshResults={refreshResults} refreshAll={refresh}/>
                 <ImagesList images={images} selectedImages={selectedImages} setSelectedImages={setSelectedImages} refreshImages={refreshImages} refreshAll={refresh}/>

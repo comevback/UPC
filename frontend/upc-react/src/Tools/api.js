@@ -17,6 +17,19 @@ export const getServices = async (CENTRAL_SERVER_URL) => {
     }
 };
 
+// the promise version of getService
+export const getServicesPromise = (CENTRAL_SERVER_URL) => {
+    return new Promise((resolve, reject) => {
+        axios.get(`${CENTRAL_SERVER_URL}/list-services`)
+            .then(response => {
+                resolve(response.data);
+            })
+            .catch(error => {
+                reject('Error fetching services');
+            });
+    });
+};
+
 // Register the service
 export const registerService = async (CENTRAL_SERVER_URL) => {
     try {
