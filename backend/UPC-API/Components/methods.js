@@ -37,7 +37,7 @@ console.log(`Local IP Address: ${localIP}`);
 // URL of this service
 const hostURL = process.env.API_URL || localURL; // TODO: Change this to the URL of your service
 // URL of the central server
-const CENTRAL_SERVER = process.env.CENTRAL_SERVER || 'http://18.179.12.207:8000'; // TODO: Change this to the URL of your central server
+const CENTRAL_SERVER = process.env.CENTRAL_SERVER || 'http://localhost:8000'; // TODO: Change this to the URL of your central server
 // ChatGPT API
 // const CHATGPT_API = process.env.OpenAI_API_Key; // replace with your chatGPT API URL
 
