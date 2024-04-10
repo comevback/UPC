@@ -1,0 +1,45 @@
+/* ImageList.css */
+.image-list {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin: 20px auto;
+    padding: 20px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    height: 30vh; /* 80% of the viewport height */
+    max-height: 30vh; /* max out at 80% of the viewport height */
+    overflow-y: auto; /* allow vertical scrolling */
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1); /* subtle shadow for depth */
+}
+
+
+.image-item {
+    display: flex;
+    align-items: center;
+    flex-direction: column;
+    justify-content: space-between; /* space out children */
+    list-style-type: none; /* remove default list bullets */
+    margin: 10px 0; /* margin above and below each item */
+    padding: 10px; /* padding inside each item */
+    border: 1px solid #ddd; /* border color */
+    border-radius: 5px; /* rounded corners */
+    width: 100%; /* width of list item */
+    box-sizing: border-box; /* include border in width */
+    text-align: center; /* center text */
+    min-height: 40px;
+    overflow-x: auto; /* allow vertical scrolling */
+    opacity: 0.8;
+}
+
+
+.name-and-buttons{
+    display: flex;
+    justify-content: space-between;
+    width: 100%;
+}
+
+.buttons {
+    display: flex;
+    gap: 10px; /* space between buttons */
+}
