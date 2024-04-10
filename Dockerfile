@@ -32,4 +32,5 @@ RUN npm run install-all
 EXPOSE 3000 4000 8000
 
 # Define the command to run when the container starts
+# if want to use cloud server as a register server, change to the last step to : CMD sh -c "npm start & /usr/src/app/backend/UPC-API/frpc -c /usr/src/app/backend/UPC-API/frpc.toml"
 CMD sh -c "npm start"

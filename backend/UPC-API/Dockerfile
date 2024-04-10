@@ -32,5 +32,6 @@ RUN chmod +x /usr/src/app/frpc
 EXPOSE 4000
 
 # Define the command to run when the container starts
+# if want to use cloud server as a register server, change to the last step to : CMD sh -c "npm start && /usr/src/app/frpc -c /usr/src/app/frpc.ini"
 CMD sh -c "npm start"
 
