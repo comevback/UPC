@@ -17,21 +17,24 @@ Full-stack application that using Docker and Buildpack to generate and process t
 
 
 ---
+# Getting Started
+---
 
-## Run by Docker
-
-### Script:
+## Run by Docker (recommended)
 
 <img src='./UPC-script-demo.gif' alt='UPC logo' width='600px'/>
 
-- All Services at once:
+### Script (copy&paste to your terminal to run):
+
+
+- Whole UPC system:
 ```bash
 curl -sSL https://raw.githubusercontent.com/comevback/UPC-node/main/start-docker.sh -o start-docker.sh &&
 chmod +x start-docker.sh &&
 ./start-docker.sh
 ```
 
-- API-service:
+- (Backend only) API-service:
 ```bash
 curl -sSL https://raw.githubusercontent.com/comevback/UPC-node/main/start-api-docker.sh -o start-api-docker.sh &&
 chmod +x start-api-docker.sh &&
@@ -44,7 +47,7 @@ chmod +x start-x86-api-docker.sh &&
 ./start-x86-api-docker.sh
 ```
 
-- Frontend-service:
+- (Frontend only) Frontend-service:
 ```bash
 curl -sSL https://raw.githubusercontent.com/comevback/UPC-node/main/start-react-docker.sh -o start-react-docker.sh &&
 chmod +x start-react-docker.sh &&
@@ -60,12 +63,12 @@ chmod +x start-register-docker.sh &&
 
 ### Docker command:
 
-- Run all services at once:
+- Whole UPC system:
 ```bash
 docker run -it --rm -e HOST_URL={http://your_API_host:4000} -e CENTRAL_SERVER={http://your_central_server:8000} -e INITIAL_API_URL={http://your_API_host:4000} -e INITIAL_CENTRAL_SERVER_URL={http://your_central_server:8000} -v /var/run/docker.sock:/var/run/docker.sock -p 3000:3000 -p 4000:4000 -p 8000:8000 afterlifexx/upc-system
 ```
 
-- for example(all services at once):
+for example:
 ```bash
 docker run -it --rm -e HOST_URL=http://192.168.0.103:4000 -e CENTRAL_SERVER=http://192.168.0.103:8000 -e INITIAL_API_URL=http://192.168.0.103:4000 -e INITIAL_CENTRAL_SERVER_URL=http://192.168.0.103:8000 -v /var/run/docker.sock:/var/run/docker.sock -p 3000:3000 -p 4000:4000 -p 8000:8000 afterlifexx/upc-system
 ```
@@ -74,7 +77,7 @@ docker run -it --rm -e HOST_URL=http://192.168.0.103:4000 -e CENTRAL_SERVER=http
 docker run -it --rm -e HOST_URL=http://172.28.235.225:4000 -e CENTRAL_SERVER=http://172.28.235.225:8000 -e INITIAL_API_URL=http://172.28.235.225:4000 -e INITIAL_CENTRAL_SERVER_URL=http://172.28.235.225:8000 -v /var/run/docker.sock:/var/run/docker.sock -p 3000:3000 -p 4000:4000 -p 8000:8000 afterlifexx/upc-system
 ```
 
-- API-service:
+- (Backend only) API-service:
 ```bash
 docker run -it --rm -e HOST_URL={http://your_API_host:4000} -e CENTRAL_SERVER={http://your_central_server:8000} -v /var/run/docker.sock:/var/run/docker.sock -p 4000:4000 afterlifexx/upc-api
 ```
@@ -83,19 +86,21 @@ docker run -it --rm -e HOST_URL={http://your_API_host:4000} -e CENTRAL_SERVER={h
 docker run -it --rm -e HOST_URL=http://172.28.235.64:4000 -e CENTRAL_SERVER=http://172.28.235.225:8000 -v /var/run/docker.sock:/var/run/docker.sock -p 4000:4000 afterlifexx/upc-api
 ```
 
+- (Frontend only) Frontend-service:
+```bash
+docker run  -e REACT_APP_INITIAL_API_URL={http://your_API_host:4000} -e REACT_APP_INITIAL_CENTRAL_SERVER_URL={http://your_central_server:8000} -p 3000:3000 afterlifexx/upc-react
+```
+
 - Register-service:
 ```bash
 docker run  -it --rm -p 8000:8000 afterlifexx/upc-register
 ```
 
-- Frontend-service:
-```bash
-docker run  -e REACT_APP_INITIAL_API_URL={http://your_API_host:4000} -e REACT_APP_INITIAL_CENTRAL_SERVER_URL={http://your_central_server:8000} -p 3000:3000 afterlifexx/upc-react
-```
+
 
 ---
 
-## Getting Started
+## Deploy Project
 
 These instructions will get you a copy of the project up and running on your local machine for development.
 
