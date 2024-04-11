@@ -26,7 +26,7 @@ The UPC system consisted three main components:
 1. **UPC-Worker** (backend server)
 2. **User Interface** (React frontend)
 3. **Register Server** (A cloud or local central server to manage the system)
-4. 
+
 --- 
 
 ## Workflow of the UPC system
