@@ -9,11 +9,13 @@ Full-stack application that using Docker and Buildpack to generate and process t
 
 ## Features
 
-- **File Upload**: Upload files to the server.
-- **Docker Image Generation**: Generate images for UPC codes.
-- **Database Integration**: Store and manage UPC data using MongoDB. (in progress).
-- **Server registration**: register backend API servers and frontend React servers at Register-Server.
-- **Command Execution**: Execute command from frontend.
+- **Process jobs**: Process different kinds of jobs in various backend hosts in the system.
+- **File management**: Upload/Delete files in the backend-server.
+- **Docker Image Generation**: Generate Docker images through uploaded zip file using Buildpack.
+- **Terminal integration**: Expose backend host terminal to frontend to let users to execute commands.
+- **Server registration**: Register and manage backend API servers/frontend React servers by Register-Server(loacl or cloud).
+- **Database Integration**: Store and manage data in MongoDB(cloud).
+- **Deploy by Docker using shell script**: Deploy the whole system by running a command.
 
 
 ---
