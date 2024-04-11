@@ -4,7 +4,7 @@
 <h1 align="center">UPC-node</h1>
 <p align="center">(User-PC Computing System)</p>
 
-A full-stack web application that using Buildpack to generate docker images and Docker to process tasks. Consists of a Express backend, a React frontend, and a Express register server.
+A full-stack computational system using Docker, buildpack to simplify the processing of all kind of tasks.
 
 ---
 
