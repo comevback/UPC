@@ -23,9 +23,6 @@ const io = new Server(server, {
 const port = process.env.API_PORT || 4000;
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
-const uploadPath = path.join(__dirname, 'uploads');
-const resultPath = path.join(__dirname, 'results');
-const tempPath = path.join(__dirname, 'temps');
 
 app.use(bodyParser.urlencoded({extended:true}));
 app.use(express.static("public"));

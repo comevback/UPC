@@ -1,7 +1,7 @@
 {
   "particles": {
     "number": {
-      "value": 10,
+      "value": 20,
       "density": {
         "enable": true,
         "value_area": 800
@@ -72,10 +72,10 @@
     "events": {
       "onhover": {
         "enable": true,
-        "mode": "bubble"
+        "mode": "repulse"
       },
       "onclick": {
-        "enable": true,
+        "enable": false,
         "mode": "repulse"
       },
       "resize": true
@@ -95,8 +95,8 @@
         "speed": 4
       },
       "repulse": {
-        "distance": 700,
-        "duration": 0.2
+        "distance": 500,
+        "duration": 0.5
       },
       "push": {
         "particles_nb": 4
