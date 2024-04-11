@@ -2,8 +2,9 @@
 <img src='./UPC-logo-rm.png' alt='UPC logo' width='300px' height='300px'/>
 </div>
 <h1 align="center">UPC-node</h1>
+<p align="center">(User-PC Computing System)</p>
 
-Full-stack application that using Docker and Buildpack to generate and process tasks. Consists of a Express backend and a React frontend.
+A full-stack web application that using Buildpack to generate docker images and Docker to process tasks. Consists of a Express backend, a React frontend, and a Express register server
 
 ---
 
@@ -17,12 +18,21 @@ Full-stack application that using Docker and Buildpack to generate and process t
 - **Database Integration**: Store and manage data in MongoDB(cloud).
 - **Deploy by Docker using shell script**: Deploy the whole system by running a command.
 
-
 ---
+
+## Architecture of the UPC system
+![Architecture of the UPC system](./architecture.png)
+The UPC system consisted three main components:
+1. **UPC-Worker** (backend server)
+2. **User Interface** (React frontend)
+3. **Register Server** (A cloud or local central server to manage the system)
+
+## Workflow of the UPC system
+![Workflow of the UPC system](./workflow.png)
+
 # Getting Started
----
 
-## Run by Docker (recommended)
+## Deploy and run using Docker (recommended)
 
 <img src='./UPC-script-demo.gif' alt='UPC logo' width='600px'/>
 
