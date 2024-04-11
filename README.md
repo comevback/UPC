@@ -4,7 +4,7 @@
 <h1 align="center">UPC-node</h1>
 <p align="center">(User-PC Computing System)</p>
 
-A full-stack web application that using Buildpack to generate docker images and Docker to process tasks. Consists of a Express backend, a React frontend, and a Express register server
+A full-stack web application that using Buildpack to generate docker images and Docker to process tasks. Consists of a Express backend, a React frontend, and a Express register server.
 
 ---
 
@@ -26,9 +26,13 @@ The UPC system consisted three main components:
 1. **UPC-Worker** (backend server)
 2. **User Interface** (React frontend)
 3. **Register Server** (A cloud or local central server to manage the system)
+4. 
+--- 
 
 ## Workflow of the UPC system
 ![Workflow of the UPC system](./workflow.png)
+
+---
 
 # Getting Started
 
