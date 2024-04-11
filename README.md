@@ -196,7 +196,7 @@ cd frontend/upc-react
 npm start
 ```
 
-## Workflow
+## Demo
 
 <img src='./docker-run-command.gif' alt='docker run command' width='1000px'/>
 
