@@ -1,0 +1,15 @@
+{
+  "files": {
+    "main.css": "/UPC-node/static/css/main.01da48bd.css",
+    "main.js": "/UPC-node/static/js/main.202b1e2e.js",
+    "static/js/787.308147a4.chunk.js": "/UPC-node/static/js/787.308147a4.chunk.js",
+    "index.html": "/UPC-node/index.html",
+    "main.01da48bd.css.map": "/UPC-node/static/css/main.01da48bd.css.map",
+    "main.202b1e2e.js.map": "/UPC-node/static/js/main.202b1e2e.js.map",
+    "787.308147a4.chunk.js.map": "/UPC-node/static/js/787.308147a4.chunk.js.map"
+  },
+  "entrypoints": [
+    "static/css/main.01da48bd.css",
+    "static/js/main.202b1e2e.js"
+  ]
+}
