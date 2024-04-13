@@ -16,7 +16,14 @@ import { serviceInfo, upload, limiter, registerService, unregisterService, sendH
 const app = express();
 app.set('trust proxy', true); // trust first proxy
 
-const server = http.createServer(app);
+// https certificate and key
+const privateKeyPath = path.join('/etc/letsencrypt/live/xuxiang.art', 'privkey.pem');
+const certificatePath = path.join('/etc/letsencrypt/live/xuxiang.art', 'fullchain.pem');
+
+const privateKey = fs.readFileSync(privateKeyPath, 'utf8');
+const certificate = fs.readFileSync(certificatePath, 'utf8');
+
+const server = https.createServer({ key: privateKey, cert: certificate }, app);
 const io = new Server(server, {
     path: '/app',
       cors: {
