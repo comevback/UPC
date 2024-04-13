@@ -4,6 +4,7 @@ import axios from 'axios';
 const response = await axios.get('https://api.ipify.org?format=json');
 const publicFrontUrl = `http://${response.data.ip}:3000`;
 console.log('Frontend IP:', publicFrontUrl);
+const frontName = 'Frontend Service: ' + response.data.ip;
 
 // With Central Server ----------------------------------------------------------------------------------------
 
@@ -34,7 +35,8 @@ export const getServicesPromise = (CENTRAL_SERVER_URL) => {
 export const registerService = async (CENTRAL_SERVER_URL) => {
     try {
       const response = await axios.post(`${CENTRAL_SERVER_URL}/frontend/register-service`, {
-        _id: 'React Frontend Service',
+        // generate a unique name for the service
+        _id: frontName,
         url: window.location.origin,
         publicUrl: publicFrontUrl,
       });
