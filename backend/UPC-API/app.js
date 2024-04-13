@@ -448,7 +448,8 @@ app.post('/api/files/:filename', async(req, res) => {
         console.log('File unzipped successfully');
         io.emit('geneMessage', 'File unzipped successfully');
 
-        const pack = spawn('pack', [
+        const pack = spawn('sudo', [
+            'pack',
             'build', 
             baseFileName.toLowerCase(),               // This is the image name
             '--path', appPath,        // Path to the application code
