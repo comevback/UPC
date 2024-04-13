@@ -1,5 +1,6 @@
 //import and setting
 import express from "express";
+import https from "https";
 import bodyParser from "body-parser";
 import cors from 'cors';
 import fs from 'fs';
@@ -13,6 +14,8 @@ import { Server } from "socket.io";
 import { serviceInfo, upload, limiter, registerService, unregisterService, sendHeartbeat, getWorkingDir, getEntrypoint, getCmd, getAvailableShell } from "./Components/methods.js";
 
 const app = express();
+app.set('trust proxy', true); // trust first proxy
+
 const server = http.createServer(app);
 const io = new Server(server, {
     cors: {
