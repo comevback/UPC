@@ -9,6 +9,7 @@ import { upload, checkDatabaseConnection, BackendService, FrontendService, backe
 
 const port = process.env.REGI_PORT || 8000; 
 const app = express();
+app.set('trust proxy', true); // trust first proxy
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
 app.use(express.json());

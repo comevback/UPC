@@ -31,9 +31,6 @@ app.use(bodyParser.urlencoded({extended:true}));
 app.use(express.static("public"));
 app.set('view engine', 'ejs');
 app.use(express.json()); // for parsing application/json
-app.use(cors({
-    origin: 'https://upc-react-k5gn78j7t-comevbacks-projects.vercel.app' // 允许这个源的跨域请求
-}));
 app.use(cors());
 //app.use(limiter);
 
@@ -103,7 +100,7 @@ app.get('/api', (req, res) => {
 });
 
 //Route to update files to the server
-app.post('/api/upload', upload.array('file', 50), (req, res) => {
+app.post('/api/upload', cors(), upload.array('file', 50), (req, res) => {
     console.log(req.files);
     res.send(req.files);
 });
