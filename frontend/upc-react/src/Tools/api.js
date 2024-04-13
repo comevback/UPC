@@ -51,7 +51,7 @@ export const registerService = async (CENTRAL_SERVER_URL) => {
 export const unregisterService = async (CENTRAL_SERVER_URL) => {
     try {
       const response = await axios.delete(`${CENTRAL_SERVER_URL}/frontend/unregister-service`, {
-        _id: 'React Frontend Service',
+        _id: frontName,
         url: window.location.origin,
         publicUrl: publicFrontUrl,
       });
@@ -66,7 +66,7 @@ export const unregisterService = async (CENTRAL_SERVER_URL) => {
 export const sendHeartbeat = async (CENTRAL_SERVER_URL) => {
     try {
         await axios.post(`${CENTRAL_SERVER_URL}/frontend/service-heartbeat`, {
-            _id: 'React Frontend Service',
+            _id: frontName,
             url: window.location.origin,
             publicUrl: publicFrontUrl,
         });
