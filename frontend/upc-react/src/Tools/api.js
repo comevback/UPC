@@ -1,10 +1,17 @@
 import axios from 'axios';
 
 // Get the Public frontend IP
-const response = await axios.get('https://api.ipify.org?format=json');
-const publicFrontUrl = `http://${response.data.ip}:3000`;
-console.log('Frontend IP:', publicFrontUrl);
-const frontName = 'Frontend-' + response.data.ip + Date.now();
+let frontName = 'Frontend - ' + Date.now();
+axios.get('https://api.ipify.org?format=json')
+    .then(response => {
+        const publicFrontUrl = `http://${response.data.ip}:3000`;
+        console.log('Frontend IP:', publicFrontUrl);
+        // generate a unique name for the service
+        frontName = 'Frontend-' + response.data.ip + Date.now();
+    })
+    .catch(error => {
+        console.error('Error fetching frontend IP:', error);
+    });
 
 // With Central Server ----------------------------------------------------------------------------------------
 
