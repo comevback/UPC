@@ -95,7 +95,7 @@ app.get("/", (req, res) => {
 });
 
 //Connection test
-app.get('/api', cors(), (req, res) => {
+app.get('/api', (req, res) => {
     res.send("Connected to API server");
 });
 
