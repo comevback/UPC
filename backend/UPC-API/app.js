@@ -100,7 +100,7 @@ app.get('/api', (req, res) => {
 });
 
 //Route to update files to the server
-app.post('/api/upload', cors(), upload.array('file', 50), (req, res) => {
+app.post('/api/upload', upload.array('file', 50), (req, res) => {
     console.log(req.files);
     res.send(req.files);
 });
@@ -849,7 +849,7 @@ server.listen(port, () => {
 
 
 // Listen for new connections
-io.on('connection', (socket) => {
+io.on('connection', cors(), (socket) => {
     console.log('New WebSocket connection');
     // Send the service info to the client
     socket.emit('message', serviceInfo);
@@ -859,7 +859,7 @@ io.on('connection', (socket) => {
 });
 
 // Listen for new connections
-io.on('connection', async(socket) => {
+io.on('connection', cors(), async(socket) => {
     console.log('New WebSocket connection');
     // Send the service info to the client
     socket.emit('message', serviceInfo);
