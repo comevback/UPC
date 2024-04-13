@@ -184,7 +184,7 @@ app.post('/frontend/register-service', async (req, res) => {
         publicURL: publicUrl,
         createdAt: new Date()
       });
-      await FrontendService.findOneAndUpdate({ _id: _id }, newService, { upsert: true, new: true }) // upsert: true means if the service is not found, insert it
+      await FrontendService.findOneAndUpdate({ _id: _id }, newService, { upsert: true, new: true }) // upsert: true means if the service is not found, insert it, new: true means return the new service
       .then((service) => {
         console.log(`Service ${service._id} registered successfully`);
         res.status(201).json(service);
