@@ -28,12 +28,12 @@
       "cpuModel": "Apple M2 Pro",
       "cpuSpeed": 2.4,
       "totalMemory": "16.00 GB",
-      "freeMemory": "0.08 GB",
-      "uptime": "2d 8h 23m",
+      "freeMemory": "0.07 GB",
+      "uptime": "2d 17h 14m",
       "platform": "darwin",
       "release": "23.4.0"
     },
-    "createdAt": "2024-04-13T03:10:11.460Z",
-    "lastHeartbeat": "2024-04-13T03:10:11.460Z"
+    "createdAt": "2024-04-13T11:59:28.124Z",
+    "lastHeartbeat": 1713009688132
   }
 }

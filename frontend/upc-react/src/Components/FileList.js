@@ -65,7 +65,9 @@ const FileList = (props) => {
         props.refreshFiles();
 
         // Create a new WebSocket
-        const socket = io(API_URL);
+        const socket = io(API_URL, {
+            path: '/app', // The path to the WebSocket endpoint on the server
+        });
 
         // Listen for connection open
         socket.on('connection', () => {
