@@ -18,6 +18,7 @@ app.set('trust proxy', true); // trust first proxy
 
 const server = http.createServer(app);
 const io = new Server(server, {
+    path: '/app',
     cors: {
       origin: "*",
       methods: ["GET", "POST"]
@@ -159,7 +160,7 @@ app.get('/api/temps', async (req, res) => {
 
 // Route to get the list of all images
 app.get('/api/images', (req, res) => {
-    exec('docker images --format "{{.Repository}}:{{.Tag}}" | sort', (err, stdout, stderr) => {
+    exec('sudo docker images --format "{{.Repository}}:{{.Tag}}" | sort', (err, stdout, stderr) => {
         if (err) {
             // Error handling
             res.status(500).send(stderr);
@@ -175,7 +176,7 @@ app.get('/api/images', (req, res) => {
 app.get('/api/images/:imageName', async(req, res) => {
     const { imageName } = req.params;
 
-    exec(`docker inspect ${imageName}`, (err, stdout, stderr) => {
+    exec(`sudo docker inspect ${imageName}`, (err, stdout, stderr) => {
         if (err) {
             // Error handling
             console.error(`Error inspecting image: ${err}`);
