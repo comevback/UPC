@@ -18,6 +18,7 @@ app.set('trust proxy', true); // trust first proxy
 
 const server = http.createServer(app);
 const io = new Server(server, {
+    path: '/app',
     cors: {
       origin: "*",
       methods: ["GET", "POST"]
@@ -849,7 +850,7 @@ server.listen(port, () => {
 
 
 // Listen for new connections
-io.on('connection', cors(), (socket) => {
+io.on('connection', (socket) => {
     console.log('New WebSocket connection');
     // Send the service info to the client
     socket.emit('message', serviceInfo);
@@ -859,7 +860,7 @@ io.on('connection', cors(), (socket) => {
 });
 
 // Listen for new connections
-io.on('connection', cors(), async(socket) => {
+io.on('connection', async(socket) => {
     console.log('New WebSocket connection');
     // Send the service info to the client
     socket.emit('message', serviceInfo);
