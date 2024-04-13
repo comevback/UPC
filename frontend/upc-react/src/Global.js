@@ -4,7 +4,7 @@ import { createContext, useState } from 'react';
 const INITIAL_API_URL = process.env.REACT_APP_INITIAL_API_URL || 'http://localhost:4000'; // replace with your backend URL
 const INITIAL_API_NAME = process.env.REACT_APP_INITIAL_API_NAME || 'API Service'; // replace with your backend name
 const INITIAL_CENTRAL_SERVER_URL = process.env.REACT_APP_INITIAL_CENTRAL_SERVER_URL || 'http://localhost:8000'; // replace with your central register server URL
-const chatGPT_API = process.env.REACT_APP_CHATGPT_API || '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'; // replace with your chatGPT API URL
+const chatGPT_API = process.env.REACT_APP_CHATGPT_API  // replace with your chatGPT API URL
 
 const defaultValue = {
     API_URL: INITIAL_API_URL,
