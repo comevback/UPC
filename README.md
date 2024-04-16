@@ -34,6 +34,23 @@ The UPC system consisted three main components:
 
 ---
 
+## Principle of accessing from outside by Frp
+![Frp](./Frp_Prin.png)
+Frp is a fast reverse proxy that allows you to expose a server(service) from a local network. 
+Frp forwards requests to internal services via a server with a Public IP.
+
+![Frp](./Frp_Imp.png)
+
+---
+
+## Docker image auto generation Process
+![Docker image auto generation Process](./Docker_gene_pro.png)
+
+**the order to generate a Docker image in UPC system:**
+![Docker image gene demo](./Docker_gene.png)
+
+---
+
 # Getting Started
 
 ## Deploy and run using Docker (recommended)
