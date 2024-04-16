@@ -8,15 +8,15 @@ A full-stack computational system using Docker, buildpack to simplify the proces
 
 ---
 
-## Quick Start by Docker
-
-<img src='./UPC-script-demo.gif' alt='UPC logo' width='600px'/>
+### Quick Start by Docker
 
 ```bash
 curl -sSL https://raw.githubusercontent.com/comevback/UPC-node/main/start-docker.sh -o start-docker.sh &&
 chmod +x start-docker.sh &&
 ./start-docker.sh
 ```
+
+<img src='./UPC-script-demo.gif' alt='UPC logo' width='600px'/>
 
 ---
 
