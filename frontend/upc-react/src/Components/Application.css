@@ -70,7 +70,7 @@
     border-radius: 5px;
     background-color: #ffffff;
     color: black;
-    font-size: rem;
+    font-size: 1rem;
     cursor: pointer;
     opacity: 0.8;
     transition: 0.3s;
@@ -311,6 +311,14 @@ button{
     justify-content: center;
     align-items: center;
     cursor: pointer;
+    background-color: white;
+    border: 1px solid #bfbfbf;
+    border-radius: 4px;
+}
+
+button:hover{
+    background-color: #f6f6f6;
+    box-shadow: 0 0 3px black;
 }
 
 input:hover{
@@ -323,6 +331,7 @@ textarea:hover{
 
 input[type="checkbox"]{
     cursor: pointer;
+    border-radius: 5px;
 }
 
 .particles-container {
