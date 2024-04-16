@@ -4,7 +4,7 @@
 <h1 align="center">UPC-node</h1>
 <p align="center">（User-PC Computing System）</p>
 
-Docker、ビルドパックを使用した全タイプのタスク処理を簡素化するフルスタック計算システムです。
+Docker、Buildpackを使用したフルスタック計算システムです。
 
 ---
 
