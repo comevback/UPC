@@ -4,8 +4,6 @@
 <h1 align="center">UPC-node</h1>
 <p align="center">（User-PC Computing System）</p>
 
-[日本語版](./README_JP.md) | [中文版](./README_CN.md)
-
 Docker、ビルドパックを使用した全タイプのタスク処理を簡素化するフルスタック計算システムです。
 
 ---

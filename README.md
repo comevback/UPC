@@ -4,6 +4,8 @@
 <h1 align="center">UPC-node</h1>
 <p align="center">(User-PC Computing System)</p>
 
+[日本語版](./README_JP.md) | [中文版](./README_CN.md)
+
 A full-stack computational system using Docker, buildpack to simplify the processing of all kind of tasks.
 
 ---
