@@ -47,7 +47,7 @@ Frp forwards requests to internal services via a server with a Public IP.
 ## Docker image auto generation Process
 ![Docker image auto generation Process](./Docker_gene_pro.png)
 
-the order to generate a Docker image in UPC system:
+The order to generate a Docker image in UPC system:
 ![Docker image gene demo](./Docker_gene.png)
 
 ---
