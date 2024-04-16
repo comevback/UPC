@@ -32,6 +32,10 @@ chmod +x start-docker.sh &&
 
 ---
 
+# Concepts
+
+---
+
 ## Architecture of the UPC system
 ![Architecture of the UPC system](./architecture.png)
 The UPC system consisted three main components:
@@ -64,7 +68,9 @@ The order to generate a Docker image in UPC system:
 
 ---
 
-# Getting Started
+# Usage
+
+---
 
 ## Deploy and run using Docker (recommended)
 
@@ -146,7 +152,7 @@ docker run  -it --rm -p 8000:8000 afterlifexx/upc-register
 
 ---
 
-## Deploy Project
+## Deploy Project with Node.js
 
 These instructions will get you a copy of the project up and running on your local machine for development.
 
@@ -191,7 +197,7 @@ chmod +x setArgs.sh
 ./setArgs.sh
 ```
 
-## Usage
+## Start by Node.js
 
 *If you want to use Database to store the registered service, create a .env file on register-server folder, and add a line as:*
 ```.env
