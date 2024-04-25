@@ -21,7 +21,7 @@ function App() {
     return () => {
       unregisterService(CENTRAL_SERVER_URL);
     };
-  }, []);
+  }, [CENTRAL_SERVER_URL]);
 
   return (
     <div className="App">

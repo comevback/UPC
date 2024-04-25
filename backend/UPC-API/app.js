@@ -686,6 +686,7 @@ app.delete('/api/files/:filename', (req, res) => {
                     return res.status(500).send('Unable to delete the file: ' + err.message);
                 }
                 // send success response after deleting the file
+                console.log(`File: ${filePath} deleted successfully`)
                 res.send('File deleted successfully');
             });
         }
@@ -717,6 +718,7 @@ app.delete('/api/results/:filename', (req, res) => {
                     return res.status(500).send('Unable to delete the file: ' + err.message);
                 }
                 // send success response after deleting the file
+                console.log(`File: ${filePath} deleted successfully`)
                 res.send('File deleted successfully');
             });
         }
@@ -740,6 +742,7 @@ app.delete('/api/files', async(req, res) => {
         fs.unlinkSync(path.join(filePath, file));
     });
 
+    console.log(`File: ${matchedFiles} deleted successfully`)
     res.status(200).send({ message: 'Files deleted successfully' });
 });
 
@@ -761,6 +764,7 @@ app.delete('/api/results', async(req, res) => {
         fs.unlinkSync(path.join(filePath, file));
     });
 
+    console.log(`File: ${matchedFiles} deleted successfully`)
     res.status(200).send({ message: 'Files deleted successfully' });
 });
 
@@ -790,6 +794,7 @@ app.delete('/api/temps/:filename', (req, res) => {
                     return res.status(500).send('Unable to delete the file: ' + err.message);
                 }
                 // send success response after deleting the file
+                console.log(`File: ${filePath} deleted successfully`)
                 res.send('File deleted successfully');
             });
         }
