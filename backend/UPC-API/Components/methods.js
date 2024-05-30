@@ -10,8 +10,12 @@ import { exec, execSync } from 'child_process';
 dotenv.config();
 
 // Get the Public IP of the backend server
-const response = await axios.get('https://api.ipify.org?format=json');
-const backendIP = `http://${response.data.ip}:4000`;
+
+// 这个太慢了，直接改成本地的ip
+// const response = await axios.get('https://api.ipify.org?format=json');
+// const backendIP = `http://${response.data.ip}:4000`;
+
+const backendIP = `http://localhost:4000`;
 console.log('Backend IP:', backendIP);
 
 // Get the Local IP of the backend server

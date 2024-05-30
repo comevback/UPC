@@ -46,7 +46,7 @@
     display: flex;
     gap: 10px;
     min-width: 185.3px;
-    justify-content: end;
+    justify-content: flex-end;
 }
 
 .info{

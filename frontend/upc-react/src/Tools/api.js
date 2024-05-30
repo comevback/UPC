@@ -1,10 +1,14 @@
 import axios from 'axios';
 
 // Get the Public frontend IP
-const response = await axios.get('https://api.ipify.org?format=json');
-const publicFrontUrl = `http://${response.data.ip}:3000`;
+
+// 不知道为什么这个特别慢，所以先用固定的IP
+// const response = await axios.get('https://api.ipify.org?format=json');
+// const publicFrontUrl = `http://${response.data.ip}:3000`;
+
+const publicFrontUrl = 'http://localhost:3000';
 console.log('Frontend IP:', publicFrontUrl);
-const frontName = 'Frontend-' + response.data.ip;
+const frontName = 'Frontend-' + publicFrontUrl;
 
 // With Central Server ----------------------------------------------------------------------------------------
 
