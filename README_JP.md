@@ -8,7 +8,7 @@ Docker、Buildpackを使用したフルスタック計算システムです。
 
 ---
 
-### Dockerを使用したクイックスタート
+### クイックスタート（Dockerの起動が必要です）：
 
 ```bash
 curl -sSL https://raw.githubusercontent.com/comevback/UPC-node/main/start-docker.sh -o start-docker.sh &&
