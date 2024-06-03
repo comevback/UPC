@@ -4,7 +4,7 @@
 <h1 align="center">UPC-node</h1>
 <p align="center">（User-PC Computing System）</p>
 
-Docker、Buildpackを使用したフルスタック計算システムです。
+Docker、Buildpackを使用したフルスタック計算システム、Dockerについての知識がなくても人々が簡単に使用できるように設計されています。
 
 ---
 
@@ -15,6 +15,9 @@ curl -sSL https://raw.githubusercontent.com/comevback/UPC-node/main/start-docker
 chmod +x start-docker.sh &&
 ./start-docker.sh
 ```
+
+脚本の指令に従って入力してください、そしたらはWEBブラウザで<http://localhost:3000>にアクセスできます。
+
 
 <img src='./UPC-script-demo.gif' alt='UPC logo' width='600px'/>
 
