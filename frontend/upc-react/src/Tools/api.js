@@ -81,7 +81,6 @@ export const sendHeartbeat = async (CENTRAL_SERVER_URL) => {
 };
 
 // ********************************************  With API server  ********************************************
-
 // Check if the backend is connected
 export const checkConnection = async (API_URL) => {
     try {
