@@ -10,7 +10,7 @@ const publicFrontUrl = 'http://localhost:3000';
 console.log('Frontend IP:', publicFrontUrl);
 const frontName = 'Frontend-' + publicFrontUrl;
 
-// With Central Server ----------------------------------------------------------------------------------------
+// ********************************************  With Central Server  *******************************************************
 
 // Get the list of services
 export const getServices = async (CENTRAL_SERVER_URL) => {
@@ -80,7 +80,7 @@ export const sendHeartbeat = async (CENTRAL_SERVER_URL) => {
     }
 };
 
-// With API server --------------------------------------------------------------------------------------------
+// ********************************************  With API server  ********************************************
 
 // Check if the backend is connected
 export const checkConnection = async (API_URL) => {
@@ -438,7 +438,7 @@ export const processFile = async (API_URL, fileName) => {
 };
 
 
-// With Register Server ----------------------------------------------------------------------------------------
+// ********************************************  With Register Server  ********************************************
 
 // upload files to Register Server
 export const uploadData_server = async (CENTRAL_SERVER_URL, data) => {

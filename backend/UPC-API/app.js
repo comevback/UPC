@@ -43,7 +43,7 @@ app.use(express.json()); // for parsing application/json
 app.use(cors());
 //app.use(limiter);
 
-// Register Or Heartbeat ======================================================================================
+// ********************************************  Register Or Heartbeat  ********************************************
 
 let isRegistered = false;
 
@@ -96,7 +96,7 @@ const gracefulShutdown = () => {
 process.on('SIGTERM', gracefulShutdown);
 process.on('SIGINT', gracefulShutdown);
 
-// Routers ======================================================================================
+// ********************************************  Routers  ********************************************
 
 //basic
 app.get("/", (req, res) => {
@@ -406,7 +406,7 @@ app.post('/api/temps/download', async(req, res) => {
 });
 
 
-// Generate Image after upload and unzip file =========================================================================================
+// ******************************************** Generate Image after upload and unzip file ********************************************
 app.post('/api/files/:filename', async(req, res) => {
     const startTime = Date.now();
 
@@ -854,7 +854,7 @@ app.post('/api/openai/:fileName', async(req, res) => {
 });
 
 
-
+// ********************************************  Start and WS  ********************************************
 
 //Listen on port
 server.listen(port, () => {
