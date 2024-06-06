@@ -298,7 +298,6 @@ li.selected:hover{
     }
 }
 
-
 li span{
     display: flex;
     justify-content: center;
@@ -314,6 +313,13 @@ button{
     justify-content: center;
     align-items: center;
     cursor: pointer;
+    border-radius: 5px;
+    border: 1px solid #ddd;
+    background-color: #ffffff;
+}
+
+button:hover{
+    box-shadow: 0 0 5px #000000;
 }
 
 input:hover{

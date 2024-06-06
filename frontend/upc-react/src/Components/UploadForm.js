@@ -147,7 +147,7 @@ const UploadForm = (props) => {
 
     return (
         <div onDragOver={handleDragOver} onDragLeave={handleDragLeave} onDrop={handleDrop}>
-            <h1>Upload a file</h1>
+            <h1>Upload files</h1>
             <form className={`upload-form ${dragging ? "dragging" : "" }`} onSubmit={handleSubmit_xhr}>
                 <div className="upload-input">
                     <div className="upload-panel">

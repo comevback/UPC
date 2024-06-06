@@ -1,11 +1,13 @@
 import { useContext, useState, useEffect } from 'react';
-import { deleteImage, viewImage } from '../Tools/api';
+import { deleteImage, viewImage, pullImage } from '../Tools/api';
 import { ParaContext } from '../Global.js';
 import Swal from 'sweetalert2';
 import './ImagesList.css';
 
 const ImagesList = (props) => {
-    const [activeImageInfo, setActiveImageInfo] = useState(null); // Store the active image info object
+    const [activeImageInfo, setActiveImageInfo] = useState(null); // 被选中的镜像
+    const [searchValue, setSearchValue] = useState(''); // 搜索框的值
+    const [isLoading, setIsLoading] = useState(false); // 是否正在加载
     const { API_URL } = useContext(ParaContext);
 
     useEffect(() => {
@@ -30,9 +32,41 @@ const ImagesList = (props) => {
         console.log('Updated selected files:', imageName);  // This is the new code, set selectedImages as a String.
     };
 
+    // 搜索框
+    const handleSearchChange = (e) => {
+        setSearchValue(e.target.value);
+    }
+
+    // 拉取镜像按钮
+    const handlePullSubmit = async (e) => {
+        e.preventDefault();
+        setIsLoading(true);
+
+        try {
+            const response = await pullImage(API_URL, searchValue);
+            if (response === undefined || response.length === 0 || response === false) {
+                alert('Image Cannot be pulled');
+                return;
+            } else {
+                // 通过 SweetAlert2 显示信息
+                Swal.fire({
+                    title: `Pull Image`,
+                    html: `Image ${searchValue} has been pulled successfully.`,
+                    customClass: {
+                        popup: 'formatted-alert'
+                    },
+                    width: '600px',
+                    confirmButtonText: 'Close'
+                });
+            }
+            props.refreshImages();
+        } finally {
+            setIsLoading(false);
+        }
+    }
+
 
     const handleViewClick = async (image) => {
-
         // Check if the activeImageInfo is already set to the clicked image
         if (activeImageInfo && activeImageInfo.RepositoryTags.includes(image)) {
             // If so, set it back to null to 'deselect' it
@@ -114,6 +148,13 @@ const ImagesList = (props) => {
         <div>
             <h1>Docker Images</h1>
             <ul className="image-list">
+                <form className="pull-form" onSubmit={handlePullSubmit}>
+                    <input className='pull-input' type="text" placeholder="Input Image Name..." onChange={handleSearchChange} />
+                    <button className='pull-button' type="submit" >
+                        {isLoading ? <div className="spinner"></div> : 'Pull Image'}
+                    </button>
+                </form>
+
                 {props.images.map((image, index) => (
                     <li className={`image-item ${props.selectedImages.includes(image) ? 'selected' : ''}`} key={index}>
                         <div className='name-and-buttons'>

@@ -387,6 +387,17 @@ export const deleteImage = async (API_URL, fileName) => {
     }
 };
 
+// Pull an image
+export const pullImage = async (API_URL, imageName) => {
+    try {
+        const response = await axios.post(`${API_URL}/api/pull/${imageName}`);
+        console.log(response.data);
+        return response.data;
+    } catch (error) {
+        console.error('Error pulling image:', error);
+    }
+};
+
 // send a command to the backend
 export const sendCommand = async (API_URL, command) => {
     try {

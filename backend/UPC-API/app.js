@@ -12,7 +12,6 @@ import { exec, spawn } from "child_process";
 import http from "http";
 import { Server } from "socket.io";    
 import { serviceInfo, upload, limiter, registerService, unregisterService, sendHeartbeat, getWorkingDir, getEntrypoint, getCmd, getAvailableShell } from "./Components/methods.js";
-import { viewImage } from "../../frontend/upc-react/src/Tools/api.js";
 
 const app = express();
 app.set('trust proxy', true); // trust first proxy

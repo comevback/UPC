@@ -7,8 +7,9 @@ import './FileList.css';
 
 // FileList.js
 const FileList = (props) => {
-    const [info, setInfo] = useState([]);
-    const [activeInfoFile, setActiveInfoFile] = useState('');
+    const [info, setInfo] = useState([]); // 信息
+    const [activeInfoFile, setActiveInfoFile] = useState(''); // 被选中的文件
+    const [isLoading, setIsLoading] = useState(false); // 是否正在加载
     const { API_URL } = useContext(ParaContext);
 
 
@@ -57,8 +58,28 @@ const FileList = (props) => {
     const handleFileClick = async(file) => {
         setInfo('Loading...');
         setActiveInfoFile(file);
-        await generateImage(API_URL, file);
-        props.refreshAll();
+        setIsLoading(true);
+
+        try {
+            const response = await generateImage(API_URL, file);
+            if (response === undefined || response.length === 0 || response === false) {
+                setInfo('Invalid file type, Shoud be .zip file');
+            } else {
+                setInfo(response);
+                Swal.fire({
+                    title: `Generate Image`,
+                    html: `Image generated successfully.`,
+                    customClass: {
+                        popup: 'formatted-alert'
+                    },
+                    width: '600px',
+                    confirmButtonText: 'Close'
+                });
+            }
+            props.refreshAll();
+        }finally {
+            setIsLoading(false);
+        }
     };
 
     // ============================== WebSocket ==================================
@@ -156,7 +177,7 @@ const FileList = (props) => {
                             <span>{file}</span>
                             <div className='buttons'>
                                 {/* <button onClick={() => handleProcessClick(file)} >AI generate</button> */}
-                                <button onClick={() => handleFileClick(file)} >Generate Image</button>
+                                <button onClick={() => handleFileClick(file)} >{isLoading ? <div className="spinner"></div> : 'Generate Image'}</button>
                                 <button onClick={() => downloadFile(API_URL, file)}>&#x21E9;</button>
                                 <button onClick={async() => {
                                     await deleteFile(API_URL, file);
