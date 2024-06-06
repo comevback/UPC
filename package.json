@@ -9,7 +9,8 @@
   "dependencies": {
     "caniuse-lite": "^1.0.30001625",
     "concurrently": "^8.2.2",
-    "particles.js": "^2.0.0"
+    "particles.js": "^2.0.0",
+    "sweetalert2": "^11.11.1"
   },
   "main": "main.js",
   "version": "1.0.0",

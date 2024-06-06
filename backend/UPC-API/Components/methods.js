@@ -107,7 +107,7 @@ export const limiter = rateLimit({
     message: "Too many requests from this IP, please try again later."
 });
 
-// Register the service ============================================================================
+// ************************************************Register the service ****************************************************
 export const registerService = async () => {
     try {
       const response = await axios.post(`${CENTRAL_SERVER}/register-service`, serviceInfo);

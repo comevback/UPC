@@ -1,7 +1,8 @@
 import { useState, useEffect, useContext } from 'react';
 import { downloadFile, generateImage, deleteFile, downloadAllFiles, downloadAllFilesZip, deleteAllFiles, processFile } from '../Tools/api';
 import { ParaContext } from '../Global.js';
-import io from 'socket.io-client';     
+import io from 'socket.io-client';    
+import Swal from 'sweetalert2'; 
 import './FileList.css';
 
 // FileList.js
@@ -154,7 +155,7 @@ const FileList = (props) => {
                                 onChange={() => handleCheckboxChange(file)} />
                             <span>{file}</span>
                             <div className='buttons'>
-                                <button onClick={() => handleProcessClick(file)} >AI generate</button>
+                                {/* <button onClick={() => handleProcessClick(file)} >AI generate</button> */}
                                 <button onClick={() => handleFileClick(file)} >Generate Image</button>
                                 <button onClick={() => downloadFile(API_URL, file)}>&#x21E9;</button>
                                 <button onClick={async() => {

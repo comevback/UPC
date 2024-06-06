@@ -267,6 +267,15 @@ const ProcessForm = (props) => {
         socket.current.emit('input', dockerCommand);
     }
 
+    // if (!props.images.length || !props.files.length) {
+    //     return (
+    //         <div className="processing">
+    //             <h1>Processing</h1>
+    //             <p>There are no images available to process.</p>
+    //         </div>
+    //     );
+    // }
+
     return(
         <div className="processing">
             <form className="processing-form" style={{ width: formWidth }} onSubmit={handleDockerRun} onChange={handleInputChange}>

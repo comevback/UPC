@@ -43,3 +43,27 @@
     display: flex;
     gap: 10px; /* space between buttons */
 }
+
+.formatted-alert pre {
+    background-color: #f9f9f9;
+    padding: 10px;
+    border-radius: 5px;
+    white-space: pre-wrap; /* 保持换行 */
+    font-family: 'Courier New', Courier, monospace; /* 使用等宽字体 */
+    font-size: 20px; /* 调整字体大小 */
+    line-height: 1.5; /* 调整行高 */
+    overflow: auto; /* 如果内容超出容器，显示滚动条 */
+}
+
+.formatted-alert th {
+    vertical-align: top;
+    text-align: left;
+    width: 200px;
+}
+
+.formatted-alert td {
+    text-align: left;
+    border-radius: 5px;
+    overflow-x: scroll;
+    width: auto;
+}

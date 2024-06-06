@@ -93,24 +93,28 @@ const UploadForm = (props) => {
     const handleSubmit_xhr = async (event) => {
         event.preventDefault();// Prevent the default form submit event
         console.log(files);
+
+        // 如果没有文件被选择，直接返回，不进行上传，显示红色
         if(files.length === 0) {
             setUploadStatus('✗');
             document.getElementById('progress-bar').style.setProperty('--progress-width', `100%`); // Reset the progress bar
             document.getElementById('progress-bar').style.setProperty('--background-color', 'red'); // set the progress bar color to red
             return;
         }
-        const formData = new FormData();
-        // Create an empty FormData object
 
+        // 创建一个FormData对象，把每个被选择的文件添加到formData中
+        const formData = new FormData();
         files.forEach((file) => {
             formData.append('file', file);
-        });// Add the file to formData
+        });
 
         document.getElementById('progress-bar').style.setProperty('--background-color', '#2ebdfb'); // set the progress bar color to blue
 
-        // Send formData to server using xhr
+        // 创建一个XMLHttpRequest对象，发送formData到服务器
         const xhr = new XMLHttpRequest();
         xhr.open('POST', `${API_URL}/api/upload`, true);
+
+        // 设置上传进度监听器
         xhr.upload.onprogress = (event) => {
             const progress = event.loaded / event.total * 100;
             document.getElementById('progress-bar').style.setProperty('--progress-width', `${progress}%`); // Updating the progress bar
@@ -119,6 +123,7 @@ const UploadForm = (props) => {
             }
         }
 
+        // 设置上传完成监听器
         xhr.onload = () => {
             if (xhr.status === 200) {
                 setUploadStatus('✓');

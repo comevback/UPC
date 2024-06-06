@@ -12,6 +12,7 @@ import { exec, spawn } from "child_process";
 import http from "http";
 import { Server } from "socket.io";    
 import { serviceInfo, upload, limiter, registerService, unregisterService, sendHeartbeat, getWorkingDir, getEntrypoint, getCmd, getAvailableShell } from "./Components/methods.js";
+import { viewImage } from "../../frontend/upc-react/src/Tools/api.js";
 
 const app = express();
 app.set('trust proxy', true); // trust first proxy
@@ -98,17 +99,17 @@ process.on('SIGINT', gracefulShutdown);
 
 // ********************************************  Routers  ********************************************
 
-//basic
+// basic
 app.get("/", (req, res) => {
     res.render("index");
 });
 
-//Connection test
+// Connection test
 app.get('/api', (req, res) => {
     res.send("Connected to API server");
 });
 
-//Route to update files to the server
+// Route to upload files to the server
 app.post('/api/upload', upload.array('file', 50), (req, res) => {
     console.log(req.files);
     res.send(req.files);
@@ -166,61 +167,6 @@ app.get('/api/temps', async (req, res) => {
     });
 });
 
-// Route to get the list of all images
-app.get('/api/images', (req, res) => {
-    exec('docker images --format "{{.Repository}}:{{.Tag}}" | sort', (err, stdout, stderr) => {
-        if (err) {
-            // Error handling
-            res.status(500).send(stderr);
-        } else {
-            // Standard output handling
-            const images = stdout.split('\n').filter(line => line); // Delete the last empty line
-            res.status(200).json(images);
-        }
-    });
-});
-
-//view the image details
-app.get('/api/images/:imageName', async(req, res) => {
-    const { imageName } = req.params;
-
-    exec(`docker inspect ${imageName}`, (err, stdout, stderr) => {
-        if (err) {
-            // Error handling
-            console.error(`Error inspecting image: ${err}`);
-            res.status(500).send(stderr);
-        } else {
-            try {
-                // Try to parse the JSON output
-                const imageDetails = JSON.parse(stdout);
-                // Create a new array with the formatted details
-                const formattedDetails = imageDetails.map(detail => ({
-                    WorkingDir: detail.Config.WorkingDir,
-                    Entrypoint: detail.Config.Entrypoint,
-                    Cmd: detail.Config.Cmd,
-                    Id: detail.Id,
-                    Created: detail.Created,
-                    Size: `${(detail.Size / 1024 / 1024).toFixed(2)} MB`,
-                    Architecture: detail.Architecture,
-                    RepositoryTags: detail.RepoTags,
-                    Os: detail.Os,
-                    DockerVersion: detail.DockerVersion,
-                    // more details can be added here
-                }));
-
-                // Send the formatted details to the client
-                res.status(200).json(formattedDetails);
-
-                // 
-
-            } catch (parseErr) {
-                // If the JSON parsing fails, send an error to the client
-                console.error(`Error parsing JSON: ${parseErr}`);
-                res.status(500).send('Error parsing JSON');
-            }
-        }
-    });
-});
 
 // Route to download a file
 app.get('/api/files/:filename', (req, res) => {
@@ -406,7 +352,64 @@ app.post('/api/temps/download', async(req, res) => {
 });
 
 
-// ******************************************** Generate Image after upload and unzip file ********************************************
+// **********************************************************  Docker  ******************************************************
+// Route to get the list of all images
+app.get('/api/images', (req, res) => {
+    exec('docker images --format "{{.Repository}}:{{.Tag}}" | sort', (err, stdout, stderr) => {
+        if (err) {
+            // Error handling
+            res.status(500).send(stderr);
+        } else {
+            // Standard output handling
+            const images = stdout.split('\n').filter(line => line); // Delete the last empty line
+            res.status(200).json(images);
+        }
+    });
+});
+
+//view the image details
+app.get('/api/images/:imageName', async(req, res) => {
+    const { imageName } = req.params;
+
+    exec(`docker inspect ${imageName}`, (err, stdout, stderr) => {
+        if (err) {
+            // Error handling
+            console.error(`Error inspecting image: ${err}`);
+            res.status(500).send(stderr);
+        } else {
+            try {
+                // Try to parse the JSON output
+                const imageDetails = JSON.parse(stdout);
+                // Create a new array with the formatted details
+                const formattedDetails = imageDetails.map(detail => ({
+                    WorkingDir: detail.Config.WorkingDir,
+                    Entrypoint: detail.Config.Entrypoint,
+                    Cmd: detail.Config.Cmd,
+                    Id: detail.Id,
+                    Created: detail.Created,
+                    Size: `${(detail.Size / 1024 / 1024).toFixed(2)} MB`,
+                    Architecture: detail.Architecture,
+                    RepositoryTags: detail.RepoTags,
+                    Os: detail.Os,
+                    DockerVersion: detail.DockerVersion,
+                    // more details can be added here
+                }));
+
+                // Send the formatted details to the client
+                res.status(200).json(formattedDetails);
+
+                // 
+
+            } catch (parseErr) {
+                // If the JSON parsing fails, send an error to the client
+                console.error(`Error parsing JSON: ${parseErr}`);
+                res.status(500).send('Error parsing JSON');
+            }
+        }
+    });
+});
+
+// unzip the file and build the image with the extracted files by buildpack
 app.post('/api/files/:filename', async(req, res) => {
     const startTime = Date.now();
 

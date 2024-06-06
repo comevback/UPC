@@ -18,8 +18,7 @@ app.set('view engine', 'ejs');
 app.use(cors());
 
 
-// manage the services =================================================================================
-
+// ************************************************  manage the services  ************************************************
 // Read data from file on startup
 readServicesFromFile();
 
@@ -56,9 +55,7 @@ app.get('/', async (req, res) => {
 });
 
 
-// BACKEND SERVERS --------------------------------------------------------------------------------------------
-
-
+// ************************************************  BACKEND SERVERS  ************************************************
 // List all registered services as json
 app.get('/list-services', async (req, res) => {
   try {
@@ -171,8 +168,7 @@ app.post('/service-heartbeat', async (req, res) => {
 });
 
 
-// FRONTEND SERVERS --------------------------------------------------------------------------------------------
-
+// ************************************************  Frontend SERVERS  ************************************************
 // Register frontend server
 app.post('/frontend/register-service', async (req, res) => {
   const { _id, url, publicUrl } = req.body;

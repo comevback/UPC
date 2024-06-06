@@ -335,6 +335,7 @@ export const downloadTemp = async (API_URL, fileName) => {
     }
 };
 
+// ****************************************************  Docker Iamges  *****************************************************
 // Generate image
 export const generateImage = async (API_URL, fileName) => {
     try {

@@ -1,6 +1,7 @@
 import { useContext, useState, useEffect } from 'react';
 import { deleteImage, viewImage } from '../Tools/api';
 import { ParaContext } from '../Global.js';
+import Swal from 'sweetalert2';
 import './ImagesList.css';
 
 const ImagesList = (props) => {
@@ -41,10 +42,54 @@ const ImagesList = (props) => {
             const response = await viewImage(API_URL, image);
             // If the response is undefined, the image was not found
             if (response === undefined || response.length === 0 || response === false) {
-                alert('Image Cannot be viewed');
+                Swal.fire({
+                    title: `Error`,
+                    html: `Image can not be viewed.`,
+                    customClass: {
+                        popup: 'formatted-alert'
+                    },
+                    width: '600px',
+                    confirmButtonText: 'Close'
+                });
                 return;
             } else {
-            setActiveImageInfo(response[0]); // Set the active image info to the first object in the response array
+                // 分解response[0]，将其各个属性显示出来
+                const info = {
+                    "WorkingDir": response[0].WorkingDir,
+                    "Entrypoint": response[0].Entrypoint,
+                    "Cmd": response[0].Cmd,
+                    "Size": response[0].Size,
+                    "Architecture": response[0].Architecture,
+                    "Os": response[0].Os,
+                    "Created": response[0].Created,
+                    "Id": response[0].Id,
+                }
+
+                // 格式化 JSON 信息为 HTML 表格
+                const infoHtml = `
+                    <table class="info-table">
+                        <tr><th>WorkingDir:</th><td>${info.WorkingDir}</td></tr>
+                        <tr><th>Entrypoint:</th><td>${info.Entrypoint}</td></tr>
+                        <tr><th>Cmd:</th><td>${info.Cmd}</td></tr>
+                        <tr><th>Size:</th><td>${info.Size}</td></tr>
+                        <tr><th>Architecture:</th><td>${info.Architecture}</td></tr>
+                        <tr><th>Os:</th><td>${info.Os}</td></tr>
+                        <tr><th>Created:</th><td>${info.Created}</td></tr>
+                        <tr><th>ID:</th><td>${info.Id}</td></tr>
+                    </table>
+                `;
+
+                // 通过 SweetAlert2 显示信息
+                Swal.fire({
+                    title: `${image}`,
+                    html: `<pre>${infoHtml}</pre>`,
+                    customClass: {
+                        popup: 'formatted-alert',
+                        header: 'formatted-alert-header',
+                    },
+                    width: '800px',
+                    confirmButtonText: 'Close'
+                });
             }
         }
         props.refreshImages();
@@ -80,17 +125,6 @@ const ImagesList = (props) => {
                                 <button onClick={() => handleDeleteClick(image)}>&#10007;</button>
                             </div>
                         </div>
-                        {activeImageInfo && activeImageInfo.RepositoryTags.includes(image) && (
-                            <div className='info'>
-                                <p>WorkingDir: {activeImageInfo.WorkingDir}</p>
-                                <p>Entrypoint: {activeImageInfo.Entrypoint}</p>
-                                <p>Cmd: {activeImageInfo.Cmd}</p>
-                                <p>Size: {activeImageInfo.Size}</p>
-                                <p>Architecture: {activeImageInfo.Architecture}</p>
-                                <p>Created: {new Date(activeImageInfo.Created).toLocaleDateString()}</p>
-                                <p>ID: {activeImageInfo.Id}</p>
-                            </div>
-                        )}
                     </li>
                 ))}
             </ul>

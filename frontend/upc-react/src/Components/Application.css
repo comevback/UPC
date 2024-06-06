@@ -14,6 +14,7 @@
     max-height: 40vh;
     height: 100%;
     width: 100%;
+    background-color: rgba(255, 255, 255, 0.9); /* 半透明背景色 */
 }
 
 .term{
@@ -153,6 +154,7 @@ ul{
     overflow-y: auto; /* allow vertical scrolling */
     margin-left: auto;
     margin-right: auto;
+    background-color: rgba(255, 255, 255, 0.95); /* 半透明背景色 */
 }
 
 ul:hover{
@@ -197,6 +199,7 @@ li{
     opacity: 0.9;
     margin-left: auto;
     margin-right: auto;
+    background-color: rgba(255, 255, 255, 0.95); /* 半透明背景色 */
 }
 
 li.example{
