@@ -31,6 +31,9 @@ RUN sh -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master
 # # Install zsh-autosuggestions and add source ~/.zsh/zsh-autosuggestions/zsh-autosuggestions.zsh to .zshrc
 # RUN git clone https://github.com/zsh-users/zsh-autosuggestions ~/.zsh/zsh-autosuggestions && echo "source ~/.zsh/zsh-autosuggestions/zsh-autosuggestions.zsh" >> ~/.zshrc
 
+# Install pack
+RUN (curl -sSL "https://github.com/buildpacks/pack/releases/download/v0.32.1/pack-v0.32.1-linux.tgz" | tar -C /usr/local/bin/ --no-same-owner -xzv pack)
+
 # Copy the Pre-built binary file from the previous stage
 COPY --from=builder /app/main .
 COPY --from=builder /app/views ./views
