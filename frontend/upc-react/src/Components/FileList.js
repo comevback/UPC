@@ -65,7 +65,7 @@ const FileList = (props) => {
             if (response === undefined || response.length === 0 || response === false) {
                 setInfo('Invalid file type, Shoud be .zip file');
             } else {
-                setInfo(response);
+                setInfo('Image generated successfully.');
                 Swal.fire({
                     title: `Generate Image`,
                     html: `Image generated successfully.`,
@@ -77,58 +77,59 @@ const FileList = (props) => {
                 });
             }
             props.refreshAll();
+            setActiveInfoFile('');
         }finally {
             setIsLoading(false);
         }
     };
 
     // ============================== WebSocket ==================================
-    useEffect(() => {
-        props.refreshFiles();
+    // useEffect(() => {
+    //     props.refreshFiles();
 
-        // Create a new WebSocket
-        const socket = io(API_URL, {
-            path: '/app', // The path to the WebSocket endpoint on the server
-        });
+    //     // Create a new WebSocket
+    //     const socket = io(API_URL, {
+    //         path: '/app', // The path to the WebSocket endpoint on the server
+    //     });
 
-        // Listen for connection open
-        socket.on('connection', () => {
-            console.log('Connected to WebSocket server');
-        });
+    //     // Listen for connection open
+    //     socket.on('connection', () => {
+    //         console.log('Connected to WebSocket server');
+    //     });
 
-        // Listen for connection close
-        socket.on('disconnect', () => {
-            console.log('Disconnected from WebSocket server');
-        });
+    //     // Listen for connection close
+    //     socket.on('disconnect', () => {
+    //         console.log('Disconnected from WebSocket server');
+    //     });
         
-        // Listen for messages
-        socket.on('message', (data) => {
-            setInfo(data);
-            console.log('Received message from server:', data);
-        });
+    //     // Listen for messages
+    //     socket.on('message', (data) => {
+    //         setInfo(data);
+    //         console.log('Received message from server:', data);
+    //     });
 
-        // Listen for WebSocket errors
-        socket.on('error', (error) => {
-            console.error('Error:', error);
-        });
+    //     // Listen for WebSocket errors
+    //     socket.on('error', (error) => {
+    //         console.error('Error:', error);
+    //     });
 
-        // Listen for geneMessage
-        socket.on('geneMessage', (data) => {
-            setInfo(data);
-        });
+    //     // Listen for geneMessage
+    //     socket.on('geneMessage', (data) => {
+    //         setInfo(data);
+    //     });
 
-        // Listen for geneError
-        socket.on('geneError', (data) => {
-            setInfo(data);
-        });
+    //     // Listen for geneError
+    //     socket.on('geneError', (data) => {
+    //         setInfo(data);
+    //     });
 
 
-        // Close the WebSocket connection when the component unmounts
-        return () => {
-            socket.close();
-            setInfo([]);
-        };
-    }, [API_URL]);
+    //     // Close the WebSocket connection when the component unmounts
+    //     return () => {
+    //         socket.close();
+    //         setInfo([]);
+    //     };
+    // }, [API_URL]);
 
     // =============================== WebSocket ==================================
 
@@ -177,7 +178,7 @@ const FileList = (props) => {
                             <span>{file}</span>
                             <div className='buttons'>
                                 {/* <button onClick={() => handleProcessClick(file)} >AI generate</button> */}
-                                <button onClick={() => handleFileClick(file)} >{isLoading ? <div className="spinner"></div> : 'Generate Image'}</button>
+                                <button className='geneButton' onClick={() => handleFileClick(file)} >{activeInfoFile === file && isLoading ? <div className="spinner"></div> : 'Generate Image'}</button>
                                 <button onClick={() => downloadFile(API_URL, file)}>&#x21E9;</button>
                                 <button onClick={async() => {
                                     await deleteFile(API_URL, file);

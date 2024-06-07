@@ -62,6 +62,7 @@ const ImagesList = (props) => {
             props.refreshImages();
         } finally {
             setIsLoading(false);
+            setSearchValue('');
         }
     }
 
@@ -149,7 +150,7 @@ const ImagesList = (props) => {
             <h1>Docker Images</h1>
             <ul className="image-list">
                 <form className="pull-form" onSubmit={handlePullSubmit}>
-                    <input className='pull-input' type="text" placeholder="Input Image Name..." onChange={handleSearchChange} />
+                    <input className='pull-input' type="text" placeholder="Input Image Name..." value={searchValue} onChange={handleSearchChange} />
                     <button className='pull-button' type="submit" >
                         {isLoading ? <div className="spinner"></div> : 'Pull Image'}
                     </button>

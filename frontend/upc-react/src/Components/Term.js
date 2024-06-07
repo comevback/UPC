@@ -64,11 +64,11 @@ const Term = () => {
             terminal.current.writeln(`${demoColor}---------------------------------------------------------------------------------------${end_style}`)
 
             socket.current.on('output', (data) => {
-                terminal.current.write(data);
+                terminal.current.write(data); // 从服务器接收到的数据
             });
 
             terminal.current.onData((data) => {
-                socket.current.emit('input', data);
+                socket.current.emit('input', data); // 发送数据到服务器
             });
 
             return () => {

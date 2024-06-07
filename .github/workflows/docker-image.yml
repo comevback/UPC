@@ -23,7 +23,7 @@ jobs:
         run: docker push afterlifexx/upc-system:latest
   
 
-  build-backend:
+  build-backend-Node:
     runs-on: ubuntu-latest
 
     steps:
@@ -39,6 +39,24 @@ jobs:
       
       - name: Push the Docker image for backend to the Dockerhub
         run: docker push afterlifexx/upc-api:latest
+
+
+  build-backend-Go:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Log in to Docker Hub
+        uses: docker/login-action@v3
+        with:
+          username: ${{ secrets.DOCKER_HUB_USERNAME }}
+          password: ${{ secrets.DOCKER_HUB_ACCESS_TOKEN }}
+
+      - uses: actions/checkout@v3
+      - name: Build the Docker image for backend
+        run: docker build ./backend/UPC-GO --file ./backend/UPC-GO/Dockerfile --tag afterlifexx/upc-go:latest
+      
+      - name: Push the Docker image for Go backend to the Dockerhub
+        run: docker push afterlifexx/upc-go:latest
 
 
   build-frontend:

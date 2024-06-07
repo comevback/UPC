@@ -9,8 +9,10 @@ import ImagesList from './ImagesList.js';
 import Heading from './Heading.js';
 import Logo from './Logo.js';
 import Term from './Term.js';
+import TermWS from './TermWS.js';
 import particlesJS from 'particles.js';
 import ProcessForm from './ProcessForm.js';
+import ProcessFormWS from './ProcessFormWS.js';
 
 const ApplicationForm = () => {
     const [connected, setConnected] = useState(false);
@@ -141,12 +143,12 @@ const ApplicationForm = () => {
             <div className='term-and-logo'>
                 <Logo termShown={termShown} connected={connected}/>     
                 <div className={`term ${termShown? 'active' : ''}`}>
-                    {termShown? <Term/> : null}
+                    {termShown? <TermWS/> : null}
                 </div>
             </div>
             <button className={`command-button ${!processing && selectedImages  ? 'shining' : processing ? 'active' : '' }` } onClick={toggleProcess} >Process</button>
             <div className={`process ${processing ? 'active' : ''}`}>
-                <ProcessForm selectedImages={selectedImages} selectedFiles={selectedFiles} images={images} files={files} /> 
+                <ProcessFormWS selectedImages={selectedImages} selectedFiles={selectedFiles} images={images} files={files} /> 
             </div>
             <div className="area">
                 <UploadForm refreshFiles={refreshFiles} refreshResults={refreshResults} refreshAll={refresh}/>

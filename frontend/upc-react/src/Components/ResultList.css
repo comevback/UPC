@@ -40,4 +40,11 @@
 .buttons{
     display: flex;
     gap: 10px;
+    min-width: 185.3px;
+    justify-content: flex-end;
+    align-items: center;
+}
+
+.buttons button{
+    height: 25px;
 }

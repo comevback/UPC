@@ -9,7 +9,7 @@ import { dirname } from 'path';
 import { fileURLToPath } from 'url';
 import { exec, spawn } from "child_process"; 
 import http from "http";
-import { WebSocketServer, WebSocket } from 'ws';
+import { Server } from "socket.io";
 import { serviceInfo, upload, limiter, registerService, unregisterService, sendHeartbeat, getWorkingDir, getEntrypoint, getCmd, getAvailableShell } from "./Components/methods.js";
 
 const app = express();
@@ -24,7 +24,13 @@ app.set('trust proxy', true); // trust first proxy
 
 // const server = https.createServer({ key: privateKey, cert: certificate }, app);
 const server = http.createServer(app);
-const wss = new WebSocketServer({ server });
+const io = new Server(server, {
+    path: '/app',
+    cors: {
+        origin: "*",
+        methods: ["GET", "POST"]
+    }
+});
 const port = process.env.API_PORT || 4000;
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
@@ -89,7 +95,7 @@ const gracefulShutdown = () => {
 process.on('SIGTERM', gracefulShutdown);
 process.on('SIGINT', gracefulShutdown);
 
-// // ********************************************  Routers  ********************************************
+// ********************************************  Routers  ********************************************
 
 // basic
 app.get("/", (req, res) => {
@@ -186,12 +192,12 @@ app.post('/api/files/download', async(req, res) => {
 
     zip.stdout.on('data', (data) => {
         console.log(`stdout: ${data}`);
-        broadcast('geneMessage', data.toString());
+        io.emit('output', data.toString());
     });
 
     zip.stderr.on('data', (data) => {
         console.error(`stderr: ${data}`);
-        broadcast('geneMessage', data.toString());
+        io.emit('output', data.toString());
     });
 
     zip.on('close', (code) => {
@@ -200,7 +206,7 @@ app.post('/api/files/download', async(req, res) => {
             return res.status(500).send({ message: 'Error zipping files' });
         }
         console.log('Files zipped successfully');
-        broadcast('geneMessage', 'Files zipped successfully');
+        io.emit('output', 'Files zipped successfully');
 
         // Now that ZIP process has completed, send the file
         res.download(zipFilePath, (err) => {
@@ -247,12 +253,12 @@ app.post('/api/results/download', async(req, res) => {
 
     zip.stdout.on('data', (data) => {
         console.log(`stdout: ${data}`);
-        broadcast('geneMessage', data.toString());
+        io.emit('output', data.toString());
     });
 
     zip.stderr.on('data', (data) => {
         console.error(`stderr: ${data}`);
-        broadcast('geneMessage', data.toString());
+        io.emit('output', data.toString());
     });
 
     zip.on('close', (code) => {
@@ -261,7 +267,7 @@ app.post('/api/results/download', async(req, res) => {
             return res.status(500).send({ message: 'Error zipping files' });
         }
         console.log('Files zipped successfully');
-        broadcast('geneMessage', 'Files zipped successfully');
+        io.emit('output', 'Files zipped successfully');
 
         // Now that ZIP process has completed, send the file
         res.download(zipFilePath, (err) => {
@@ -308,12 +314,12 @@ app.post('/api/temps/download', async(req, res) => {
 
     zip.stdout.on('data', (data) => {
         console.log(`stdout: ${data}`);
-        broadcast('geneMessage', data.toString());
+        io.emit('output', data.toString());
     });
 
     zip.stderr.on('data', (data) => {
         console.error(`stderr: ${data}`);
-        broadcast('geneMessage', data.toString());
+        io.emit('output', data.toString());
     });
 
     zip.on('close', (code) => {
@@ -322,7 +328,7 @@ app.post('/api/temps/download', async(req, res) => {
             return res.status(500).send({ message: 'Error zipping files' });
         }
         console.log('Files zipped successfully');
-        broadcast('geneMessage', 'Files zipped successfully');
+        io.emit('output', 'Files zipped successfully');
 
         // Now that ZIP process has completed, send the file
         res.download(zipFilePath, (err) => {
@@ -383,12 +389,14 @@ app.get('/api/images/:imageName', async(req, res) => {
                     Architecture: detail.Architecture,
                     RepositoryTags: detail.RepoTags,
                     Os: detail.Os,
-                    DockerVersn: detail.DockerVersion,
+                    DockerVersion: detail.DockerVersion,
                     // more details can be added here
                 }));
 
                 // Send the formatted details to the client
                 res.status(200).json(formattedDetails);
+
+                // 
 
             } catch (parseErr) {
                 // If the JSON parsing fails, send an error to the client
@@ -402,6 +410,7 @@ app.get('/api/images/:imageName', async(req, res) => {
 // unzip the file and build the image with the extracted files by buildpack
 app.post('/api/files/:filename', async(req, res) => {
     const startTime = Date.now();
+
     const { filename } = req.params;
     const baseFileName = path.basename(filename, '.zip');
     const filePath = path.join(__dirname, 'uploads', filename);
@@ -412,10 +421,9 @@ app.post('/api/files/:filename', async(req, res) => {
 
     if (!filename.endsWith('.zip')) {
         console.log('Invalid file type');
-        broadcast('geneError', 'Invalid file type, Should be .zip file');
-        return res.status(400).send({ message: 'Invalid file type, Should be .zip file' });
+        io.emit('geneError', 'Invalid file type, Shoud be .zip file');
+        return res.status(400).send({ message: 'Invalid file type, Shoud be .zip file' });
     }
-
     if (!fs.existsSync(filePath)) {
         console.log('File does not exist');
         return res.status(400).send({ message: 'File does not exist' });
@@ -425,20 +433,19 @@ app.post('/api/files/:filename', async(req, res) => {
         await fs.promises.rm(appPath, { recursive: true });
         console.log('Previous unzipped folder deleted');
     }
+    
+    //await extract(filePath, { dir: extractPath });
 
     const unzip = spawn('unzip', ['-o', filePath, '-d', extractPath]);
 
     unzip.stdout.on('data', (data) => {
         console.log(`stdout: ${data}`);
-        // broadcast('geneMessage', data.toString());
-        const output = data.toString();
-        const chunks = output.match(/(.|[\r\n]){1,1000}/g); // 分块大小调整
-        chunks.forEach(chunk => broadcast('geneMessage', chunk));
+        io.emit('geneMessage', data.toString());
     });
 
     unzip.stderr.on('data', (data) => {
         console.error(`stderr: ${data}`);
-        broadcast('geneError', data.toString());
+        io.emit('geneError', data.toString());
     });
 
     unzip.on('close', (code) => {
@@ -446,51 +453,215 @@ app.post('/api/files/:filename', async(req, res) => {
             console.error(`unzip process exited with code ${code}`);
             return res.status(500).send({ message: 'Error unzipping file' });
         }
-
+        
         console.log('File unzipped successfully');
-        broadcast('geneMessage', 'File unzipped successfully');
+        io.emit('geneMessage', 'File unzipped successfully');
 
         const pack = spawn('pack', [
             'build', 
-            baseFileName.toLowerCase(),               
-            '--path', appPath,        
+            baseFileName.toLowerCase(),               // This is the image name
+            '--path', appPath,        // Path to the application code
             '--builder', 'paketobuildpacks/builder-jammy-base'
         ]);
-
+    
         pack.stdout.on('data', (data) => {
             console.log(`stdout: ${data}`);
-            // broadcast('geneMessage', data.toString());
-            const output = data.toString();
-            const chunks = output.match(/(.|[\r\n]){1,1000}/g); // 分块大小调整
-            chunks.forEach(chunk => broadcast('geneMessage', chunk));
+            // Send the output to all connected WebSocket clients
+            io.emit('geneMessage', data.toString());
         });
-
+    
         pack.stderr.on('data', (data) => {
             console.error(`stderr: ${data}`);
-            broadcast('geneError', data.toString());
+            // Send the Error to all connected WebSocket clients
+            io.emit('geneError', data.toString());
         });
-
+    
         pack.on('close', async(code) => {
             const endTime = Date.now();
             const timeTaken = (endTime - startTime)/1000 ;
             console.log(`Time took: ${timeTaken}s`);
-
+    
             if (code === 0) {
                 console.log(`pack build completed successfully.`);
-                await fs.promises.rm(appPath, { recursive: true });
+                await fs.promises.rm(appPath, { recursive: true }); // Delete the unzipped folder
                 console.log('unzipped folder deleted');
-                broadcast('geneMessage', `[${timeTaken}s] Image built successfully.`);
+                io.emit('geneMessage', `[${timeTaken}s] Image built successfully.`);
                 res.status(200).send({ message: 'Image built successfully'});
             } else {
                 console.error(`pack build failed with code ${code}`);
-                broadcast('geneError', `[${timeTaken}s] Error building image.`);
+                io.emit('geneError', `[${timeTaken}s] Error building image.`);
                 res.status(500).send({ message: 'Error building image'});
             }
         });
+
     });  
 });
 
-// **********************************************************  Delete  ******************************************************
+// //test process
+// app.post('/api/process', async(req, res) => {
+//     const startTime = Date.now();
+//     const { imageName, additionalParams } = req.body;
+//     let dockerParams = [];
+//     let filesToProcess = [];
+//     console.log("imageName: ", imageName);
+//     console.log("additionalParams: ", additionalParams);
+
+//     //if additionalParams.fileNames.exist, add the files parameters to docker_process command
+//     if (additionalParams.fileNames) {
+//         filesToProcess = dockerParams.concat(additionalParams.fileNames); // Add the fileNames to the dockerParams array
+//     }
+
+//     if (additionalParams.Port) {
+//         dockerParams = dockerParams.concat(['-p', additionalParams.Port]);
+//     }
+        
+
+//     const fileNames = additionalParams.fileNames;
+//     const files = fs.readdirSync(uploadPath); // Get the list of files in the uploads folder
+//     const matchedFiles = files.filter(file => fileNames.includes(file)); // Filter the files to only include the ones in the fileNames array
+//     console.log('Files to copy:', matchedFiles);
+//     // Copy the files to the temp directory
+//     matchedFiles.forEach(file => {
+//         fs.copyFileSync(path.join(uploadPath, file), path.join(tempPath, file));
+//     });
+
+//     const WorkingDir = await getWorkingDir(imageName);
+//     const Entrypoint = await getEntrypoint(imageName);
+//     const Cmd = await getCmd(imageName);
+
+//     let docker_cmd = `docker run --rm -v ${tempPath}:${WorkingDir}/input -v ${resultPath}:${WorkingDir}/output ${imageName} ${Entrypoint} ${Cmd} ${filesToProcess}`;
+
+//     //use spawn to run the command, use --mount to mount the temp directory
+//     const docker_process = spawn('docker', [
+//         'run', 
+//         '--rm', 
+//         '-v', `${tempPath}:${WorkingDir}/input`, 
+//         '-v', `${resultPath}:${WorkingDir}/output`, 
+//         imageName, 
+//         // other parameters
+//         ...dockerParams,
+//     ]);
+
+//     // delete all the files in the temp directory
+//     await fs.promises.rm(tempPath, { recursive: true });
+//     console.log('temp folder deleted');
+// });
+
+// // process the command directly
+// app.post('/api/process-by-command', async(req, res) => {
+//     const startTime = Date.now();
+//     const dockerCommand = req.body.command;
+//     console.log("dockerCommand: ", dockerCommand);
+
+//     const args = dockerCommand.split(" ");
+//     const docker_process = spawn(args[0], args.slice(1)); // docker
+
+//     //use websocket to send the output to the client
+//     docker_process.stdout.on('data', (data) => {
+//         console.log(`stdout: ${data}`);
+//         // Send the output to all connected WebSocket clients
+//         io.emit('cmd_Msg', data.toString());
+//     });
+//     //use websocket to send the error to the client
+//     docker_process.stderr.on('data', (data) => {
+//         console.error(`stderr: ${data}`);
+//         // Send the Error to all connected WebSocket clients
+//         io.emit('cmd_Msg', data.toString());
+//     });
+//     //use websocket to send the result to the client
+//     docker_process.on('close', async(code) => {
+//         const endTime = Date.now();
+//         const timeTaken = (endTime - startTime)/1000 ;
+//         console.log(`Time took: ${timeTaken}s`);
+
+//         if (code === 0) {
+//             console.log(`docker run completed successfully.`);
+//             //io.emit('runMessage', `[${timeTaken}s] Docker run completed successfully.`);
+//             io.emit('cmd_Msg', `[${timeTaken}s] Docker run completed successfully.`);
+//             res.status(200).send({ message: 'Docker run completed successfully' });
+//         } else {
+//             console.error(`docker run failed with code ${code}`);
+//             io.emit('cmd_Msg', `[${timeTaken}s] Error running docker.`);
+//             res.status(500).send({ message: 'Error running docker' });
+//         }
+//     });
+// });
+
+// // Route to Process a Task by image with or without input files
+// app.post('/api/process1', async(req, res) => {
+//     const startTime = Date.now();
+//     const { imageName, additionalParams } = req.body;
+//     console.log("imageName: " + imageName);
+//     console.log("additionalParams: " + additionalParams);
+//     // put the files matching the fileNames in the uploads folder into the anonymous directory
+//     const filePath = path.join(__dirname, 'uploads');
+//     const tempPath = path.join(__dirname, 'temps'); // Create a temporary directory to store the files
+//     if (!fs.existsSync(tempPath)) {
+//         fs.mkdirSync(tempPath);
+//     }
+//     const resultPath = path.join(__dirname, 'results');
+//     const files = fs.readdirSync(filePath); // Get the list of files in the uploads folder
+//     const matchedFiles = files.filter(file => fileNames.includes(file)); // Filter the files to only include the ones in the fileNames array
+//     console.log('Files to copy:', matchedFiles);
+//     // Copy the files to the temp directory
+//     matchedFiles.forEach(file => {
+//         fs.copyFileSync(path.join(filePath, file), path.join(tempPath, file));
+//     });
+
+//     const WorkingDir = await getWorkingDir(imageName);
+//     const Entrypoint = await getEntrypoint(imageName);
+//     const Cmd = await getCmd(imageName);
+//     console.log(`WorkingDir: ${WorkingDir}`);
+//     console.log(`Entrypoint: ${Entrypoint}`);
+//     console.log(`Cmd: ${Cmd}`);
+
+//     //use spawn to run the command, use --mount to mount the temp directory
+//     const docker_process = spawn('docker', [
+//         'run', 
+//         '--rm', 
+//         '-v', `${tempPath}:${WorkingDir}/input`, 
+//         '-v', `${resultPath}:${WorkingDir}/output`, 
+//         imageName, 
+//         // other parameters
+//         ...additionalParams,
+//     ]);
+
+//     //use websocket to send the output to the client
+//     docker_process.stdout.on('data', (data) => {
+//         console.log(`stdout: ${data}`);
+//         // Send the output to all connected WebSocket clients
+//         //io.emit('runMessage', data.toString());
+//         io.emit('output', data.toString());
+//     });
+//     //use websocket to send the error to the client
+//     docker_process.stderr.on('data', (data) => {
+//         console.error(`stderr: ${data}`);
+//         // Send the Error to all connected WebSocket clients
+//         //io.emit('runError', data.toString());
+//         io.emit('output', data.toString());
+//     });
+//     //use websocket to send the result to the client
+//     docker_process.on('close', async(code) => {
+//         const endTime = Date.now();
+//         const timeTaken = (endTime - startTime)/1000 ;
+//         console.log(`Time took: ${timeTaken}s`);
+
+//         if (code === 0) {
+//             console.log(`docker run completed successfully.`);
+//             // Delete all the files in the temp directory
+//             await fs.promises.rm(tempPath, { recursive: true });
+//             //io.emit('runMessage', `[${timeTaken}s] Docker run completed successfully.`);
+//             io.emit('output', `[${timeTaken}s] Docker run completed successfully.`);
+//             console.log('temp folder deleted');
+//             res.status(200).send({ message: 'Docker run completed successfully' });
+//         } else {
+//             console.error(`docker run failed with code ${code}`);
+//             io.emit('runError', `[${timeTaken}s] Error running docker.`);
+//             res.status(500).send({ message: 'Error running docker' });
+//         }
+//     });
+// });
+
 // Route to delete a file
 app.delete('/api/files/:filename', (req, res) => {
     const filePath = path.join(__dirname, 'uploads', req.params.filename);
@@ -658,17 +829,17 @@ app.post('/api/command', (req, res) => {
     // Send the output to all connected WebSocket clients
     child.stdout.on('data', (data) => {
         console.log(`stdout: ${data}`);
-        broadcast('geneMessage', data.toString());
+        io.emit('commandMessage', data.toString());
     });
     // Send the Error to all connected WebSocket clients
     child.stderr.on('data', (data) => {
         console.error(`stderr: ${data}`);
-        broadcast('geneMessage', data.toString());
+        io.emit('commandError', data.toString());
     });
     // Send the output to all connected WebSocket clients
     child.on('close', (code) => {
         console.log(`child process exited with code ${code}`);
-        broadcast('geneMessage', `child process exited with code ${code}`);
+        io.emit('commandMessage', `child process exited with code ${code}`);
     });
 });
 
@@ -685,26 +856,27 @@ app.post('/api/openai/:fileName', async(req, res) => {
 
 
 // ********************************************  Start and WS  ********************************************
+
 //Listen on port
 server.listen(port, () => {
     console.log(`Server is running on port ${port}.`);
 });
 
-// Broadcast function for WebSocket
-const broadcast = (type, message) => {
-    wss.clients.forEach(client => {
-        if (client.readyState === WebSocket.OPEN) {
-            client.send(JSON.stringify({ type, message }));
-        }
-    });
-};
 
 // Listen for new connections
-wss.on('connection', (ws) => {
+io.on('connection', (socket) => {
     console.log('New WebSocket connection');
-
     // Send the service info to the client
-    ws.send(JSON.stringify({ type: 'message', data: serviceInfo }));
+    socket.emit('message', serviceInfo);
+    socket.on('disconnect', () => {
+        console.log('WebSocket disconnected');
+    });
+});
+
+// Listen for new connections
+io.on('connection', async(socket) => {
+    console.log('New WebSocket connection');
+    socket.emit('message', serviceInfo);  // 发送给前端
 
     const available_shell = getAvailableShell();
 
@@ -712,22 +884,19 @@ wss.on('connection', (ws) => {
         name: 'xterm-256color',
         cols: 130,
         rows: 40,
-        cwd: process.env.WorkingDir || process.cwd(),
+        cwd: process.env.WorkingDir,
         env: process.env
     });
 
     shellTTY.on('data', (data) => {
-        ws.send(JSON.stringify({ type: 'output', data })); // 发送给前端
+        socket.emit('output', data); // 发送给前端
     });
 
-    ws.on('message', (message) => {
-        const parsedMessage = JSON.parse(message);
-        if (parsedMessage.type === 'input') {
-            shellTTY.write(parsedMessage.data); // 接收前端输入
-        }
+    socket.on('input', (input) => {
+        shellTTY.write(input);  // 接收前端输入
     });
 
-    ws.on('close', () => {
+    socket.on('disconnect', () => {
         shellTTY.kill();
         console.log('User disconnected');
     });
