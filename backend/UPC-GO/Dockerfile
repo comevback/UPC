@@ -28,8 +28,8 @@ RUN apk update && apk add --no-cache docker-cli curl git zsh python3 make g++ zi
 # Install oh-my-zsh
 RUN sh -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)"
 
-# Install zsh-autosuggestions and add source ~/.zsh/zsh-autosuggestions/zsh-autosuggestions.zsh to .zshrc
-RUN git clone https://github.com/zsh-users/zsh-autosuggestions ~/.zsh/zsh-autosuggestions && echo "source ~/.zsh/zsh-autosuggestions/zsh-autosuggestions.zsh" >> ~/.zshrc
+# # Install zsh-autosuggestions and add source ~/.zsh/zsh-autosuggestions/zsh-autosuggestions.zsh to .zshrc
+# RUN git clone https://github.com/zsh-users/zsh-autosuggestions ~/.zsh/zsh-autosuggestions && echo "source ~/.zsh/zsh-autosuggestions/zsh-autosuggestions.zsh" >> ~/.zshrc
 
 # Copy the Pre-built binary file from the previous stage
 COPY --from=builder /app/main .
@@ -39,5 +39,8 @@ COPY --from=builder /app/public ./public
 # Expose port 4000 to the outside world
 EXPOSE 4000
 
+# Set Zsh as the default shell
+SHELL ["/bin/zsh", "-c"]
+
 # Command to run the executable
-CMD sh -c "./main "
+CMD ["./main"]
