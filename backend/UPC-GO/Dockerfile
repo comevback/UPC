@@ -40,4 +40,4 @@ COPY --from=builder /app/public ./public
 EXPOSE 4000
 
 # Command to run the executable
-CMD sh -c "go run main.go"
+CMD sh -c "./main "
