@@ -15,7 +15,7 @@ COPY backend/UPC-GO/ ./
 RUN CGO_ENABLED=0 GOOS=linux GOARCH=amd64 go build -o upc-go .
 
 # 第二个阶段：使用最小化的基础镜像
-FROM alpine:latest
+FROM node:20.04-alpine
 
 # 设置工作目录
 WORKDIR /usr/src/app
