@@ -19,16 +19,20 @@ type ServiceInfo struct {
 
 // 全局变量
 var (
-	URL            = "http://192.168.0.103:4000" // 替换为你的服务地址
-	CENTRAL_SERVER = "http://localhost:8000"     // 替换为你的中央服务器地址
-	id             = "GO Server: " + URL         // 替换为你的服务ID
+	URL            = "http://192.168.0.103"  // 替换为你的服务地址
+	CENTRAL_SERVER = "http://localhost:8000" // 替换为你的中央服务器地址
+	id             = "GO Server: "           // 替换为你的服务ID
 )
 
-func RegisterService() bool {
+func RegisterService(port string) bool {
 	hostInfo, err := GetHostInfo()
 	if err != nil {
 		log.Fatal(err)
 	}
+
+	// 通过指针修改全局变量
+	URL = URL + ":" + port
+	id = id + URL
 
 	// 创建服务信息
 	serviceInfo := ServiceInfo{

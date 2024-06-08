@@ -19,7 +19,25 @@ func main() {
 	inputPort := flag.String("p", "4000", "port to listen on")
 	flag.Parse()
 
-	success := register.RegisterService()
+	// 设置默认端口
+	port := "4000"
+
+	// 如果命令行参数 -p 被指定，则使用命令行参数
+	if *inputPort != "4000" {
+		port = *inputPort
+	} else {
+		// 否则检查环境变量 API_PORT
+		envPort := os.Getenv("API_PORT")
+		if envPort != "" {
+			port = envPort
+		}
+	}
+
+	addr := ":" + port
+	log.Println("Starting server on : " + port)
+
+	// 注册服务
+	success := register.RegisterService(port)
 	if success {
 		fmt.Println("Service registered successfully")
 	} else {
@@ -42,23 +60,6 @@ func main() {
 			}
 		}
 	}()
-
-	// 设置默认端口
-	port := "4000"
-
-	// 如果命令行参数 -p 被指定，则使用命令行参数
-	if *inputPort != "4000" {
-		port = *inputPort
-	} else {
-		// 否则检查环境变量 API_PORT
-		envPort := os.Getenv("API_PORT")
-		if envPort != "" {
-			port = envPort
-		}
-	}
-
-	addr := ":" + port
-	log.Println("Starting server on : " + port)
 
 	// 启动服务器
 	if err := StartServer(addr); err != nil {
