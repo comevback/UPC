@@ -12,7 +12,7 @@ RUN go mod download
 COPY backend/UPC-GO/ ./
 
 # 编译Go应用为静态可执行文件
-RUN CGO_ENABLED=0 GOOS=linux GOARCH=amd64 go build -o upc-go
+RUN go build -o upc-go .
 
 # 第二个阶段：使用 Node.js 官方镜像
 FROM node:20-alpine
