@@ -38,7 +38,7 @@ COPY --from=builder /app/views ./views
 COPY --from=builder /app/public ./public
 
 # 暴露端口 4000
-EXPOSE 4000 8000
+EXPOSE 4000
 
 # 设置 Zsh 为默认 shell
 SHELL ["/bin/zsh", "-c"]
