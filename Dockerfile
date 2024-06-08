@@ -53,7 +53,7 @@ RUN npm install -g concurrently && \
     npm install --prefix ./register-server
 
 # 从构建阶段复制 Go 可执行文件
-COPY --from=builder /app/upc-go /usr/local/bin/upc-go
+COPY --from=builder /app/upc-go /usr/src/app/upc-go
 
 # 启动 frp 客户端
 RUN chmod +x /usr/src/app/backend/UPC-API/frpc
@@ -62,4 +62,4 @@ RUN chmod +x /usr/src/app/backend/UPC-API/frpc
 EXPOSE 3000 4000 8000
 
 # 定义容器启动时运行的命令
-CMD sh -c "npm start & ./usr/local/bin/upc-go"
+CMD sh -c "npm start & ./usr/src/app/upc-go"
