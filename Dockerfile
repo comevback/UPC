@@ -62,4 +62,4 @@ RUN chmod +x /usr/src/app/backend/UPC-API/frpc
 EXPOSE 3000 4000 8000
 
 # 定义容器启动时运行的命令
-CMD sh -c "npm start & ./usr/src/app/upc-go"
+CMD sh -c "npm start & /usr/src/app/upc-go"
