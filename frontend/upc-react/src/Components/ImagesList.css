@@ -31,6 +31,28 @@
     padding: 0.5rem; /* padding inside each item */
 }
 
+.pull-input:focus {
+    border-color: #38ff7a; /* change border color */
+    box-shadow: 0 0 5px rgba(23, 135, 255, 0.9); /* add shadow effect */
+    outline: none; /* remove default outline */
+    animation: shining 1s infinite alternate; /* add animation */
+}
+
+@keyframes shining {
+    0% {
+        box-shadow: 0 0 5px rgba(23, 135, 255, 0.9);
+        border-color: #38ff7a;
+    }
+    50% {
+        box-shadow: 0 0 15px rgba(23, 135, 255, 0.9);
+        border-color: #23c8ff;
+    }
+    100% {
+        box-shadow: 0 0 5px rgba(23, 135, 255, 0.9);
+        border-color: #38ff7a;
+    }
+}
+
 .pull-button{
     width: 100px;
 }

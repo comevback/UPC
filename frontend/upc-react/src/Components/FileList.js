@@ -67,8 +67,7 @@ const FileList = (props) => {
             } else {
                 setInfo('Image generated successfully.');
                 Swal.fire({
-                    title: `Generate Image`,
-                    html: `Image generated successfully.`,
+                    title: `Generate Successfully`,
                     customClass: {
                         popup: 'formatted-alert'
                     },

@@ -19,7 +19,7 @@ type ServiceInfo struct {
 
 // 全局变量
 var (
-	URL            = "http://192.168.0.103"  // 替换为你的服务地址
+	URL            = "http://localhost"      // 替换为你的服务地址
 	CENTRAL_SERVER = "http://localhost:8000" // 替换为你的中央服务器地址
 	id             = "GO Server: "           // 替换为你的服务ID
 )
@@ -86,8 +86,6 @@ type HeartbeatRequest struct {
 func SendHeartbeat() bool {
 	hostInfo, _ := GetHostInfo()
 	heartbeatReq := HeartbeatRequest{ID: id, HostInfo: hostInfo}
-
-	fmt.Println(heartbeatReq)
 
 	// 将心跳请求转换为json格式
 	jsonData, err := json.Marshal(heartbeatReq)

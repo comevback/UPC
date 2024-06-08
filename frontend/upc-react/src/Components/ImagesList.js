@@ -45,13 +45,19 @@ const ImagesList = (props) => {
         try {
             const response = await pullImage(API_URL, searchValue);
             if (response === undefined || response.length === 0 || response === false) {
-                alert('Image Cannot be pulled');
+                Swal.fire({
+                    title: `Image can not be pulled.`,
+                    customClass: {
+                        popup: 'formatted-alert'
+                    },
+                    width: '600px',
+                    confirmButtonText: 'Close'
+                });
                 return;
             } else {
                 // 通过 SweetAlert2 显示信息
                 Swal.fire({
-                    title: `Pull Image`,
-                    html: `Image ${searchValue} has been pulled successfully.`,
+                    title: `Pull Image Successfully`,
                     customClass: {
                         popup: 'formatted-alert'
                     },
@@ -134,9 +140,27 @@ const ImagesList = (props) => {
     const handleDeleteClick = async (image) => {
         const response = await deleteImage(API_URL, image);
         if (response === undefined || response.length === 0 || response === false) {
-            alert('Image Cannot be deleted');
+            Swal.fire({
+                title: `Image ${image} can not be deleted.`,
+                customClass: {
+                    popup: 'formatted-alert'
+                },
+                width: '600px',
+                confirmButtonText: 'Close'
+            });
             return;
         }
+
+        // 通过 SweetAlert2 显示信息
+        Swal.fire({
+            title: `Delete Successfully`,
+            customClass: {
+                popup: 'formatted-alert'
+            },
+            width: '600px',
+            confirmButtonText: 'Close'
+        });
+        
         props.refreshImages();
         // If the deleted image was the active image, clear the active image info
         if (activeImageInfo && activeImageInfo.RepositoryTags.includes(image)) {
