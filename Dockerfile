@@ -38,7 +38,7 @@ FROM node:20-alpine
 # 设置工作目录
 WORKDIR /usr/src/app
 
-# 安装必要的包并清理缓存
+# 安装必要的包、oh-my-zsh、zsh-autosuggestions 和 pack，并清理缓存
 RUN apk update && apk add --no-cache \
     curl \
     git \
@@ -48,16 +48,12 @@ RUN apk update && apk add --no-cache \
     g++ \
     zip && \
     npm install -g concurrently serve && \
-    apk del make g++ && \
-    rm -rf /var/cache/apk/*
-
-# 安装 oh-my-zsh 和 zsh-autosuggestions
-RUN sh -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)" && \
+    sh -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)" && \
     git clone https://github.com/zsh-users/zsh-autosuggestions ~/.zsh/zsh-autosuggestions && \
-    echo "source ~/.zsh/zsh-autosuggestions/zsh-autosuggestions.zsh" >> ~/.zshrc
-
-# 安装 pack
-RUN (curl -sSL "https://github.com/buildpacks/pack/releases/download/v0.32.1/pack-v0.32.1-linux.tgz" | tar -C /usr/local/bin/ --no-same-owner -xzv pack)
+    echo "source ~/.zsh/zsh-autosuggestions/zsh-autosuggestions.zsh" >> ~/.zshrc && \
+    (curl -sSL "https://github.com/buildpacks/pack/releases/download/v0.32.1/pack-v0.32.1-linux.tgz" | tar -C /usr/local/bin/ --no-same-owner -xzv pack) && \
+    apk del git python3 make g++ && \
+    rm -rf /var/cache/apk/* /tmp/* /var/tmp/* /usr/share/man /usr/share/doc /usr/share/licenses
 
 # 复制前端构建输出
 COPY --from=nodebuilder /usr/src/app/frontend/upc-react/build ./frontend/upc-react/build
