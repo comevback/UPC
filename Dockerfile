@@ -21,7 +21,7 @@ FROM node:20-alpine as nodebuilder
 WORKDIR /usr/src/app
 
 # 复制 package.json 和 package-lock.json (如果有)
-COPY frontend/upc-react/package*.json ./frontend/upc-react/
+COPY frontend/upc-react/package*.json ./
 
 # 安装项目依赖
 RUN npm install
