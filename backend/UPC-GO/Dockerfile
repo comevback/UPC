@@ -14,7 +14,7 @@ RUN go mod download
 COPY . .
 
 # 构建 Go 应用程序
-RUN go build -o main .
+RUN go build -o upc-go .
 
 # 第二个阶段：使用最小化的基础镜像运行应用程序
 FROM alpine:latest
@@ -43,4 +43,4 @@ EXPOSE 4000
 SHELL ["/bin/zsh", "-c"]
 
 # 运行可执行文件
-CMD ["./main"]
+CMD ["./upc-go"]

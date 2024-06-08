@@ -87,6 +87,8 @@ func SendHeartbeat() bool {
 	hostInfo, _ := GetHostInfo()
 	heartbeatReq := HeartbeatRequest{ID: id, HostInfo: hostInfo}
 
+	fmt.Println(heartbeatReq)
+
 	// 将心跳请求转换为json格式
 	jsonData, err := json.Marshal(heartbeatReq)
 	if err != nil {
