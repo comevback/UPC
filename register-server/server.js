@@ -137,53 +137,50 @@ app.delete('/unregister-service', async (req, res) => {
   
 // Heartbeat Endpoint
 app.post('/service-heartbeat', async (req, res) => {
-  const { _id, hostInfo } = req.body;
+    const { _id, hostInfo } = req.body;
     try {
-      if (isDbConnected) {
-        const service = await BackendService.findByIdAndUpdate(
-            _id,
-            // update the hostInfo and lastHeartbeat
-            { hostInfo, lastHeartbeat: Date.now() },
-            { new: true }
-        );
-        console.log(`Heartbeat from backend service: (${service._id}): ————` + new Date(Date.now()).toLocaleString());
-        if (!service) {
-          // 如果没注册，现在注册
-          console.log('Service not found, registering now');
-          await BackendService.findOneAndUpdate({ _id: _id }, newService, { upsert: true }) // upsert: true means if the service is not found, insert it
-          .then((service) => {
-            console.log(`Service ${service._id} registered successfully`);
-            res.status(201).json(service);
-          })
-          .catch((error) => {
-            console.log(error);
-            res.status(500).json({ message: error.message });
-          });
-          // return res.status(404).json({ message: "Service not found" });
+        if (isDbConnected) {
+            const service = await BackendService.findByIdAndUpdate(
+                _id,
+                { hostInfo, lastHeartbeat: Date.now() },
+                { new: true }
+            );
+            console.log(`Heartbeat from backend service: (${service._id}): ————` + new Date(Date.now()).toLocaleString());
+            if (!service) {
+                console.log('Service not found, registering now');
+                await BackendService.findOneAndUpdate({ _id: _id }, newService, { upsert: true }) // upsert: true means if the service is not found, insert it
+                .then((newService) => {
+                    console.log(`Service ${newService._id} registered successfully`);
+                    return res.status(201).json(newService);
+                })
+                .catch((error) => {
+                    console.log(error);
+                    return res.status(500).json({ message: error.message });
+                });
+            } else {
+                return res.status(200).json(service);
+            }
+        } else {
+            const service = backendServices[_id];
+            if (!service) {
+                console.log('Service not found, registering now');
+                backendServices[_id] = {
+                    _id,
+                    hostInfo,
+                    lastHeartbeat: Date.now()
+                };
+                writeServicesToFile();
+                console.log(`Service ${_id} registered successfully`);
+                return res.status(201).json({ message: 'Service registered successfully.' });
+            } else {
+                service.hostInfo = hostInfo;
+                service.lastHeartbeat = Date.now();
+                console.log(`Heartbeat from backend service: (${service._id}): ————` + new Date(Date.now()).toLocaleString());
+                return res.status(200).json(service);
+            }
         }
-        res.status(200).json(service);
-      } else {
-        const service = backendServices[_id];
-        if (!service) {
-          // 如果没注册，现在注册
-          console.log('Service not found, registering now');
-          backendServices[_id] = {
-            _id,
-            hostInfo,
-          };
-          writeServicesToFile();
-          console.log(`Service ${_id} registered successfully`);
-          res.status(201).json({ message: 'Service registered successfully.' });
-          // return res.status(404).json({ message: "Service not found" });
-        }
-        // update the hostInfo and lastHeartbeat
-        service.hostInfo = hostInfo;
-        service.lastHeartbeat = Date.now();
-        console.log(`Heartbeat from backend service: (${service._id}): ————` + new Date(Date.now()).toLocaleString());
-        res.status(200).json(service);
-      }
     } catch (error) {
-        res.status(500).json({ message: error.message });
+        return res.status(500).json({ message: error.message });
     }
 });
 
