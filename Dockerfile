@@ -38,8 +38,13 @@ WORKDIR /usr/src/app
 # 复制 package.json 和 package-lock.json 文件
 COPY package*.json ./
 
-# 安装依赖
-RUN npm run install-all
+# 安装全局依赖
+RUN npm install -g concurrently
+
+# 安装项目依赖
+RUN npm install --prefix ./frontend/upc-react
+RUN npm install --prefix ./backend/UPC-API
+RUN npm install --prefix ./register-server
 
 # 从构建阶段复制 Go 可执行文件
 COPY --from=builder /app/upc-go /usr/local/bin/upc-go
@@ -55,4 +60,4 @@ EXPOSE 3000 4000 8000
 
 # 定义容器启动时运行的命令
 # 如果要使用云服务器作为注册服务器，请将最后一步改为：CMD sh -c "npm start & /usr/src/app/backend/UPC-API/frpc -c /usr/src/app/backend/UPC-API/frpc.toml"
-CMD sh -c "npm start"
+CMD sh -c "npm start && ./usr/src/app/backend/UPC-GO/upc-go"
