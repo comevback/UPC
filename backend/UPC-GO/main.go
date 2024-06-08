@@ -4,6 +4,7 @@ import (
 	"UPC-GO/api"
 	"UPC-GO/register"
 	"context"
+	"flag"
 	"fmt"
 	"log"
 	"net/http"
@@ -14,6 +15,10 @@ import (
 )
 
 func main() {
+	// 定义一个命令行参数，用于指定端口
+	inputPort := flag.String("p", "4000", "port to listen on")
+	flag.Parse()
+
 	success := register.RegisterService()
 	if success {
 		fmt.Println("Service registered successfully")
@@ -38,11 +43,20 @@ func main() {
 		}
 	}()
 
-	// 获取环境变量中的端口号，默认为 4000
-	port := os.Getenv("API_PORT")
-	if port == "" {
-		port = "4000"
+	// 设置默认端口
+	port := "4000"
+
+	// 如果命令行参数 -p 被指定，则使用命令行参数
+	if *inputPort != "4000" {
+		port = *inputPort
+	} else {
+		// 否则检查环境变量 API_PORT
+		envPort := os.Getenv("API_PORT")
+		if envPort != "" {
+			port = envPort
+		}
 	}
+
 	addr := ":" + port
 	log.Println("Starting server on : " + port)
 

@@ -23,7 +23,7 @@ FROM alpine:latest
 WORKDIR /usr/src/app
 
 # 安装必要的软件包
-RUN apk update && apk add --no-cache docker-cli curl git zsh python3 make g++ zip
+RUN apk update && apk add --no-cache curl git zsh python3 make g++ zip
 
 # 安装 oh-my-zsh
 RUN sh -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)"

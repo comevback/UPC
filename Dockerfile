@@ -25,7 +25,6 @@ COPY package*.json ./
 
 # 安装必要的包
 RUN apk update && apk add --no-cache \
-    docker-cli \
     curl \
     git \
     zsh \
@@ -46,10 +45,9 @@ RUN (curl -sSL "https://github.com/buildpacks/pack/releases/download/v0.32.1/pac
 # 复制前端、后端和注册服务器文件
 COPY . .
 
-# 安装项目依赖
+# 安装项目依赖 如果要使用node服务器 ，加上 npm install --prefix ./backend/UPC-API && \
 RUN npm install -g concurrently && \
     npm install --prefix ./frontend/upc-react && \
-    npm install --prefix ./backend/UPC-API && \
     npm install --prefix ./register-server
 
 # 从构建阶段复制 Go 可执行文件
