@@ -22,8 +22,11 @@ FROM alpine:latest
 # 设置工作目录
 WORKDIR /usr/src/app
 
-# 安装必要的软件包
-RUN apk update && apk add --no-cache curl git zsh python3 make g++ zip
+# 安装必要的软件包并清理缓存
+RUN apk update && apk add --no-cache \
+    curl \
+    zsh \
+    && rm -rf /var/cache/apk/*
 
 # 安装 oh-my-zsh
 RUN sh -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)"

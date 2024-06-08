@@ -1,20 +1,20 @@
-# Use an official Node runtime as a parent image
+# 使用官方的 Node.js 运行时作为基础镜像
 FROM node:20-alpine
 
-# Set the working directory
+# 设置工作目录
 WORKDIR /usr/src/app
 
-# Copy package.json and package-lock.json (if available)
+# 复制 package.json 和 package-lock.json（如果有）
 COPY package*.json ./
 
-# Install project dependencies
-RUN npm install
+# 安装项目依赖并清理 npm 缓存
+RUN npm install && npm cache clean --force
 
-# Copy project files into the docker image
+# 复制项目文件到 Docker 镜像中
 COPY . .
 
-# Expose port 8000
+# 暴露端口 8000
 EXPOSE 8000
 
-# Define the command to run when the container starts
+# 定义容器启动时运行的命令
 CMD ["npm", "start"]

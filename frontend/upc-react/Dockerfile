@@ -1,32 +1,32 @@
-# Stage 1: Build the application
+# 第一阶段：构建应用程序
 FROM node:20-alpine AS build
 
-# Set the working directory
+# 设置工作目录
 WORKDIR /usr/src/app
 
-# Copy package.json and package-lock.json (if available)
+# 复制 package.json 和 package-lock.json（如果有）
 COPY package*.json ./
 
-# Install project dependencies
-RUN npm install
+# 安装项目依赖并清理 npm 缓存
+RUN npm install && npm cache clean --force
 
-# Copy project files into the docker image
+# 将项目文件复制到 Docker 镜像中
 COPY . .
 
-# Build the application
+# 构建应用程序
 RUN npm run build
 
-# Stage 2: Serve the application with serve
+# 第二阶段：使用 serve 提供应用程序服务
 FROM node:20-alpine
 
-# Install serve globally
-RUN npm install -g serve
+# 全局安装 serve 并清理 npm 缓存
+RUN npm install -g serve && npm cache clean --force
 
-# Copy the build output to the final image
+# 将第一阶段的构建输出复制到最终镜像中
 COPY --from=build /usr/src/app/build /usr/src/app/build
 
-# Expose port 3000
+# 暴露端口 3000
 EXPOSE 3000
 
-# Define the command to run serve
+# 定义运行 serve 的命令
 CMD ["serve", "-s", "/usr/src/app/build", "-l", "3000"]
