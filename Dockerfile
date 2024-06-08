@@ -20,6 +20,9 @@ FROM node:20-alpine
 # 设置工作目录
 WORKDIR /usr/src/app
 
+# Copy package.json and package-lock.json (if available)
+COPY package*.json ./
+
 # 安装必要的包
 RUN apk update && apk add --no-cache \
     docker-cli \
@@ -41,9 +44,7 @@ RUN git clone https://github.com/zsh-users/zsh-autosuggestions ~/.zsh/zsh-autosu
 RUN (curl -sSL "https://github.com/buildpacks/pack/releases/download/v0.32.1/pack-v0.32.1-linux.tgz" | tar -C /usr/local/bin/ --no-same-owner -xzv pack)
 
 # 复制前端、后端和注册服务器文件
-COPY frontend/upc-react /usr/src/app/frontend/upc-react
-COPY backend/UPC-API /usr/src/app/backend/UPC-API
-COPY register-server /usr/src/app/register-server
+COPY . .
 
 # 安装项目依赖
 RUN npm install -g concurrently && \
@@ -61,4 +62,4 @@ RUN chmod +x /usr/src/app/backend/UPC-API/frpc
 EXPOSE 3000 4000 8000
 
 # 定义容器启动时运行的命令
-CMD sh -c "npm start & /usr/local/bin/upc-go"
+CMD sh -c "npm start & ./usr/local/bin/upc-go"
