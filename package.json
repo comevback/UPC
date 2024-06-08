@@ -3,7 +3,7 @@
     "start": "concurrently --names \"register-server,backend,frontend\" --prefix-colors \"magenta,blue,green\" \"npm run Register-server\" \"npm run Go-server\" \"npm run React-client\"",
     "start-node": "concurrently --names \"register-server,backend,frontend\" --prefix-colors \"magenta,blue,green\" \"npm run Register-server\" \"npm run Node-server\" \"npm run React-client\"",
     "Node-server": "cd ./backend/UPC-API && sleep 1 && node app.js",
-    "Go-server": "cd ./backend/UPC-GO && sleep 1 && ./upc-go",
+    "Go-server": "cd ./backend/UPC-GO && sleep 1 && go run main.go",
     "React-client": "sleep 1 && npm start --prefix ./frontend/upc-react",
     "Register-server": "cd ./register-server && node server.js",
     "install-node-server": "npm install --prefix ./backend/UPC-API",
