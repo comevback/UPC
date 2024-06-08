@@ -32,7 +32,7 @@ RUN sh -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master
 RUN (curl -sSL "https://github.com/buildpacks/pack/releases/download/v0.32.1/pack-v0.32.1-linux.tgz" | tar -C /usr/local/bin/ --no-same-owner -xzv pack)
 
 # 从构建阶段复制预构建的二进制文件和其他需要的文件
-COPY --from=builder /app/main .
+COPY --from=builder /app/upc-go .
 COPY --from=builder /app/views ./views
 COPY --from=builder /app/public ./public
 
