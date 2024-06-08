@@ -21,7 +21,16 @@ FROM node:20-slim
 ENV PATH="/usr/local/go/bin:${PATH}"
 
 # 安装必要的包
-RUN apk update && apk add --no-cache docker-cli curl git zsh python3 make g++ zip
+RUN apt-get update && apt-get install -y \
+    docker.io \
+    curl \
+    git \
+    zsh \
+    python3 \
+    make \
+    g++ \
+    zip \
+    && rm -rf /var/lib/apt/lists/*
 
 # 安装 oh-my-zsh
 RUN sh -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)"
