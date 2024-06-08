@@ -25,7 +25,8 @@ const TermWS = () => {
         requestAnimationFrame(() => {
             console.log(`Terminal is being rendered`);
             // Create a new WebSocket connection
-            socket.current = new WebSocket(`ws://localhost:4000/ws`);
+            let url = API_URL.replace('http', 'ws');
+            socket.current = new WebSocket(url + '/ws');
 
             terminal.current = new Terminal({
                 cursorBlink: true,
