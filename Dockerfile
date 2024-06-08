@@ -1,6 +1,14 @@
 # Use an official Node runtime as a parent image
 FROM node:20-alpine
 
+# 下载并安装Go 1.22
+RUN curl -LO https://go.dev/dl/go1.22.linux-amd64.tar.gz && \
+    tar -C /usr/local -xzf go1.22.linux-amd64.tar.gz && \
+    rm go1.22.linux-amd64.tar.gz
+
+# 设置Go环境变量
+ENV PATH="/usr/local/go/bin:${PATH}"
+
 # Set the working directory
 WORKDIR /usr/src/app
 
