@@ -1,11 +1,16 @@
 {
   "scripts": {
-    "start": "concurrently --names \"register-server,backend,frontend\" --prefix-colors \"magenta,blue,green\" \"npm run Register-server\" \"npm run Go-server\" \"npm run React-client\" ",
-    "API-server": "cd ./backend/UPC-API && sleep 1 && node app.js",
+    "start": "concurrently --names \"register-server,backend,frontend\" --prefix-colors \"magenta,blue,green\" \"npm run Register-server\" \"npm run Go-server\" \"npm run React-client\"",
+    "start-node": "concurrently --names \"register-server,backend,frontend\" --prefix-colors \"magenta,blue,green\" \"npm run Register-server\" \"npm run Node-server\" \"npm run React-client\"",
+    "Node-server": "cd ./backend/UPC-API && sleep 1 && node app.js",
     "Go-server": "cd ./backend/UPC-GO && sleep 1 && go run main.go",
     "React-client": "sleep 1 && npm start --prefix ./frontend/upc-react",
     "Register-server": "cd ./register-server && node server.js",
-    "install-all": "npm install --prefix ./backend/UPC-API && npm install --prefix ./frontend/upc-react && npm install --prefix ./register-server && npm install concurrently"
+    "install-node-server": "npm install --prefix ./backend/UPC-API",
+    "install-go-server": "cd ./backend/UPC-GO && go mod download",
+    "install-react": "npm install --prefix ./frontend/upc-react",
+    "install-register": "npm install --prefix ./register-server",
+    "install-all": "npm run install-node-server && npm run install-go-server && npm run install-react && npm run install-register && npm install concurrently"
   },
   "dependencies": {
     "caniuse-lite": "^1.0.30001625",

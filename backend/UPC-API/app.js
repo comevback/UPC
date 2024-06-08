@@ -14,7 +14,6 @@ import { serviceInfo, upload, limiter, registerService, unregisterService, sendH
 
 const app = express();
 app.set('trust proxy', true); // trust first proxy
-
 // https certificate and key
 // const privateKeyPath = path.join('/etc/letsencrypt/live/xuxiang.art', 'privkey.pem');
 // const certificatePath = path.join('/etc/letsencrypt/live/xuxiang.art', 'fullchain.pem');
@@ -89,7 +88,7 @@ const gracefulShutdown = () => {
 process.on('SIGTERM', gracefulShutdown);
 process.on('SIGINT', gracefulShutdown);
 
-// // ********************************************  Routers  ********************************************
+// ********************************************  Routers  ********************************************
 
 // basic
 app.get("/", (req, res) => {
@@ -430,10 +429,7 @@ app.post('/api/files/:filename', async(req, res) => {
 
     unzip.stdout.on('data', (data) => {
         console.log(`stdout: ${data}`);
-        // broadcast('geneMessage', data.toString());
-        const output = data.toString();
-        const chunks = output.match(/(.|[\r\n]){1,1000}/g); // 分块大小调整
-        chunks.forEach(chunk => broadcast('geneMessage', chunk));
+        broadcast('geneMessage', data.toString());
     });
 
     unzip.stderr.on('data', (data) => {
@@ -459,10 +455,7 @@ app.post('/api/files/:filename', async(req, res) => {
 
         pack.stdout.on('data', (data) => {
             console.log(`stdout: ${data}`);
-            // broadcast('geneMessage', data.toString());
-            const output = data.toString();
-            const chunks = output.match(/(.|[\r\n]){1,1000}/g); // 分块大小调整
-            chunks.forEach(chunk => broadcast('geneMessage', chunk));
+            broadcast('geneMessage', data.toString());
         });
 
         pack.stderr.on('data', (data) => {

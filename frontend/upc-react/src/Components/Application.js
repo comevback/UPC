@@ -8,10 +8,8 @@ import UploadForm from './UploadForm.js';
 import ImagesList from './ImagesList.js';
 import Heading from './Heading.js';
 import Logo from './Logo.js';
-import Term from './Term.js';
 import TermWS from './TermWS.js';
 import particlesJS from 'particles.js';
-import ProcessForm from './ProcessForm.js';
 import ProcessFormWS from './ProcessFormWS.js';
 
 const ApplicationForm = () => {

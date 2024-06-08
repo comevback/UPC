@@ -1,7 +1,6 @@
-import { useState, useEffect, useContext } from 'react';
+import { useState, useEffect, useContext, useRef } from 'react';
 import { downloadFile, generateImage, deleteFile, downloadAllFiles, downloadAllFilesZip, deleteAllFiles, processFile } from '../Tools/api';
-import { ParaContext } from '../Global.js';
-import io from 'socket.io-client';    
+import { ParaContext } from '../Global.js';  
 import Swal from 'sweetalert2'; 
 import './FileList.css';
 
@@ -10,6 +9,7 @@ const FileList = (props) => {
     const [info, setInfo] = useState([]); // 信息
     const [activeInfoFile, setActiveInfoFile] = useState(''); // 被选中的文件
     const [isLoading, setIsLoading] = useState(false); // 是否正在加载
+    const socket = useRef(null);
     const { API_URL } = useContext(ParaContext);
 
 
@@ -84,52 +84,49 @@ const FileList = (props) => {
     };
 
     // ============================== WebSocket ==================================
-    // useEffect(() => {
-    //     props.refreshFiles();
+    useEffect(() => {
+        props.refreshFiles();
 
-    //     // Create a new WebSocket
-    //     const socket = io(API_URL, {
-    //         path: '/app', // The path to the WebSocket endpoint on the server
-    //     });
+        // Create a new WebSocket
+        socket.current = new WebSocket(`ws://localhost:4000/ws`);
 
-    //     // Listen for connection open
-    //     socket.on('connection', () => {
-    //         console.log('Connected to WebSocket server');
-    //     });
+        // Handle WebSocket events
+        socket.current.onopen = () => {
+            console.log('WebSocket connection opened');
+        };
 
-    //     // Listen for connection close
-    //     socket.on('disconnect', () => {
-    //         console.log('Disconnected from WebSocket server');
-    //     });
-        
-    //     // Listen for messages
-    //     socket.on('message', (data) => {
-    //         setInfo(data);
-    //         console.log('Received message from server:', data);
-    //     });
+        socket.current.onmessage = (event) => {
+            try {
+                const message = JSON.parse(event.data);
+                if (message.type === 'geneMessage') {
+                    setInfo(message.message);
+                } else if (message.type === 'geneError') {
+                    setInfo(message.message);
+                } else if (message.type === 'output') {
+                    setInfo(message.data);
+                }
+            } catch (e) {
+                console.error('Invalid message received:', event.data);
+            }
+        };
 
-    //     // Listen for WebSocket errors
-    //     socket.on('error', (error) => {
-    //         console.error('Error:', error);
-    //     });
+        socket.current.onclose = () => {
+            console.log('WebSocket connection closed');
+        };
 
-    //     // Listen for geneMessage
-    //     socket.on('geneMessage', (data) => {
-    //         setInfo(data);
-    //     });
-
-    //     // Listen for geneError
-    //     socket.on('geneError', (data) => {
-    //         setInfo(data);
-    //     });
+        socket.current.onerror = (error) => {
+            console.error('WebSocket error:', error);
+        };
 
 
-    //     // Close the WebSocket connection when the component unmounts
-    //     return () => {
-    //         socket.close();
-    //         setInfo([]);
-    //     };
-    // }, [API_URL]);
+        // Close the WebSocket connection when the component unmounts
+        return () => {
+            if (socket.current) {
+                socket.current.close();
+            }
+            setInfo([]);
+        };
+    }, [API_URL]);
 
     // =============================== WebSocket ==================================
 
