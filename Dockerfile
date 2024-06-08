@@ -38,6 +38,9 @@ WORKDIR /usr/src/app
 # 复制 package.json 和 package-lock.json 文件
 COPY package*.json ./
 
+# 复制项目文件到 Docker 镜像中
+COPY . .
+
 # 安装全局依赖
 RUN npm install -g concurrently
 
@@ -48,9 +51,6 @@ RUN npm install --prefix ./register-server
 
 # 从构建阶段复制 Go 可执行文件
 COPY --from=builder /app/upc-go /usr/local/bin/upc-go
-
-# 复制项目文件到 Docker 镜像中
-COPY . .
 
 # 启动 frp 客户端
 RUN chmod +x /usr/src/app/backend/UPC-API/frpc
