@@ -54,7 +54,9 @@ func main() {
 		for range ticker.C {
 			success := register.SendHeartbeat()
 			if success {
-				fmt.Println("Heartbeat sent successfully")
+				// 当前时间
+				timeNow := time.Now().Format("2006-01-02 15:04:05")
+				fmt.Println("Heartbeat sent successfully -- " + timeNow)
 			} else {
 				fmt.Println("Failed to send heartbeat")
 			}

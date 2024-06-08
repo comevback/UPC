@@ -148,13 +148,33 @@ app.post('/service-heartbeat', async (req, res) => {
         );
         console.log(`Heartbeat from backend service: (${service._id}): ————` + new Date(Date.now()).toLocaleString());
         if (!service) {
-            return res.status(404).json({ message: "Service not found" });
+          // 如果没注册，现在注册
+          console.log('Service not found, registering now');
+          await BackendService.findOneAndUpdate({ _id: _id }, newService, { upsert: true }) // upsert: true means if the service is not found, insert it
+          .then((service) => {
+            console.log(`Service ${service._id} registered successfully`);
+            res.status(201).json(service);
+          })
+          .catch((error) => {
+            console.log(error);
+            res.status(500).json({ message: error.message });
+          });
+          // return res.status(404).json({ message: "Service not found" });
         }
         res.status(200).json(service);
       } else {
         const service = backendServices[_id];
         if (!service) {
-            return res.status(404).json({ message: "Service not found" });
+          // 如果没注册，现在注册
+          console.log('Service not found, registering now');
+          backendServices[_id] = {
+            _id,
+            hostInfo,
+          };
+          writeServicesToFile();
+          console.log(`Service ${_id} registered successfully`);
+          res.status(201).json({ message: 'Service registered successfully.' });
+          // return res.status(404).json({ message: "Service not found" });
         }
         // update the hostInfo and lastHeartbeat
         service.hostInfo = hostInfo;

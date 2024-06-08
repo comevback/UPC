@@ -111,8 +111,8 @@ func SendHeartbeat() bool {
 	}
 	defer resp.Body.Close()
 
-	// 检查响应状态码
-	return resp.StatusCode == http.StatusOK
+	// 检查响应状态码，只要状态码在200-299之间，就认为心跳发送成功
+	return resp.StatusCode >= 200 && resp.StatusCode < 300
 }
 
 // 注销请求结构
