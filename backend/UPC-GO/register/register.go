@@ -52,7 +52,7 @@ func RegisterService(port string) bool {
 	client := &http.Client{Timeout: 10 * time.Second}
 
 	// 创建HTTP请求
-	req, err := http.NewRequest("POST", fmt.Sprintf("%s/register-service", CENTRAL_SERVER), bytes.NewBuffer(jsonData))
+	req, err := http.NewRequest("POST", fmt.Sprintf("%s/backend/register-service", CENTRAL_SERVER), bytes.NewBuffer(jsonData))
 	if err != nil {
 		fmt.Printf("Failed to create request: %s\n", err.Error())
 		return false
@@ -96,7 +96,7 @@ func SendHeartbeat() bool {
 
 	// 创建HTTP客户端
 	client := &http.Client{Timeout: 10 * time.Second}
-	req, err := http.NewRequest("POST", fmt.Sprintf("%s/service-heartbeat", CENTRAL_SERVER), bytes.NewBuffer(jsonData))
+	req, err := http.NewRequest("POST", fmt.Sprintf("%s/backend/service-heartbeat", CENTRAL_SERVER), bytes.NewBuffer(jsonData))
 	if err != nil {
 		fmt.Printf("Failed to create request: %s\n", err.Error())
 		return false
@@ -133,7 +133,7 @@ func UnregisterService() {
 
 	// 创建HTTP客户端
 	client := &http.Client{Timeout: 10 * time.Second}
-	req, err := http.NewRequest("DELETE", fmt.Sprintf("%s/unregister-service", CENTRAL_SERVER), bytes.NewBuffer(jsonData))
+	req, err := http.NewRequest("DELETE", fmt.Sprintf("%s/backend/unregister-service", CENTRAL_SERVER), bytes.NewBuffer(jsonData))
 	if err != nil {
 		fmt.Printf("Failed to create request: %s\n", err.Error())
 		return

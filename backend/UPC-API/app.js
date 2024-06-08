@@ -7,7 +7,7 @@ import path from 'path';
 import pty from 'node-pty';
 import { dirname } from 'path';
 import { fileURLToPath } from 'url';
-import { exec, spawn } from "child_process"; 
+import { exec, spawn } from "child_process";
 import http from "http";
 import { WebSocketServer, WebSocket } from 'ws';
 import { serviceInfo, upload, limiter, registerService, unregisterService, sendHeartbeat, getWorkingDir, getEntrypoint, getCmd, getAvailableShell } from "./Components/methods.js";
@@ -28,7 +28,7 @@ const port = process.env.API_PORT || 4000;
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
 
-app.use(bodyParser.urlencoded({extended:true}));
+app.use(bodyParser.urlencoded({ extended: true }));
 app.use(express.static("public"));
 app.set('view engine', 'ejs');
 app.use(express.json()); // for parsing application/json
@@ -74,14 +74,14 @@ setInterval(() => {
 // Gracefully unregister the service when the process is terminated ============================================
 const gracefulShutdown = () => {
     try {
-      unregisterService();
-      console.log('Service unregistered and server is closing.');
-      setTimeout(() => {
-        process.exit(0);
-      }, 1000); // Wait 3 seconds before shutting down
+        unregisterService();
+        console.log('Service unregistered and server is closing.');
+        setTimeout(() => {
+            process.exit(0);
+        }, 1000); // Wait 3 seconds before shutting down
     } catch (error) {
-      console.log('Failed to unregister service: ', error.message);
-    } 
+        console.log('Failed to unregister service: ', error.message);
+    }
 };
 
 // Handle process termination
@@ -116,7 +116,7 @@ app.get('/api/files', async (req, res) => {
     fs.readdir(directoryPath, (err, files) => {
         if (err) {
             return res.status(500).send('Unable to scan directory: ' + err);
-        } 
+        }
         // ignore the .gitkeep and __MACOSX and .DS_Store file
         files = files.filter(file => file !== '.gitkeep' && file !== '__MACOSX' && file !== '.DS_Store');
         // Return the list of files
@@ -133,7 +133,7 @@ app.get('/api/results', async (req, res) => {
     fs.readdir(directoryPath, (err, files) => {
         if (err) {
             return res.status(500).send('Unable to scan directory: ' + err);
-        } 
+        }
         // ignore the .gitkeep file
         files = files.filter(file => file !== '.gitkeep' && file !== '__MACOSX' && file !== '.DS_Store');
         // Return the list of files
@@ -166,7 +166,7 @@ app.get('/api/files/:filename', (req, res) => {
 });
 
 // Route to download all selected files
-app.post('/api/files/download', async(req, res) => {
+app.post('/api/files/download', async (req, res) => {
     const { fileNames } = req.body;
     const filePath = path.join(__dirname, 'uploads');
     const files = fs.readdirSync(filePath);
@@ -178,7 +178,7 @@ app.post('/api/files/download', async(req, res) => {
 
     console.log('Files to download:', matchedFiles);
 
-    const zipFileName = 'Result-' + Date.now()+ '.zip'; // Name of the ZIP file to download
+    const zipFileName = 'Result-' + Date.now() + '.zip'; // Name of the ZIP file to download
     const zipFilePath = path.join(filePath, zipFileName);
 
     const zip = spawn('zip', ['-r', zipFileName, ...matchedFiles], { cwd: filePath });
@@ -227,7 +227,7 @@ app.get('/api/results/:filename', (req, res) => {
 });
 
 // Route to download all selected results
-app.post('/api/results/download', async(req, res) => {
+app.post('/api/results/download', async (req, res) => {
     const { fileNames } = req.body;
     const filePath = path.join(__dirname, 'results');
     const files = fs.readdirSync(filePath);
@@ -239,7 +239,7 @@ app.post('/api/results/download', async(req, res) => {
 
     console.log('Files to download:', matchedFiles);
 
-    const zipFileName = 'Result-' + Date.now()+ '.zip'; // Name of the ZIP file to download
+    const zipFileName = 'Result-' + Date.now() + '.zip'; // Name of the ZIP file to download
     const zipFilePath = path.join(filePath, zipFileName);
 
     const zip = spawn('zip', ['-r', zipFileName, ...matchedFiles], { cwd: filePath });
@@ -288,7 +288,7 @@ app.get('/api/temps/:filename', (req, res) => {
 });
 
 // Route to download all selected temps
-app.post('/api/temps/download', async(req, res) => {
+app.post('/api/temps/download', async (req, res) => {
     const { fileNames } = req.body;
     const filePath = path.join(__dirname, 'temps');
     const files = fs.readdirSync(filePath);
@@ -300,7 +300,7 @@ app.post('/api/temps/download', async(req, res) => {
 
     console.log('Files to download:', matchedFiles);
 
-    const zipFileName = 'Result-' + Date.now()+ '.zip'; // Name of the ZIP file to download
+    const zipFileName = 'Result-' + Date.now() + '.zip'; // Name of the ZIP file to download
     const zipFilePath = path.join(filePath, zipFileName);
 
     const zip = spawn('zip', ['-r', zipFileName, ...matchedFiles], { cwd: filePath });
@@ -359,7 +359,7 @@ app.get('/api/images', (req, res) => {
 });
 
 //view the image details
-app.get('/api/images/:imageName', async(req, res) => {
+app.get('/api/images/:imageName', async (req, res) => {
     const { imageName } = req.params;
 
     exec(`docker inspect ${imageName}`, (err, stdout, stderr) => {
@@ -399,7 +399,7 @@ app.get('/api/images/:imageName', async(req, res) => {
 });
 
 // unzip the file and build the image with the extracted files by buildpack
-app.post('/api/files/:filename', async(req, res) => {
+app.post('/api/files/:filename', async (req, res) => {
     const startTime = Date.now();
     const { filename } = req.params;
     const baseFileName = path.basename(filename, '.zip');
@@ -447,9 +447,9 @@ app.post('/api/files/:filename', async(req, res) => {
         broadcast('geneMessage', 'File unzipped successfully');
 
         const pack = spawn('pack', [
-            'build', 
-            baseFileName.toLowerCase(),               
-            '--path', appPath,        
+            'build',
+            baseFileName.toLowerCase(),
+            '--path', appPath,
             '--builder', 'paketobuildpacks/builder-jammy-base'
         ]);
 
@@ -463,9 +463,9 @@ app.post('/api/files/:filename', async(req, res) => {
             broadcast('geneError', data.toString());
         });
 
-        pack.on('close', async(code) => {
+        pack.on('close', async (code) => {
             const endTime = Date.now();
-            const timeTaken = (endTime - startTime)/1000 ;
+            const timeTaken = (endTime - startTime) / 1000;
             console.log(`Time took: ${timeTaken}s`);
 
             if (code === 0) {
@@ -473,14 +473,14 @@ app.post('/api/files/:filename', async(req, res) => {
                 await fs.promises.rm(appPath, { recursive: true });
                 console.log('unzipped folder deleted');
                 broadcast('geneMessage', `[${timeTaken}s] Image built successfully.`);
-                res.status(200).send({ message: 'Image built successfully'});
+                res.status(200).send({ message: 'Image built successfully' });
             } else {
                 console.error(`pack build failed with code ${code}`);
                 broadcast('geneError', `[${timeTaken}s] Error building image.`);
-                res.status(500).send({ message: 'Error building image'});
+                res.status(500).send({ message: 'Error building image' });
             }
         });
-    });  
+    });
 });
 
 // **********************************************************  Delete  ******************************************************
@@ -497,7 +497,7 @@ app.delete('/api/files/:filename', (req, res) => {
             // if it is a directory, delete it recursively
             fs.rm(filePath, { recursive: true }, (err) => {
                 if (err) {
-                    return res.status(500).send('Can not find the file'+ err.message);
+                    return res.status(500).send('Can not find the file' + err.message);
                 }
                 res.send('directory deleted successfully');
             });
@@ -529,7 +529,7 @@ app.delete('/api/results/:filename', (req, res) => {
             // if it is a directory, delete it recursively
             fs.rm(filePath, { recursive: true }, (err) => {
                 if (err) {
-                    return res.status(500).send('Can not find the file'+ err.message);
+                    return res.status(500).send('Can not find the file' + err.message);
                 }
                 res.send('directory deleted successfully');
             });
@@ -549,7 +549,7 @@ app.delete('/api/results/:filename', (req, res) => {
 });
 
 // Delete all selected files
-app.delete('/api/files', async(req, res) => {
+app.delete('/api/files', async (req, res) => {
     const { fileNames } = req.body.files;
     const filePath = path.join(__dirname, 'uploads');
     const files = fs.readdirSync(filePath);
@@ -571,7 +571,7 @@ app.delete('/api/files', async(req, res) => {
 
 
 // Delete all selected results
-app.delete('/api/results', async(req, res) => {
+app.delete('/api/results', async (req, res) => {
     const { fileNames } = req.body.files;
     const filePath = path.join(__dirname, 'results');
     const files = fs.readdirSync(filePath);
@@ -605,7 +605,7 @@ app.delete('/api/temps/:filename', (req, res) => {
             // if it is a directory, delete it recursively
             fs.rm(filePath, { recursive: true }, (err) => {
                 if (err) {
-                    return res.status(500).send('Can not find the file'+ err.message);
+                    return res.status(500).send('Can not find the file' + err.message);
                 }
                 res.send('directory deleted successfully');
             });
@@ -666,7 +666,7 @@ app.post('/api/command', (req, res) => {
 });
 
 // upload this file to openai and get the result
-app.post('/api/openai/:fileName', async(req, res) => {
+app.post('/api/openai/:fileName', async (req, res) => {
     const { fileName } = req.params;
     console.log("process this file with OpenAI: " + fileName);
     const filePath = path.join(__dirname, 'uploads', fileName);

@@ -15,7 +15,7 @@ const frontName = 'Frontend-' + publicFrontUrl;
 // Get the list of services
 export const getServices = async (CENTRAL_SERVER_URL) => {
     try {
-        const response = await axios.get(`${CENTRAL_SERVER_URL}/list-services`);
+        const response = await axios.get(`${CENTRAL_SERVER_URL}/backend/list-services`);
         return response.data;
     } catch (error) {
         console.error('Error fetching services:', error);

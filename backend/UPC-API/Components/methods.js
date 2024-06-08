@@ -110,7 +110,7 @@ export const limiter = rateLimit({
 // ************************************************Register the service ****************************************************
 export const registerService = async () => {
     try {
-      const response = await axios.post(`${CENTRAL_SERVER}/register-service`, serviceInfo);
+      const response = await axios.post(`${CENTRAL_SERVER}/backend/register-service`, serviceInfo);
       if (response.status >= 200 && response.status < 300) {
         return true;
       } else {
@@ -127,7 +127,7 @@ export const registerService = async () => {
 export const sendHeartbeat = async () => {
     try {
       const hostInfo = getHostInfo();
-      const response = await axios.post(`${CENTRAL_SERVER}/service-heartbeat`, { _id: id, hostInfo: hostInfo});
+      const response = await axios.post(`${CENTRAL_SERVER}/backend/service-heartbeat`, { _id: id, hostInfo: hostInfo});
       if (response.status == 200){
         return true;
       } else {
@@ -142,7 +142,7 @@ export const sendHeartbeat = async () => {
 // Unregister the service. ============================================================
 export const unregisterService = async () => {
     try {
-      await axios.delete(`${CENTRAL_SERVER}/unregister-service`, { data: { _id: id } });
+      await axios.delete(`${CENTRAL_SERVER}/backend/unregister-service`, { data: { _id: id } });
       console.log('Service unregistered');
     } catch (error) {
       console.error('Failed to unregister service:', error.message);

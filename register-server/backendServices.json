@@ -35,5 +35,18 @@
     },
     "createdAt": "2024-04-13T11:59:28.124Z",
     "lastHeartbeat": 1713009688132
+  },
+  "GO Server: http://localhost:4000": {
+    "_id": "GO Server: http://localhost:4000",
+    "url": "http://localhost:4000",
+    "publicURL": "http://localhost:4000",
+    "hostInfo": {
+      "architecture": "arm64",
+      "cpus": 10,
+      "hostname": "xuxiangdeMacBook-Pro.local",
+      "platform": "darwin",
+      "release": "go1.22.3"
+    },
+    "lastHeartbeat": 1717869922321
   }
 }
