@@ -26,7 +26,9 @@ WORKDIR /usr/src/app
 RUN apk update && apk add --no-cache \
     curl \
     zsh \
+    git \
     && rm -rf /var/cache/apk/*
+
 
 # 安装 oh-my-zsh
 RUN sh -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)"
