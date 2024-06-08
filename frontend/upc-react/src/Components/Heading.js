@@ -19,6 +19,7 @@ const Heading = (props) => {
     const chooseAPIserver = (service) => {
         setAPI_URL(service.url);
         setAPI_NAME(service._id);
+        console.log(`API_URL: ${service.url}`);
     };
 
     return (

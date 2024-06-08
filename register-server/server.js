@@ -137,18 +137,19 @@ app.delete('/unregister-service', async (req, res) => {
   
 // Heartbeat Endpoint
 app.post('/service-heartbeat', async (req, res) => {
-    const { _id, hostInfo } = req.body;
+    const { _id, url, publicUrl, hostInfo } = req.body;
     try {
         if (isDbConnected) {
             const service = await BackendService.findByIdAndUpdate(
                 _id,
-                { hostInfo, lastHeartbeat: Date.now() },
+                { url: url, publicURL: publicUrl, hostInfo, lastHeartbeat: Date.now() },
                 { new: true }
             );
             console.log(`Heartbeat from backend service: (${service._id}): ————` + new Date(Date.now()).toLocaleString());
             if (!service) {
                 console.log('Service not found, registering now');
-                await BackendService.findOneAndUpdate({ _id: _id }, newService, { upsert: true }) // upsert: true means if the service is not found, insert it
+                // upsert: true means if the service is not found, insert it
+                await BackendService.findOneAndUpdate({ _id: _id, url: url, publicURL: publicUrl, hostInfo, lastHeartbeat: Date.now() }, { upsert: true })
                 .then((newService) => {
                     console.log(`Service ${newService._id} registered successfully`);
                     return res.status(201).json(newService);
@@ -166,6 +167,8 @@ app.post('/service-heartbeat', async (req, res) => {
                 console.log('Service not found, registering now');
                 backendServices[_id] = {
                     _id,
+                    url,
+                    publicURL: publicUrl,
                     hostInfo,
                     lastHeartbeat: Date.now()
                 };

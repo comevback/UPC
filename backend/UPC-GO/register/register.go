@@ -76,19 +76,19 @@ func RegisterService(port string) bool {
 	}
 }
 
-// 心跳请求结构
-type HeartbeatRequest struct {
-	ID       string                 `json:"_id"`
-	HostInfo map[string]interface{} `json:"hostInfo"`
-}
-
 // 发送心跳功能
 func SendHeartbeat() bool {
 	hostInfo, _ := GetHostInfo()
-	heartbeatReq := HeartbeatRequest{ID: id, HostInfo: hostInfo}
+	// 创建服务信息
+	serviceInfo := ServiceInfo{
+		ID:        id,
+		URL:       URL,
+		PublicURL: URL,
+		HostInfo:  hostInfo,
+	}
 
 	// 将心跳请求转换为json格式
-	jsonData, err := json.Marshal(heartbeatReq)
+	jsonData, err := json.Marshal(serviceInfo)
 	if err != nil {
 		fmt.Printf("Failed to marshal heartbeat request: %s\n", err.Error())
 		return false
