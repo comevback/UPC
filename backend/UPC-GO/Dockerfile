@@ -1,49 +1,46 @@
-# Use the official Golang image as the base image
+# 第一个阶段：使用 Go 官方镜像构建 Go 可执行文件
 FROM golang:1.22-alpine as builder
 
-# Set the Current Working Directory inside the container
+# 设置工作目录
 WORKDIR /app
 
-# Copy go mod and sum files
+# 复制 go.mod 和 go.sum 文件
 COPY go.mod go.sum ./
 
-# Download all dependencies. Dependencies will be cached if the go.mod and go.sum files are not changed
+# 下载所有依赖项
 RUN go mod download
 
-# Copy the source code into the container
+# 复制源代码
 COPY . .
 
-# Build the Go app
+# 构建 Go 应用程序
 RUN go build -o main .
 
-# Use a minimal base image
+# 第二个阶段：使用最小化的基础镜像运行应用程序
 FROM alpine:latest
 
-# Set the working directory
+# 设置工作目录
 WORKDIR /usr/src/app
 
-# Install docker, curl, git, zsh, python3, make, g++ and zip
+# 安装必要的软件包
 RUN apk update && apk add --no-cache docker-cli curl git zsh python3 make g++ zip
 
-# Install oh-my-zsh
+# 安装 oh-my-zsh
 RUN sh -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)"
 
-# # Install zsh-autosuggestions and add source ~/.zsh/zsh-autosuggestions/zsh-autosuggestions.zsh to .zshrc
-# RUN git clone https://github.com/zsh-users/zsh-autosuggestions ~/.zsh/zsh-autosuggestions && echo "source ~/.zsh/zsh-autosuggestions/zsh-autosuggestions.zsh" >> ~/.zshrc
-
-# Install pack
+# 安装 pack
 RUN (curl -sSL "https://github.com/buildpacks/pack/releases/download/v0.32.1/pack-v0.32.1-linux.tgz" | tar -C /usr/local/bin/ --no-same-owner -xzv pack)
 
-# Copy the Pre-built binary file from the previous stage
+# 从构建阶段复制预构建的二进制文件和其他需要的文件
 COPY --from=builder /app/main .
 COPY --from=builder /app/views ./views
 COPY --from=builder /app/public ./public
 
-# Expose port 4000 to the outside world
+# 暴露端口 4000
 EXPOSE 4000
 
-# Set Zsh as the default shell
+# 设置 Zsh 为默认 shell
 SHELL ["/bin/zsh", "-c"]
 
-# Command to run the executable
+# 运行可执行文件
 CMD ["./main"]

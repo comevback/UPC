@@ -1,5 +1,5 @@
 # 第一个阶段：使用 Go 官方镜像构建 Go 可执行文件
-FROM golang:1.22 as builder
+FROM golang:1.22-buster as builder
 
 # 设置工作目录
 WORKDIR /app
@@ -12,13 +12,10 @@ RUN go mod download
 COPY backend/UPC-GO/ ./
 
 # 编译Go应用为静态可执行文件
-RUN go build -o upc-go .
+RUN CGO_ENABLED=0 GOOS=linux GOARCH=amd64 go build -o upc-go .
 
 # 第二个阶段：使用 Node.js 官方镜像
-FROM node:20-slim
-
-# 设置Go环境变量
-ENV PATH="/usr/local/go/bin:${PATH}"
+FROM node:20-buster-slim
 
 # 安装必要的包
 RUN apt-get update && apt-get install -y \
@@ -69,4 +66,4 @@ EXPOSE 3000 4000 8000
 
 # 定义容器启动时运行的命令
 # 如果要使用云服务器作为注册服务器，请将最后一步改为：CMD sh -c "npm start & /usr/src/app/backend/UPC-API/frpc -c /usr/src/app/backend/UPC-API/frpc.toml"
-CMD sh -c "npm start && ./usr/src/app/backend/UPC-GO/upc-go"
+CMD sh -c "npm start && /usr/local/bin/upc-go"
