@@ -8,7 +8,7 @@
       }
     },
     "color": {
-      "value": [ "#FDFFB6", "#CAFFBF", "#9BF6FF", "#BDB2FF", "#9cffff", "#FF4444"]
+      "value": ["#808080"]
     },
     "shape": {
       "type": "polygon",
@@ -36,7 +36,7 @@
       }
     },
     "size": {
-      "value": 25,
+      "value": 30,
       "random": false,
       "anim": {
         "enable": false,
@@ -54,7 +54,7 @@
     },
     "move": {
       "enable": true,
-      "speed": 10,
+      "speed": 6,
       "direction": "bottom",
       "random": false,
       "straight": true,

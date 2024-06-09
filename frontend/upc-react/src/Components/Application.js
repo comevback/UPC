@@ -109,19 +109,27 @@ const ApplicationForm = () => {
     useEffect(() => {
         // Get the list of files when the component mounts
         checkBackend();
+    }, [API_URL]);
+
+    useEffect(() => {
         if (connected) {
             refreshFiles();
             refreshResults();
             refreshImages();
         }
 
-        // Load the particles.js library
-        if (window.particlesJS) {
-            window.particlesJS.load('particles-js', 'particlesjs.json', function() {
-              console.log('particles.js loaded - callback');
-            });
-        }
-        
+        // Load the particles.js library with the appropriate configuration file based on the connection status
+        const loadParticles = (configFile) => {
+            if (window.particlesJS) {
+                window.particlesJS.load('particles-js', configFile, function () {
+                    console.log('particles.js loaded - callback with config:', configFile);
+                });
+            }
+        };
+
+        const configFile = connected ? 'particlesjs.json' : 'particles-noConnect.json';
+        loadParticles(configFile);
+
         // Remove the canvas element when the component unmounts
         return () => {
             let particlesJSContainer = document.getElementById('particles-js');
@@ -132,7 +140,7 @@ const ApplicationForm = () => {
                 }
             }
         };
-    }, [API_URL]);
+    }, [connected]);
 
     return (
         <div>
