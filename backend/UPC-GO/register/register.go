@@ -27,9 +27,18 @@ func GetCentralServer() string {
 	return centralServer
 }
 
+// 获取环境变量中的本后端服务URL
+func GetGoAPIURL() string {
+	goAPIURL := os.Getenv("API_URL")
+	if goAPIURL == "" {
+		goAPIURL = "http://localhost" // 默认值
+	}
+	return goAPIURL
+}
+
 // 全局变量
 var (
-	URL            = "http://localhost" // 替换为你的服务地址
+	URL            = GetGoAPIURL()
 	CENTRAL_SERVER = GetCentralServer()
 	id             = "GO Server: " // 替换为你的服务ID
 )

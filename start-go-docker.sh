@@ -1,12 +1,12 @@
 #!/bin/bash
 
-# get host name
+# 获取操作系统名称
 os_name=$(uname -s)
 white="\033[0;37m"
 green="\033[1;32m"
 end_style="\033[0m"
 
-# test if sudo command exists
+# 检查 sudo 命令是否存在
 if command -v sudo &> /dev/null
 then
     SUDO="sudo"
@@ -20,7 +20,7 @@ if ! docker info > /dev/null 2>&1; then
     exit 1
 fi
 
-#  get local ip address according to the operating system
+# 根据操作系统获取本地 IP 地址
 if [ "$os_name" = "Linux" ]; then
     ip_address=$(hostname -I | awk '{print $1}')
 elif [ "$os_name" = "Darwin" ]; then
@@ -31,7 +31,7 @@ else
     ip_address=localhost
 fi
 
-# get public ip address
+# 获取公共 IP 地址
 public_ip_address=$(curl -s https://api.ipify.org)
 
 echo -e "\033[2J\033[0;0H"
@@ -47,7 +47,7 @@ echo -e "${white}|                              ╚██████╔╝█�
 echo -e "${white}|                               ╚═════╝ ╚═╝      ╚═════╝                              |${end_style}"
 
 echo -e "${white}|-------------------------------------------------------------------------------------|${end_style}"
-echo -e "${white}|                                      Frontend                                       |${end_style}"
+echo -e "${white}|                                       Backend                                       |${end_style}"
 echo -e "${white}---------------------------------------------------------------------------------------${end_style}"
 
 echo ""
@@ -58,45 +58,32 @@ echo ""
 
 default_api_url="http://$ip_address:4000"
 default_central_server_url="http://$ip_address:8000"
-default_port=3000
 
-echo -e "\033[1;37m1. Please enter your React \033[1;31mPORT${end_style} ${white}(press Enter for default:${end_style} \033[32m3000${end_style}${white}):${end_style}"
-if ! read -e -p '(default): ' -i "$default_port" PORT 2>/dev/null; 
-then
-    # if failed, use 'read' command without '-i' option
-    read -e -p "(default: $default_port): " PORT
-else
-    # if succeed, use 'read' command with '-i' option
-    read -e -p $'\033[0;33m(default)\033[0m: ' -i "$default_port" PORT
-fi
-PORT=${PORT:-3000}
-echo -e "\033[97mReact URL: ${green}\033[4mhttp://$ip_address:$PORT${end_style}"
-
-
-# Ask user to input API host URL
-echo -e "\033[1;37m2. Please enter your API host URL${end_style} ${white}(press Enter for default:${end_style} \033[32mhttp://$ip_address:4000${end_style}${white}):${end_style}"
+# 提示用户输入 API 主机 URL
+echo -e "\033[1;37m1. Please enter your API host URL${end_style} ${white}(press Enter for default:${end_style} \033[32mhttp://$ip_address:4000${end_style}${white}):${end_style}"
 if ! read -e -p '(default): ' -i "$default_api_url" URL 2>/dev/null; 
 then
-    # if failed, use 'read' command without '-i' option
-    read -e -p "(default: $default_api_url): " API_URL
+    # 如果失败，使用不带 -i 选项的 read 命令
+    read -e -p "(default: $default_api_url): " URL
 else
-    # if succeed, use 'read' command with '-i' option
-    read -e -p $'\033[0;33m(default)\033[0m: ' -i "$default_api_url" API_URL
+    # 如果成功，使用带 -i 选项的 read 命令
+    read -e -p $'\033[0;33m(default)\033[0m: ' -i "$default_api_url" URL 
 fi
-API_URL=${API_URL:-http://$ip_address:4000}
+API_URL=${URL:-http://$ip_address:4000}
+API_PORT=$(echo $API_URL | cut -d':' -f3)
+API_PORT=${API_PORT:-4000}
 echo -e "\033[97mAPI Host URL: ${green}\033[4m$API_URL${end_style}"
 echo ""
 
-
-# Ask user to input central register server URL
-echo -e "\033[1;37m3. Please enter your central register server URL${end_style} ${white}(press Enter for default:${end_style} \033[32mhttp://$ip_address:8000${end_style}${white}):${end_style} "
-if ! read -e -p '(default): ' -i "$default_central_server_url" CENTRAL_SERVER 2>/dev/null; 
+# 提示用户输入中央注册服务器 URL
+echo -e "\033[1;37m2. Please enter your central register server URL${end_style} ${white}(press Enter for default:${end_style} \033[32mhttp://$ip_address:8000${end_style}${white}):${end_style} "
+if ! read -e -p '(default): ' -i "$default_central_server_url" URL 2>/dev/null; 
 then
-    # if failed, use 'read' command without '-i' option
+    # 如果失败，使用不带 -i 选项的 read 命令
     read -e -p "(default: $default_central_server_url): " CENTRAL_SERVER
 else
-    # if succeed, use 'read' command with '-i' option
-    read -e -p $'\033[0;33m(default)\033[0m: ' -i "$default_central_server_url" CENTRAL_SERVER
+    # 如果成功，使用带 -i 选项的 read 命令
+    read -e -p $'\033[0;33m(default)\033[0m: ' -i "$default_central_server_url" CENTRAL_SERVER 
 fi
 CENTRAL_SERVER=${CENTRAL_SERVER:-http://$ip_address:8000}
 echo -e "\033[97mCentral Register Server URL: ${green}\033[4m$CENTRAL_SERVER${end_style}"
@@ -117,21 +104,31 @@ echo -e "${green}|                              ╚██████╔╝█�
 echo -e "${green}|                               ╚═════╝ ╚═╝      ╚═════╝                              |${end_style}"
 
 echo -e "${green}|-------------------------------------------------------------------------------------|${end_style}"
-echo -e "${green}|                                      Frontend                                       |${end_style}"
+echo -e "${green}|                                       Backend                                       |${end_style}"
 echo -e "${green}---------------------------------------------------------------------------------------${end_style}"
 
-
-# check if there are dangling images
+# 检查是否有悬挂的镜像
 dangling_images=$($SUDO docker images -f "dangling=true" -q)
 if [ -n "$dangling_images" ]; then
-    # if there are dangling images, remove them
+    # 如果有悬挂的镜像，删除它们
     $SUDO docker rmi $dangling_images
 fi
 
-# replace the ip address in files, and start the docker container
-$SUDO docker pull afterlifexx/upc-react:latest && \
-$SUDO docker run -e REACT_APP_INITIAL_API_URL=$API_URL \
-           -e REACT_APP_INITIAL_CENTRAL_SERVER_URL=$CENTRAL_SERVER \
-           -e PORT=$PORT \
-           -p $PORT:$PORT -it --rm \
-           afterlifexx/upc-react:latest
+# 替换文件中的 IP 地址并启动 Docker 容器
+if [ "${os_name}" = "Windows" ]; then
+    $SUDO docker pull afterlifexx/upc-go:latest && \
+    $SUDO docker run -e API_URL=$API_URL \
+           -e CENTRAL_SERVER=$CENTRAL_SERVER \
+           -e API_PORT=$API_PORT \
+           -v "//var/run/docker.sock:/var/run/docker.sock" \
+           -p $API_PORT:$API_PORT -it --rm \
+           afterlifexx/upc-go:latest
+else
+    $SUDO docker pull afterlifexx/upc-go:latest && \
+    $SUDO docker run -e API_URL=$API_URL \
+            -e CENTRAL_SERVER=$CENTRAL_SERVER \
+            -e API_PORT=$API_PORT \
+            -v /var/run/docker.sock:/var/run/docker.sock \
+            -p $API_PORT:$API_PORT -it --rm \
+            afterlifexx/upc-go:latest
+fi

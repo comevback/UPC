@@ -14,6 +14,12 @@ else
     SUDO=""
 fi
 
+# 检查 Docker 是否正在运行
+if ! docker info > /dev/null 2>&1; then
+    echo -e "\033[1;31mDocker is not running. Please start Docker and try again.\033[0m"
+    exit 1
+fi
+
 #  get local ip address according to the operating system
 if [ "$os_name" = "Linux" ]; then
     ip_address=$(hostname -I | awk '{print $1}')
