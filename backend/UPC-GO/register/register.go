@@ -6,6 +6,7 @@ import (
 	"fmt"
 	"log"
 	"net/http"
+	"os"
 	"time"
 )
 
@@ -17,11 +18,20 @@ type ServiceInfo struct {
 	HostInfo  map[string]interface{} `json:"hostInfo"`
 }
 
+// 获取环境变量中的注册服务URL
+func GetCentralServer() string {
+	centralServer := os.Getenv("CENTRAL_SERVER")
+	if centralServer == "" {
+		centralServer = "http://localhost:8000" // 默认值
+	}
+	return centralServer
+}
+
 // 全局变量
 var (
-	URL            = "http://localhost"      // 替换为你的服务地址
-	CENTRAL_SERVER = "http://localhost:8000" // 替换为你的中央服务器地址
-	id             = "GO Server: "           // 替换为你的服务ID
+	URL            = "http://localhost" // 替换为你的服务地址
+	CENTRAL_SERVER = GetCentralServer()
+	id             = "GO Server: " // 替换为你的服务ID
 )
 
 func RegisterService(port string) bool {
