@@ -20,17 +20,33 @@ chmod +x start-docker.sh &&
 
 <img src='./UPC-script-demo.gif' alt='UPC logo' width='600px'/>
 
+--
+
+## Demo
+
+<img src='./docker-run-command.gif' alt='docker run command' width='1000px'/>
+
+1. Start the React(frontend) API(backend) servers and Register-Server.
+2. Compress the directory of the task in to .zip file,
+3. Upload the compressed file on React website,
+4. Generate a image for this kind of task,
+5. Upload files and process,
+6. Download the results.
+
+
 ---
 
 ## Features
+This system allows users to easily operate Docker through a web browser. Here are its main features:
 
-- **Process jobs**: Process different kinds of jobs in various backend hosts in the system.
-- **File management**: Upload/Delete files in the backend-server.
-- **Docker Image Generation**: Generate Docker images through uploaded zip file using Buildpack.
-- **Terminal integration**: Expose backend host terminal to frontend to let users to execute commands.
-- **Server registration**: Register and manage backend API servers/frontend React servers by Register-Server(loacl or cloud).
-- **Database Integration**: Store and manage data in MongoDB(cloud).
-- **Deploy by Docker using shell script**: Deploy the whole system by running a command.
+- **File Management**: Upload and delete files.
+- **Docker Image Creation**: Create Docker images from uploaded files.
+- **Task Processing**: Perform various tasks on the backend.
+- **Terminal Access**: Execute commands directly from the web browser.
+- **Server Management**: Register and manage local or cloud servers.
+- **Docker Deployment**: Deploy the entire system with a single command.
+
+In short, this system allows users to operate Docker from the web interface to create, pull, and delete Docker images. Additionally, through a panel, it helps users utilize Docker containers more quickly and easily.
 
 ---
 
@@ -88,20 +104,21 @@ chmod +x start-docker.sh &&
 ./start-docker.sh
 ```
 
-- (Backend only) API-service:
+- Go-Server :
+```bash
+curl -sSL https://raw.githubusercontent.com/comevback/UPC-node/main/start-go-docker.sh -o start-go-docker.sh &&
+chmod +x start-go-docker.sh &&
+./start-go-docker.sh
+```
+
+- Node-Server (deprecated):
 ```bash
 curl -sSL https://raw.githubusercontent.com/comevback/UPC-node/main/start-api-docker.sh -o start-api-docker.sh &&
 chmod +x start-api-docker.sh &&
 ./start-api-docker.sh
 ```
-- for x86 arch host:
-```bash
-curl -sSL https://raw.githubusercontent.com/comevback/UPC-node/main/start-x86-api-docker.sh -o start-x86-api-docker.sh &&
-chmod +x start-x86-api-docker.sh &&
-./start-x86-api-docker.sh
-```
 
-- (Frontend only) Frontend-service:
+- Frontend-service:
 ```bash
 curl -sSL https://raw.githubusercontent.com/comevback/UPC-node/main/start-react-docker.sh -o start-react-docker.sh &&
 chmod +x start-react-docker.sh &&
@@ -114,43 +131,6 @@ curl -sSL https://raw.githubusercontent.com/comevback/UPC-node/main/start-regist
 chmod +x start-register-docker.sh &&
 ./start-register-docker.sh
 ```
-
-### Docker command:
-
-- Whole UPC system:
-```bash
-docker run -it --rm -e HOST_URL={http://your_API_host:4000} -e CENTRAL_SERVER={http://your_central_server:8000} -e INITIAL_API_URL={http://your_API_host:4000} -e INITIAL_CENTRAL_SERVER_URL={http://your_central_server:8000} -v /var/run/docker.sock:/var/run/docker.sock -p 3000:3000 -p 4000:4000 -p 8000:8000 afterlifexx/upc-system
-```
-
-for example:
-```bash
-docker run -it --rm -e HOST_URL=http://192.168.0.103:4000 -e CENTRAL_SERVER=http://192.168.0.103:8000 -e INITIAL_API_URL=http://192.168.0.103:4000 -e INITIAL_CENTRAL_SERVER_URL=http://192.168.0.103:8000 -v /var/run/docker.sock:/var/run/docker.sock -p 3000:3000 -p 4000:4000 -p 8000:8000 afterlifexx/upc-system
-```
-
-```bash
-docker run -it --rm -e HOST_URL=http://172.28.235.225:4000 -e CENTRAL_SERVER=http://172.28.235.225:8000 -e INITIAL_API_URL=http://172.28.235.225:4000 -e INITIAL_CENTRAL_SERVER_URL=http://172.28.235.225:8000 -v /var/run/docker.sock:/var/run/docker.sock -p 3000:3000 -p 4000:4000 -p 8000:8000 afterlifexx/upc-system
-```
-
-- (Backend only) API-service:
-```bash
-docker run -it --rm -e HOST_URL={http://your_API_host:4000} -e CENTRAL_SERVER={http://your_central_server:8000} -v /var/run/docker.sock:/var/run/docker.sock -p 4000:4000 afterlifexx/upc-api
-```
-- for example( API service ):
-```bash
-docker run -it --rm -e HOST_URL=http://172.28.235.64:4000 -e CENTRAL_SERVER=http://172.28.235.225:8000 -v /var/run/docker.sock:/var/run/docker.sock -p 4000:4000 afterlifexx/upc-api
-```
-
-- (Frontend only) Frontend-service:
-```bash
-docker run  -e REACT_APP_INITIAL_API_URL={http://your_API_host:4000} -e REACT_APP_INITIAL_CENTRAL_SERVER_URL={http://your_central_server:8000} -p 3000:3000 afterlifexx/upc-react
-```
-
-- Register-service:
-```bash
-docker run  -it --rm -p 8000:8000 afterlifexx/upc-register
-```
-
-
 
 ---
 
@@ -233,17 +213,6 @@ npm start
 cd frontend/upc-react
 npm start
 ```
-
-## Demo
-
-<img src='./docker-run-command.gif' alt='docker run command' width='1000px'/>
-
-1. Start the React(frontend) API(backend) servers and Register-Server.
-2. Compress the directory of the task in to .zip file,
-3. Upload the compressed file on React website,
-4. Generate a image for this kind of task,
-5. Upload files and process,
-6. Download the results.
 
 ## Contributing
 

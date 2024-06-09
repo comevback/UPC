@@ -21,17 +21,68 @@ chmod +x start-docker.sh &&
 
 <img src='./UPC-script-demo.gif' alt='UPC logo' width='600px'/>
 
+- 全体のUPCシステム（Go バックエンド、React フロントエンド、Express 登録サーバー）を起動します。
+```bash
+curl -sSL https://raw.githubusercontent.com/comevback/UPC-node/main/start-docker.sh -o start-docker.sh &&
+chmod +x start-docker.sh &&
+./start-docker.sh
+```
+
+- Go-サーバー :
+```bash
+curl -sSL https://raw.githubusercontent.com/comevback/UPC-node/main/start-go-docker.sh -o start-go-docker.sh &&
+chmod +x start-go-docker.sh &&
+./start-go-docker.sh
+```
+
+- （フロントエンドのみ）フロントエンドサービス：
+```bash
+curl -sSL https://raw.githubusercontent.com/comevback/UPC-node/main/start-react-docker.sh -o start-react-docker.sh &&
+chmod +x start-react-docker.sh &&
+./start-react-docker.sh
+```
+
+- 登録サービス：
+```bash
+curl -sSL https://raw.githubusercontent.com/comevback/UPC-node/main/start-register-docker.sh -o start-register-docker.sh &&
+chmod +x start-register-docker.sh &&
+./start-register-docker.sh
+```
+
+- Node-Server（非推奨）：
+```bash
+curl -sSL https://raw.githubusercontent.com/comevback/UPC-node/main/start-api-docker.sh -o start-api-docker.sh &&
+chmod +x start-api-docker.sh &&
+./start-api-docker.sh
+```
+
+---
+
+## デモ
+
+1. React（フロントエンド）、API（バックエンド）サーバーおよび登録サーバーを起動します。
+2. タスクのディレクトリを.zipファイルに圧縮します。
+3. Reactのウェブサイトで圧縮ファイルをアップロードします。
+4. この種のタスク用のイメージを生成します。
+5. ファイルをアップロードして処理します。
+6. 結果をダウンロードします。
+
+<img src='./docker-run-command.gif' alt='docker run command' width='1000px'/>
+
 ---
 
 ## 特徴
 
-- **タスク処理**: システム内の様々なバックエンドホストで異なる種類のタスクを処理します。
-- **ファイル管理**: バックエンドサーバーでファイルをアップロード／削除。
-- **Dockerイメージ生成**: アップロードされたzipファイルを使ってBuildpackを通じてDockerイメージを生成。
-- **ターミナル統合**: ユーザーがコマンドを実行できるようにバックエンドホストターミナルをフロントエンドに公開。
-- **サーバー管理**: Register-Server（ローカルまたはクラウド）によるバックエンドAPIサーバー／フロントエンドReactサーバーの登録と管理。
-- **データベース統合**: MongoDB（クラウド）でデータを保存・管理。
-- **Dockerデプロイ（シェルスクリプトによる）**: コマンドを実行することでシステム全体をデプロイ。
+このシステムは、ウェブブラウザでDockerを簡単に操作できるようにするものです。以下がその主な機能です：
+
+- **ファイル管理**: ファイルをアップロードしたり削除したりします。
+- **Dockerイメージ生成**: アップロードしたファイルからDockerイメージを作ります。
+- **タスク処理**: 様々な作業をバックエンドで行います。
+- **ターミナル操作**: ウェブブラウザから直接コマンドを実行できます。
+- **サーバー管理**: ローカルやクラウドのサーバーを登録して管理します。
+- **Dockerデプロイ**: コマンド一つでシステム全体をデプロイします。
+
+つまり、このシステムを使うと、ウェブ画面からDockerを操作して、Dockerイメージを作成、取得（pull）、削除できます。また、パネルを通じて、ユーザーがDockerコンテナをより迅速かつ簡単に利用できるようサポートします。
 
 ---
 
@@ -81,77 +132,6 @@ UPCシステムでDockerイメージを生成する手順：
 
 ### スクリプト（ターミナルにコピーアンドペーストして実行）:
 
-
-- 全体のUPCシステム：
-```bash
-curl -sSL https://raw.githubusercontent.com/comevback/UPC-node/main/start-docker.sh -o start-docker.sh &&
-chmod +x start-docker.sh &&
-./start-docker.sh
-```
-
-- （
-
-バックエンドのみ）APIサービス：
-```bash
-curl -sSL https://raw.githubusercontent.com/comevback/UPC-node/main/start-api-docker.sh -o start-api-docker.sh &&
-chmod +x start-api-docker.sh &&
-./start-api-docker.sh
-```
-- x86アーキテクチャホスト用：
-```bash
-curl -sSL https://raw.githubusercontent.com/comevback/UPC-node/main/start-x86-api-docker.sh -o start-x86-api-docker.sh &&
-chmod +x start-x86-api-docker.sh &&
-./start-x86-api-docker.sh
-```
-
-- （フロントエンドのみ）フロントエンドサービス：
-```bash
-curl -sSL https://raw.githubusercontent.com/comevback/UPC-node/main/start-react-docker.sh -o start-react-docker.sh &&
-chmod +x start-react-docker.sh &&
-./start-react-docker.sh
-```
-
-- 登録サービス：
-```bash
-curl -sSL https://raw.githubusercontent.com/comevback/UPC-node/main/start-register-docker.sh -o start-register-docker.sh &&
-chmod +x start-register-docker.sh &&
-./start-register-docker.sh
-```
-
-### Dockerコマンド:
-
-- 全体のUPCシステム：
-```bash
-docker run -it --rm -e HOST_URL={http://your_API_host:4000} -e CENTRAL_SERVER={http://your_central_server:8000} -e INITIAL_API_URL={http://your_API_host:4000} -e INITIAL_CENTRAL_SERVER_URL={http://your_central_server:8000} -v /var/run/docker.sock:/var/run/docker.sock -p 3000:3000 -p 4000:4000 -p 8000:8000 afterlifexx/upc-system
-```
-
-例：
-```bash
-docker run -it --rm -e HOST_URL=http://192.168.0.103:4000 -e CENTRAL_SERVER=http://192.168.0.103:8000 -e INITIAL_API_URL=http://192.168.0.103:4000 -e INITIAL_CENTRAL_SERVER_URL=http://192.168.0.103:8000 -v /var/run/docker.sock:/var/run/docker.sock -p 3000:3000 -p 4000:4000 -p 8000:8000 afterlifexx/upc-system
-```
-
-```bash
-docker run -it --rm -e HOST_URL=http://172.28.235.225:4000 -e CENTRAL_SERVER=http://172.28.235.225:8000 -e INITIAL_API_URL=http://172.28.235.225:4000 -e INITIAL_CENTRAL_SERVER_URL=http://172.28.235.225:8000 -v /var/run/docker.sock:/var/run/docker.sock -p 3000:3000 -p 4000:4000 -p 8000:8000 afterlifexx/upc-system
-```
-
-- （バックエンドのみ）APIサービス：
-```bash
-docker run -it --rm -e HOST_URL={http://your_API_host:4000} -e CENTRAL_SERVER={http://your_central_server:8000} -v /var/run/docker.sock:/var/run/docker.sock -p 4000:4000 afterlifexx/upc-api
-```
-- 例（APIサービス）：
-```bash
-docker run -it --rm -e HOST_URL=http://172.28.235.64:4000 -e CENTRAL_SERVER=http://172.28.235.225:8000 -v /var/run/docker.sock:/var/run/docker.sock -p 4000:4000 afterlifexx/upc-api
-```
-
-- （フロントエンドのみ）フロントエンドサービス：
-```bash
-docker run  -e REACT_APP_INITIAL_API_URL={http://your_API_host:4000} -e REACT_APP_INITIAL_CENTRAL_SERVER_URL={http://your_central_server:8000} -p 3000:3000 afterlifexx/upc-react
-```
-
-- 登録サービス：
-```bash
-docker run  -it --rm -p 8000:8000 afterlifexx/upc-register
-```
 
 
 
@@ -238,17 +218,6 @@ npm start
 cd frontend/upc-react
 npm start
 ```
-
-## デモ
-
-<img src='./docker-run-command.gif' alt='docker run command' width='1000px'/>
-
-1. React（フロントエンド）、API（バックエンド）サーバーおよび登録サーバーを起動します。
-2. タスクのディレクトリを.zipファイルに圧縮します。
-3. Reactのウェブサイトで圧縮ファイルをアップロードします。
-4. この種のタスク用のイメージを生成します。
-5. ファイルをアップロードして処理します。
-6. 結果をダウンロードします。
 
 ## 貢献
 

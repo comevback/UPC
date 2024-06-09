@@ -20,15 +20,18 @@ chmod +x start-docker.sh &&
 
 ---
 
-## 功能特点
+## 特点
 
-- **任务处理**：在系统中的各种后端主机上处理不同类型的任务。
-- **文件管理**：在后端服务器上上传/删除文件。
-- **Docker镜像生成**：通过上传的zip文件使用Buildpack生成Docker镜像。
-- **终端集成**：公开后端主机终端至前端，允许用户执行命令。
-- **服务器注册**：通过Register-Server（本地或云端）注册和管理后端API服务器/前端React服务器。
-- **数据库集成**：在MongoDB（云端）中存储和管理数据。
-- **使用Docker和shell脚本部署**：通过运行命令部署整个系统。
+这个系统使用户可以通过网页浏览器轻松操作Docker。以下是其主要功能：
+
+- **文件管理**: 上传和删除文件。
+- **Docker镜像生成**: 从上传的文件中创建Docker镜像。
+- **任务处理**: 在后端执行各种任务。
+- **终端访问**: 直接从网页浏览器执行命令。
+- **服务器管理**: 注册和管理本地或云端服务器。
+- **Docker部署**: 通过一个命令部署整个系统。
+
+简而言之，这个系统允许用户通过网页界面操作Docker，以创建、获取（pull）和删除Docker镜像。此外，通过面板帮助用户更快速、简便地使用Docker容器。
 
 ---
 
@@ -86,17 +89,18 @@ chmod +x start-docker.sh &&
 ./start-docker.sh
 ```
 
-- （仅后端）API服务：
+- Go-Server：
+```bash
+curl -sSL https://raw.githubusercontent.com/comevback/UPC-node/main/start-go-docker.sh -o start-go-docker.sh &&
+chmod +x start-go-docker.sh &&
+./start-go-docker.sh
+```
+
+- Node-Server（不推荐）：
 ```bash
 curl -sSL https://raw.githubusercontent.com/comevback/UPC-node/main/start-api-docker.sh -o start-api-docker.sh &&
 chmod +x start-api-docker.sh &&
 ./start-api-docker.sh
-```
-- 适用于x86架构主机：
-```bash
-curl -sSL https://raw.githubusercontent.com/comevback/UPC-node/main/start-x86-api-docker.sh -o start-x86-api-docker.sh &&
-chmod +x start-x86-api-docker.sh &&
-./start-x86-api-docker.sh
 ```
 
 - （仅前端）前端服务：
@@ -112,45 +116,6 @@ curl -sSL https://raw.githubusercontent.com/comevback/UPC-node/main/start-regist
 chmod +x start-register-docker.sh &&
 ./start-register-docker.sh
 ```
-
-### Docker命令:
-
-- 整个UPC系统：
-```bash
-docker run -it --rm -e HOST_URL={http://your_API_host:4000
-
-} -e CENTRAL_SERVER={http://your_central_server:8000} -e INITIAL_API_URL={http://your_API_host:4000} -e INITIAL_CENTRAL_SERVER_URL={http://your_central_server:8000} -v /var/run/docker.sock:/var/run/docker.sock -p 3000:3000 -p 4000:4000 -p 8000:8000 afterlifexx/upc-system
-```
-
-例如：
-```bash
-docker run -it --rm -e HOST_URL=http://192.168.0.103:4000 -e CENTRAL_SERVER=http://192.168.0.103:8000 -e INITIAL_API_URL=http://192.168.0.103:4000 -e INITIAL_CENTRAL_SERVER_URL=http://192.168.0.103:8000 -v /var/run/docker.sock:/var/run/docker.sock -p 3000:3000 -p 4000:4000 -p 8000:8000 afterlifexx/upc-system
-```
-
-```bash
-docker run -it --rm -e HOST_URL=http://172.28.235.225:4000 -e CENTRAL_SERVER=http://172.28.235.225:8000 -e INITIAL_API_URL=http://172.28.235.225:4000 -e INITIAL_CENTRAL_SERVER_URL=http://172.28.235.225:8000 -v /var/run/docker.sock:/var/run/docker.sock -p 3000:3000 -p 4000:4000 -p 8000:8000 afterlifexx/upc-system
-```
-
-- （仅后端）API服务：
-```bash
-docker run -it --rm -e HOST_URL={http://your_API_host:4000} -e CENTRAL_SERVER={http://your_central_server:8000} -v /var/run/docker.sock:/var/run/docker.sock -p 4000:4000 afterlifexx/upc-api
-```
-- 示例（API服务）：
-```bash
-docker run -it --rm -e HOST_URL=http://172.28.235.64:4000 -e CENTRAL_SERVER=http://172.28.235.225:8000 -v /var/run/docker.sock:/var/run/docker.sock -p 4000:4000 afterlifexx/upc-api
-```
-
-- （仅前端）前端服务：
-```bash
-docker run  -e REACT_APP_INITIAL_API_URL={http://your_API_host:4000} -e REACT_APP_INITIAL_CENTRAL_SERVER_URL={http://your_central_server:8000} -p 3000:3000 afterlifexx/upc-react
-```
-
-- 注册服务：
-```bash
-docker run  -it --rm -p 8000:8000 afterlifexx/upc-register
-```
-
-
 
 ---
 
@@ -249,7 +214,7 @@ npm start
 
 ## 贡献者
 
-徐翔
+Xu Xiang
 
 ## 许可证
 
