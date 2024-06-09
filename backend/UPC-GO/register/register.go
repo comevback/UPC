@@ -7,6 +7,7 @@ import (
 	"log"
 	"net/http"
 	"os"
+	"strings"
 	"time"
 )
 
@@ -31,9 +32,17 @@ func GetCentralServer() string {
 func GetGoAPIURL() string {
 	goAPIURL := os.Getenv("API_URL")
 	if goAPIURL == "" {
-		goAPIURL = "http://localhost" // 默认值
+		goAPIURL = "http://localhost:4000" // 默认值
 	}
 	return goAPIURL
+}
+
+// removePort 函数移除URL中的端口号, 例如 http://localhost:4000 -> http://localhost
+func removePort(rawURL string) string {
+	if strings.Contains(rawURL, ":") {
+		return rawURL[:strings.LastIndex(rawURL, ":")]
+	}
+	return rawURL
 }
 
 // 全局变量
@@ -48,6 +57,9 @@ func RegisterService(port string) bool {
 	if err != nil {
 		log.Fatal(err)
 	}
+
+	// 去掉端口号，然后添加新的端口号
+	URL = removePort(URL)
 
 	// 通过指针修改全局变量
 	URL = URL + ":" + port
