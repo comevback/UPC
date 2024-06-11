@@ -6,7 +6,23 @@
 
 [日本語版](./README_JP.md) | [中文版](./README_CN.md)
 
-A full-stack computational system using Docker, buildpack to simplify the processing of all kind of tasks.
+This system is designed to easily execute the same tasks on different hosts. By leveraging Docker's capabilities, it allows users with no Docker knowledge to use it effortlessly.
+
+In simple terms, this system is divided into three parts:
+
+```
+UPC
+├── backend
+│   ├── UPC-Node
+│   └── UPC-GO
+├── frontend
+│   └── upc-react
+└── register-server
+```
+
+1. **React Frontend**: Provides a user interface that allows users to interact with the system intuitively.
+2. **Go or Node Backend**: Connects to the host's Docker daemon, receives requests from the frontend, and handles operations on files and Docker.
+3. **Register Server**: Functions as a central server, managing all frontends and backends, aggregating information, and enabling the frontend to switch between different backends easily.
 
 ---
 

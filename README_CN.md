@@ -4,7 +4,23 @@
 <h1 align="center">UPC-node</h1>
 <p align="center">（User-PC Computing System）</p>
 
-使用Docker和Buildpack的全栈计算系统，简化各种任务的处理。
+这个系统设计为在不同的主机上简便地执行相同的任务。利用Docker的功能，即使不了解Docker的人也能轻松使用。
+
+简单来说，这个系统分为三个部分：
+
+```
+UPC
+├── backend
+│   ├── UPC-Node
+│   └── UPC-GO
+├── frontend
+│   └── upc-react
+└── register-server
+```
+
+1. **React前端**: 提供用户界面，使用户能够直观地操作系统。
+2. **Go或Node后端**: 与所在主机的Docker守护进程相连接，接受前端传来的请求，对文件以及Docker进行操作。
+3. **注册服务器**: 作为中心服务器，管理所有前端和后端，统计信息，使前端能够轻松切换不同的后端。
 
 ---
 
