@@ -35,7 +35,7 @@ jobs:
 
       - uses: actions/checkout@v3
       - name: Build the Docker image for backend
-        run: docker build ./backend/UPC-API --file ./backend/UPC-API/Dockerfile --tag afterlifexx/upc-api:latest
+        run: docker build ./backend/UPC-Node --file ./backend/UPC-Node/Dockerfile --tag afterlifexx/upc-api:latest
       
       - name: Push the Docker image for backend to the Dockerhub
         run: docker push afterlifexx/upc-api:latest
