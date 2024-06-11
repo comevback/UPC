@@ -68,7 +68,7 @@ RUN npm install --prefix ./register-server --production
 COPY --from=builder /app/upc-go ./backend/UPC-GO/upc-go
 
 # 启动 frp 客户端
-RUN chmod +x /usr/src/app/backend/UPC-API/frpc
+RUN chmod +x /usr/src/app/backend/UPC-Node/frpc
 
 # 暴露端口
 EXPOSE 3000 4000 8000
