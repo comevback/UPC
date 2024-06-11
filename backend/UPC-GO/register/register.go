@@ -50,14 +50,10 @@ var (
 	URL            = GetGoAPIURL()
 	CENTRAL_SERVER = GetCentralServer()
 	id             = "GO Server: " // 替换为你的服务ID
+	hostInfo, _    = GetHostInfo()
 )
 
 func RegisterService(port string) bool {
-	hostInfo, err := GetHostInfo()
-	if err != nil {
-		log.Fatal(err)
-	}
-
 	// 去掉端口号，然后添加新的端口号
 	URL = removePort(URL)
 
@@ -109,7 +105,6 @@ func RegisterService(port string) bool {
 
 // 发送心跳功能
 func SendHeartbeat() bool {
-	hostInfo, _ := GetHostInfo()
 	// 创建服务信息
 	serviceInfo := ServiceInfo{
 		ID:        id,
@@ -118,16 +113,17 @@ func SendHeartbeat() bool {
 		HostInfo:  hostInfo,
 	}
 
-	// 将心跳请求转换为json格式
-	jsonData, err := json.Marshal(serviceInfo)
+	// 将服务信息转换为json格式
+	jsonData, err := json.Marshal(serviceInfo) // 将服务信息转换为json格式
 	if err != nil {
-		fmt.Printf("Failed to marshal heartbeat request: %s\n", err.Error())
-		return false
+		log.Fatal(err)
 	}
 
 	// 创建HTTP客户端
 	client := &http.Client{Timeout: 10 * time.Second}
-	req, err := http.NewRequest("POST", fmt.Sprintf("%s/backend/service-heartbeat", CENTRAL_SERVER), bytes.NewBuffer(jsonData))
+
+	// 创建HTTP请求
+	req, err := http.NewRequest("POST", fmt.Sprintf("%s/backend/register-service", CENTRAL_SERVER), bytes.NewBuffer(jsonData))
 	if err != nil {
 		fmt.Printf("Failed to create request: %s\n", err.Error())
 		return false
@@ -137,13 +133,18 @@ func SendHeartbeat() bool {
 	// 发送请求
 	resp, err := client.Do(req)
 	if err != nil {
-		fmt.Printf("Failed to send heartbeat: %s\n", err.Error())
+		fmt.Printf("Failed to register service: %s\n", err.Error())
 		return false
 	}
 	defer resp.Body.Close()
 
-	// 检查响应状态码，只要状态码在200-299之间，就认为心跳发送成功
-	return resp.StatusCode >= 200 && resp.StatusCode < 300
+	// 检查响应状态码
+	if resp.StatusCode >= 200 && resp.StatusCode < 300 {
+		return true
+	} else {
+		fmt.Printf("Failed to register service: %s\n", resp.Status)
+		return false
+	}
 }
 
 // 注销请求结构

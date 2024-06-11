@@ -20,7 +20,7 @@ chmod +x start-docker.sh &&
 
 <img src='./UPC-script-demo.gif' alt='UPC logo' width='600px'/>
 
---
+---
 
 ## Demo
 
