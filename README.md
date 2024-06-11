@@ -8,7 +8,7 @@
 
 This system is designed to easily execute the same tasks on different hosts. By leveraging Docker's capabilities, it allows users with no Docker knowledge to use it effortlessly.
 
-In simple terms, this system is divided into three parts:
+This system is divided into three parts:
 
 ```
 UPC
