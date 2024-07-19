@@ -174,9 +174,16 @@ func ImageBuilder(w http.ResponseWriter, r *http.Request) {
 	trimedName := strings.TrimSuffix(filename, ".zip")
 	lowerName := strings.ToLower(trimedName)
 	cmd := exec.Command("pack", "build", lowerName, "--path", destPosition, "--builder", "paketobuildpacks/builder-jammy-base")
-	output, err := cmd.CombinedOutput()
+	// output, err := cmd.CombinedOutput()
+	// if err != nil {
+	// 	http.Error(w, "Error building image: "+string(output), http.StatusInternalServerError)
+	// 	return
+	// }
+	cmd.Stdout = os.Stdout
+	cmd.Stderr = os.Stderr
+	err = cmd.Run()
 	if err != nil {
-		http.Error(w, "Error building image: "+string(output), http.StatusInternalServerError)
+		http.Error(w, "Error building image: "+err.Error(), http.StatusInternalServerError)
 		return
 	}
 

@@ -17,7 +17,7 @@ const UploadForm = (props) => {
     const handleDragOver = (event) => {
         event.preventDefault(); // 阻止默认行为
         if (!dragging) {
-        setDragging(true);
+            setDragging(true);
         }
     };
 
@@ -29,7 +29,7 @@ const UploadForm = (props) => {
     const handleDrop = async (event) => {
         event.preventDefault(); // 阻止文件被打开
         setDragging(false);
-        
+
         const dropedFiles = Array.from(event.dataTransfer.files);
         console.log(dropedFiles);
         // 处理文件上传逻辑
@@ -66,7 +66,7 @@ const UploadForm = (props) => {
         console.log(files);
         const formData = new FormData();
         // Create an empty FormData object
-        
+
         files.forEach((file) => {
             formData.append('file', file);
         });// Add the file to formData
@@ -95,7 +95,7 @@ const UploadForm = (props) => {
         console.log(files);
 
         // 如果没有文件被选择，直接返回，不进行上传，显示红色
-        if(files.length === 0) {
+        if (files.length === 0) {
             setUploadStatus('✗');
             document.getElementById('progress-bar').style.setProperty('--progress-width', `100%`); // Reset the progress bar
             document.getElementById('progress-bar').style.setProperty('--background-color', 'red'); // set the progress bar color to red
@@ -148,14 +148,14 @@ const UploadForm = (props) => {
     return (
         <div onDragOver={handleDragOver} onDragLeave={handleDragLeave} onDrop={handleDrop}>
             <h1>Upload files</h1>
-            <form className={`upload-form ${dragging ? "dragging" : "" }`} onSubmit={handleSubmit_xhr}>
+            <form className={`upload-form ${dragging ? "dragging" : ""}`} onSubmit={handleSubmit_xhr}>
                 <div className="upload-input">
                     <div className="upload-panel">
                         {/* <input type="file" id="file-input" onChange={handleFileChange} webkitdirectory="true" multiple /> */}
-                        <input type="file" id="file-input" onChange={handleFileChange} multiple placeholder="well"/>
+                        <input type="file" id="file-input" onChange={handleFileChange} multiple placeholder="well" />
                         <button type="submit" className={`${files.length ? 'actived' : ''} `}>Upload</button>
                         <div id="progress-container">
-                            <div id="progress-bar" style={{'--progress-width': '0%', '--background-color': '#2ebdfb'}}></div>
+                            <div id="progress-bar" style={{ '--progress-width': '0%', '--background-color': '#2ebdfb' }}></div>
                         </div>
                     </div>
                     <div className={`upload-status ${uploadStatus === '✓' ? 'success' : uploadStatus === '✗' ? 'failure' : ''}`}>{uploadStatus}</div>

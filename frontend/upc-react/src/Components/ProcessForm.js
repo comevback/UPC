@@ -2,7 +2,7 @@ import React, { useContext, useState, useEffect, useRef } from "react";
 import { ParaContext } from "../Global.js";
 import { Terminal } from 'xterm';
 import { FitAddon } from 'xterm-addon-fit';
-import io from 'socket.io-client';  
+import io from 'socket.io-client';
 import 'xterm/css/xterm.css';
 import './Term.css';
 import "./ProcessForm.css";
@@ -14,14 +14,14 @@ const ProcessForm = (props) => {
     const socket = useRef(null);
     const { API_URL } = useContext(ParaContext);
 
-    const [formWidth, setFormWidth] = useState('45%'); 
-    const [terminalWidth, setTerminalWidth] = useState('55%'); 
+    const [formWidth, setFormWidth] = useState('45%');
+    const [terminalWidth, setTerminalWidth] = useState('55%');
 
     const [Language, setLanguage] = useState(["bash", "python", "c", "c++", "java", "javascript", "go", "ruby", "rust", "php", "perl", "r", "swift", "kotlin", "scala", "haskell", "clojure", "elixir", "typescript", "julia", "ocaml", "racket", "commonlisp", "fortran", "erlang", "lua", "groovy", "dart"]);
     const [reliancesFiles, setReliancesFiles] = useState([]);
-    const [portMappings, setPortMappings] = useState([{Port_Host: null, Port_Container: null}]);
-    const [envVariables, setEnvVariables] = useState([{EnvKey: "", EnvValue: ""}]);
-    const [volumeMappings, setVolumeMappings] = useState([{Volume_Host: null, Volume_Container: null}]);
+    const [portMappings, setPortMappings] = useState([{ Port_Host: null, Port_Container: null }]);
+    const [envVariables, setEnvVariables] = useState([{ EnvKey: "", EnvValue: "" }]);
+    const [volumeMappings, setVolumeMappings] = useState([{ Volume_Host: null, Volume_Container: null }]);
     const [dockerCommand, setDockerCommand] = useState("");
     const [formDatas, setFormDatas] = useState(
         {
@@ -57,20 +57,20 @@ const ProcessForm = (props) => {
             const containerWidth = document.querySelector('.processing').clientWidth; // Width of the container
             const newFormWidth = e.clientX / containerWidth * 100; // Percentage of the container width that the form will take
             const newTerminalWidth = 100 - newFormWidth;
-    
+
             setFormWidth(`${newFormWidth}%`);
             setTerminalWidth(`${newTerminalWidth}%`);
         };
-    
+
         const resizer = document.querySelector('.resizer');
         resizer.addEventListener('mousedown', () => {
             document.addEventListener('mousemove', handleResize);
         });
-    
+
         document.addEventListener('mouseup', () => {
             document.removeEventListener('mousemove', handleResize);
         });
-    
+
 
         requestAnimationFrame(() => {
             console.log(`Terminal is being rendered`)
@@ -86,10 +86,10 @@ const ProcessForm = (props) => {
                 cols: 200,
                 rows: 40,
                 // theme: atomOneLightTheme,
-                });
+            });
             terminal.current.loadAddon(fitAddon.current);
             terminal.current.open(terminalRef.current);
-            setTimeout(() => {fitAddon.current.fit()}, 100);
+            setTimeout(() => { fitAddon.current.fit() }, 100);
 
             const end_style = '\x1b[0m';
             const demoColor = '\x1b[1;37m';
@@ -128,14 +128,14 @@ const ProcessForm = (props) => {
         });
     }, [API_URL]);
 
-    
+
     const handleInputChange = (event) => {
         const target = event.target;
-        const value = target.type === 'checkbox' ? target.checked: target.value;
+        const value = target.type === 'checkbox' ? target.checked : target.value;
         const name = target.name;
 
         let updatedFormDatas;
-        
+
         // Update the formDatas depending on the input:
         // if the input is a port mapping, environment variable or volume mapping
         // update the portMappings, envVariables or volumeMappings state
@@ -196,7 +196,7 @@ const ProcessForm = (props) => {
                 reliancesFiles: reliancesFiles
             };
         } else {
-                updatedFormDatas = {
+            updatedFormDatas = {
                 ...formDatas,
                 [name]: value,
             };
@@ -206,6 +206,7 @@ const ProcessForm = (props) => {
         const commandParts = [
             "docker run",
             updatedFormDatas.Interactive ? "-it" : "",
+            updatedFormDatas.Root ? "--user root" : "",
             updatedFormDatas.Remove ? "--rm" : "",
             updatedFormDatas.Background ? "-d" : "",
             updatedFormDatas.volumeMappings.map(volumeMapping => `-v ${volumeMapping.Volume_Host}:${volumeMapping.Volume_Container}`).join(' '),
@@ -217,13 +218,13 @@ const ProcessForm = (props) => {
             updatedFormDatas.Execute ? '\n' : ''
 
         ];
-        
+
         const newDockerCommand = commandParts.filter(part => part).join(' ');
-        
+
         setDockerCommand(newDockerCommand);
         setFormDatas(updatedFormDatas);
     }
-    
+
     const addPortMapping = () => {
         setPortMappings([...portMappings, { Port_Host: null, Port_Container: null }]);
     }
@@ -276,14 +277,14 @@ const ProcessForm = (props) => {
     //     );
     // }
 
-    return(
+    return (
         <div className="processing">
             <form className="processing-form" style={{ width: formWidth }} onSubmit={handleDockerRun} onChange={handleInputChange}>
                 <label htmlFor="DockerImages" className="processing-info">Docker image:</label>
                 <select className="processing-select" name="DockerImages" id="DockerImages" defaultValue={props.selectedImages} >
                     {props.images.map((image) => (
-                            <option key={image} value={image} selected={image === props.selectedImages} >{image}</option>
-                        ))
+                        <option key={image} value={image} selected={image === props.selectedImages} >{image}</option>
+                    ))
                     }
                 </select>
 
@@ -291,51 +292,56 @@ const ProcessForm = (props) => {
                     <input className="processing-checkbox" type="checkbox" name="Interactive" id="Interactive" />
                     Interactive (-it)
                 </label>
-                
+
+                <label htmlFor="Root" className="processing-checkbox-label">
+                    <input className="processing-checkbox" type="checkbox" name="Root" id="Root" />
+                    Root (--user root)
+                </label>
+
                 <label htmlFor="Remove" className="processing-checkbox-label">
-                    <input className="processing-checkbox" type="checkbox" name="Remove" id="Remove"/>
+                    <input className="processing-checkbox" type="checkbox" name="Remove" id="Remove" />
                     Remove after execution (--rm)
                 </label>
 
                 <label htmlFor="Background" className="processing-checkbox-label">
-                    <input className="processing-checkbox" type="checkbox" name="Background" id="Background"/>
+                    <input className="processing-checkbox" type="checkbox" name="Background" id="Background" />
                     Run on background (-d)
                 </label>
 
-                <label htmlFor="Execute" className="processing-checkbox-label">
-                    <input className="processing-checkbox" type="checkbox" name="Execute" id="Execute"/>
+                {/* <label htmlFor="Execute" className="processing-checkbox-label">
+                    <input className="processing-checkbox" type="checkbox" name="Execute" id="Execute" />
                     Execute directly (Enter)
-                </label>
+                </label> */}
 
                 <label htmlFor="Language" className="processing-Language">Language:</label>
                 <select className="processing-select" name="Language" id="Language" defaultValue="bash">
                     {Language.map((language) => (
-                            <option key={language} value={language}>{language}</option>
-                        ))
+                        <option key={language} value={language}>{language}</option>
+                    ))
                     }
                 </select>
 
-                
+
                 <label htmlFor="files" className="processing-info">Files:</label>
                 <select className="processing-select" name="files" id="files" defaultValue={props.selectedFiles} multiple>
                     {props.files.map((file) => (
-                            <option key={file} value={file} selected={props.selectedFiles.includes(file)} >{file}</option>
-                        ))
+                        <option key={file} value={file} selected={props.selectedFiles.includes(file)} >{file}</option>
+                    ))
                     }
                 </select>
 
                 <label htmlFor="reliancesFiles" className="processing-info">Reliances Files:</label>
                 <select className="processing-select" name="reliancesFiles" id="reliancesFiles" multiple>
                     {props.files.map((file) => (
-                            <option key={file} value={file}>{file}</option>
-                        ))
+                        <option key={file} value={file}>{file}</option>
+                    ))
                     }
                 </select>
 
 
                 {portMappings.map((portMapping, index) => (
                     <>
-                        <label htmlFor="Port_Host" className="processing-port-label">Port Mapping {index+1}:</label>
+                        <label htmlFor="Port_Host" className="processing-port-label">Port Mapping {index + 1}:</label>
                         <input className="processing-port" type="number" name={`Port_Host_${index}`} id="Port_Host" placeholder="Host Port" />
                         <input className="processing-port" type="number" name={`Port_Container_${index}`} id="Port_Container" placeholder="Container Port" />
                         <div className="processing-add-and-remove">
@@ -347,7 +353,7 @@ const ProcessForm = (props) => {
 
                 {envVariables.map((envVariable, index) => (
                     <>
-                        <label htmlFor="EnvKey" className="processing-label">Environment Variables {index+1}:</label>
+                        <label htmlFor="EnvKey" className="processing-label">Environment Variables {index + 1}:</label>
                         <input className="processing-env" type="text" name={`EnvKey_${index}`} id="EnvKey" placeholder="env-key" />
                         <input className="processing-env" type="text" name={`EnvValue_${index}`} id="EnvValue" placeholder="env-value" />
                         <div className="processing-add-and-remove">
@@ -359,7 +365,7 @@ const ProcessForm = (props) => {
 
                 {volumeMappings.map((volumeMapping, index) => (
                     <>
-                        <label htmlFor="Volume_Host" className="processing-label">Volume Mapping {index+1}:</label>
+                        <label htmlFor="Volume_Host" className="processing-label">Volume Mapping {index + 1}:</label>
                         <input className="processing-env" type="text" name={`Volume_Host_${index}`} id="Volume_Host" placeholder="Host Volume" />
                         <input className="processing-env" type="text" name={`Volume_Container_${index}`} id="Volume_Container" placeholder="Container Volume" />
                         <div className="processing-add-and-remove">
@@ -376,8 +382,8 @@ const ProcessForm = (props) => {
                 <input className="processing-input" type="text" name="AdditionalParams" id="AdditionalParams" placeholder="Additional parameters (Commands)" />
 
                 <label htmlFor="Docker_command" className="processing-label">Docker Command:</label>
-                <textarea key={dockerCommand} className="processing-command" name="Docker_command" id="Docker_command" defaultValue={dockerCommand}/>
-                
+                <textarea key={dockerCommand} className="processing-command" name="Docker_command" id="Docker_command" defaultValue={dockerCommand} />
+
                 <div className="processing-buttons">
                     <button className="processing-button">Generate Image</button>
                     <button className="processing-button">Docker Run</button>
@@ -386,7 +392,7 @@ const ProcessForm = (props) => {
 
             <div className="resizer"></div>
 
-            <div id='processing-terminal' ref={terminalRef} style={{ width: terminalWidth }}/> 
+            <div id='processing-terminal' ref={terminalRef} style={{ width: terminalWidth }} />
         </div>
     )
 };
